@@ -1,6 +1,8 @@
-# Interactive Creative Portfolio Website
+# Digital Dreams Portfolio - Interactive Creative Website
 
-A stunning, interactive portfolio website designed specifically for showcasing animation, illustration, and drawing work. This website features cutting-edge animations, particle effects, and modern design elements that create an engaging user experience.
+🌟 **NEW & IMPROVED VERSION** 🌟
+
+A stunning, next-generation interactive portfolio website designed specifically for showcasing animation, illustration, and drawing work. This completely rebuilt website features cutting-edge animations, dynamic particle effects, and modern design elements that create the most engaging user experience possible.
 
 ## ✨ Features
 
