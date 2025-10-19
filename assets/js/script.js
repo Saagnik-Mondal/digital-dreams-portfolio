@@ -21,6 +21,7 @@ function initializeWebsite() {
     setupModalSystem();
     setupSmoothScrolling();
     setupScrollProgress();
+    setupAdvancedScrollEffects();
 }
 
 // Custom Cursor
@@ -191,6 +192,11 @@ function setupLoadingScreen() {
                         startHeroAnimations();
                         setupCustomCursor();
                         setupMagneticElements();
+                        
+                        // Initialize advanced WebGL effects
+                        if (typeof window.initAdvancedEffects === 'function') {
+                            window.initAdvancedEffects();
+                        }
                     }, 1000);
                 }, 800);
             }
@@ -936,5 +942,166 @@ function setupAccessibility() {
 // Initialize accessibility features
 document.addEventListener('DOMContentLoaded', setupAccessibility);
 
+// Advanced Scroll Effects with GSAP
+function setupAdvancedScrollEffects() {
+    // Skip if GSAP is not available or on mobile
+    if (typeof gsap === 'undefined' || isMobile) return;
+    
+    // Register ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
+    
+    // Hero parallax effect
+    gsap.to('.hero-background', {
+        yPercent: -50,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '.hero',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true
+        }
+    });
+    
+    // Portfolio cards stagger animation
+    gsap.fromTo('.portfolio-card', {
+        y: 100,
+        opacity: 0,
+        scale: 0.8
+    }, {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        duration: 1,
+        stagger: 0.2,
+        ease: 'power3.out',
+        scrollTrigger: {
+            trigger: '.portfolio-grid',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        }
+    });
+    
+    // Section titles reveal
+    gsap.fromTo('.section-title', {
+        y: 50,
+        opacity: 0
+    }, {
+        y: 0,
+        opacity: 1,
+        duration: 1.2,
+        ease: 'power3.out',
+        scrollTrigger: {
+            trigger: '.section-title',
+            start: 'top 90%',
+            toggleActions: 'play none none reverse'
+        }
+    });
+    
+    // Skills animation
+    gsap.fromTo('.skill-item', {
+        x: -50,
+        opacity: 0
+    }, {
+        x: 0,
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: 'power3.out',
+        scrollTrigger: {
+            trigger: '.skills',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        }
+    });
+    
+    // Contact section reveal
+    gsap.fromTo('.contact-content', {
+        y: 80,
+        opacity: 0
+    }, {
+        y: 0,
+        opacity: 1,
+        duration: 1.5,
+        ease: 'power3.out',
+        scrollTrigger: {
+            trigger: '.contact',
+            start: 'top 70%',
+            toggleActions: 'play none none reverse'
+        }
+    });
+    
+    // Morphing shapes animation
+    gsap.to('.morph-shape', {
+        rotation: 360,
+        duration: 20,
+        repeat: -1,
+        ease: 'none'
+    });
+    
+    // Floating elements
+    gsap.to('.floating-element', {
+        y: -30,
+        duration: 3,
+        repeat: -1,
+        yoyo: true,
+        ease: 'power1.inOut',
+        stagger: 0.5
+    });
+}
+
+// Enhanced Page Transitions
+function createPageTransition() {
+    const transition = document.createElement('div');
+    transition.className = 'page-transition';
+    transition.innerHTML = '<div class="transition-text">Loading...</div>';
+    document.body.appendChild(transition);
+    
+    gsap.to(transition, {
+        opacity: 1,
+        duration: 0.5,
+        ease: 'power2.out',
+        onComplete: () => {
+            setTimeout(() => {
+                gsap.to(transition, {
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: 'power2.out',
+                    onComplete: () => {
+                        document.body.removeChild(transition);
+                    }
+                });
+            }, 1000);
+        }
+    });
+}
+
+// Magnetic field effect for buttons
+function createMagneticField() {
+    document.querySelectorAll('.magnetic-btn').forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            gsap.to(btn, {
+                x: x * 0.3,
+                y: y * 0.3,
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+        });
+        
+        btn.addEventListener('mouseleave', () => {
+            gsap.to(btn, {
+                x: 0,
+                y: 0,
+                duration: 0.5,
+                ease: 'elastic.out(1, 0.3)'
+            });
+        });
+    });
+}
+
 // Export functions for global use
 window.scrollToSection = scrollToSection;
+window.createPageTransition = createPageTransition;
