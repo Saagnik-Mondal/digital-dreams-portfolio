@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Portfolio - Animation, Illustration & Art</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loader">
+            <div class="paint-brush">
+                <i class="fas fa-paint-brush"></i>
+            </div>
+            <div class="loading-text">Loading Creative Magic...</div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-text">Creative Portfolio</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#animations" class="nav-link">Animations</a></li>
+                <li><a href="#illustrations" class="nav-link">Illustrations</a></li>
+                <li><a href="#drawings" class="nav-link">Drawings</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <canvas id="particle-canvas"></canvas>
+        </div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="title-line">Bringing Ideas</span>
+                    <span class="title-line">To Life</span>
+                </h1>
+                <p class="hero-subtitle">Through Animation, Illustration & Art</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="scrollToSection('animations')">
+                        <i class="fas fa-play"></i> View Animations
+                    </button>
+                    <button class="btn btn-secondary" onclick="scrollToSection('about')">
+                        <i class="fas fa-user"></i> About Me
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">About Me</h2>
+                <div class="section-subtitle">Creative mind behind the art</div>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <p class="about-description">
+                        I'm a passionate creative artist specializing in bringing imagination to life through 
+                        various forms of visual storytelling. From fluid animations that captivate audiences 
+                        to detailed illustrations that tell stories, and expressive drawings that capture emotions.
+                    </p>
+                    <div class="skills">
+                        <div class="skill-item">
+                            <i class="fas fa-film"></i>
+                            <span>2D/3D Animation</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-palette"></i>
+                            <span>Digital Illustration</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-pencil-alt"></i>
+                            <span>Traditional Drawing</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-magic"></i>
+                            <span>Visual Effects</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Animations Section -->
+    <section id="animations" class="portfolio-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Animations</h2>
+                <div class="section-subtitle">Motion brings stories to life</div>
+            </div>
+            <div class="portfolio-grid" id="animations-grid">
+                <!-- Animation items will be populated by JavaScript -->
+                <div class="portfolio-item" data-category="animation">
+                    <div class="portfolio-card">
+                        <div class="card-image">
+                            <div class="placeholder-animation">
+                                <i class="fas fa-play-circle"></i>
+                                <span>Sample Animation 1</span>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Character Animation</h3>
+                            <p>Fluid character movements and expressions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="animation">
+                    <div class="portfolio-card">
+                        <div class="card-image">
+                            <div class="placeholder-animation">
+                                <i class="fas fa-play-circle"></i>
+                                <span>Sample Animation 2</span>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Motion Graphics</h3>
+                            <p>Dynamic visual effects and transitions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="animation">
+                    <div class="portfolio-card">
+                        <div class="card-image">
+                            <div class="placeholder-animation">
+                                <i class="fas fa-play-circle"></i>
+                                <span>Sample Animation 3</span>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h3>3D Animation</h3>
+                            <p>Three-dimensional storytelling</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Illustrations Section -->
+    <section id="illustrations" class="portfolio-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Illustrations</h2>
+                <div class="section-subtitle">Digital art that speaks volumes</div>
+            </div>
+            <div class="portfolio-grid" id="illustrations-grid">
+                <div class="portfolio-item" data-category="illustration">
+                    <div class="portfolio-card">
+                        <div class="card-image">
+                            <div class="placeholder-image">
+                                <i class="fas fa-image"></i>
+                                <span>Sample Illustration 1</span>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Digital Portrait</h3>
+                            <p>Realistic character illustrations</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="illustration">
+                    <div class="portfolio-card">
+                        <div class="card-image">
+                            <div class="placeholder-image">
+                                <i class="fas fa-image"></i>
+                                <span>Sample Illustration 2</span>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Fantasy Art</h3>
+                            <p>Imaginative worlds and creatures</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="illustration">
+                    <div class="portfolio-card">
+                        <div class="card-image">
+                            <div class="placeholder-image">
+                                <i class="fas fa-image"></i>
+                                <span>Sample Illustration 3</span>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Concept Art</h3>
+                            <p>Visual development and design</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Drawings Section -->
+    <section id="drawings" class="portfolio-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Drawings</h2>
+                <div class="section-subtitle">Traditional art with a modern twist</div>
+            </div>
+            <div class="portfolio-grid" id="drawings-grid">
+                <div class="portfolio-item" data-category="drawing">
+                    <div class="portfolio-card">
+                        <div class="card-image">
+                            <div class="placeholder-drawing">
+                                <i class="fas fa-pencil-alt"></i>
+                                <span>Sample Drawing 1</span>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Pencil Sketch</h3>
+                            <p>Detailed graphite artwork</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="drawing">
+                    <div class="portfolio-card">
+                        <div class="card-image">
+                            <div class="placeholder-drawing">
+                                <i class="fas fa-pencil-alt"></i>
+                                <span>Sample Drawing 2</span>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Ink Drawing</h3>
+                            <p>Bold black and white illustrations</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="drawing">
+                    <div class="portfolio-card">
+                        <div class="card-image">
+                            <div class="placeholder-drawing">
+                                <i class="fas fa-pencil-alt"></i>
+                                <span>Sample Drawing 3</span>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Mixed Media</h3>
+                            <p>Combined traditional techniques</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Get In Touch</h2>
+                <div class="section-subtitle">Let's create something amazing together</div>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p>your.email@example.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Phone</h4>
+                            <p>+1 (555) 123-4567</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Location</h4>
+                            <p>Your City, Country</p>
+                        </div>
+                    </div>
+                </div>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <input type="text" placeholder="Your Name" required>
+                        <input type="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="Subject" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea placeholder="Your Message" rows="6" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-behance"></i></a>
+                </div>
+                <p>&copy; 2024 Creative Portfolio. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal for Portfolio Items -->
+    <div id="portfolio-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-body">
+                <div class="modal-image"></div>
+                <div class="modal-info">
+                    <h3 class="modal-title"></h3>
+                    <p class="modal-description"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
