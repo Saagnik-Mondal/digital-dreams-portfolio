@@ -421,6 +421,39 @@
     50% { opacity: 1; }
 }
 
+/* Screen Vision Toggle Button */
+.screen-vision-toggle {
+    margin-left: auto;
+    transition: all 0.3s ease;
+}
+
+.screen-vision-toggle:hover {
+    transform: scale(1.1);
+}
+
+.screen-vision-toggle:active {
+    transform: scale(0.95);
+}
+
+/* Screen Vision Status Indicator */
+.screen-vision-active::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 8px;
+    height: 8px;
+    background: #4CAF50;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
 /* Mobile responsiveness for chatbot */
 @media (max-width: 768px) {
     .chatbot-window {

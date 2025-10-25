@@ -24,6 +24,30 @@ window.addEventListener('error', function(e) {
     alert('JavaScript Error: ' + e.error.message);
 });
 
+// Platform detection for screen vision capabilities
+function detectPlatform() {
+    const userAgent = navigator.userAgent;
+    const platform = navigator.platform;
+
+    const platforms = {
+        isWindows: platform.includes('Win'),
+        isMac: platform.includes('Mac'),
+        isAndroid: /Android/i.test(userAgent),
+        isIOS: /iPad|iPhone|iPod/.test(userAgent) || (platform === 'MacIntel' && navigator.maxTouchPoints > 1),
+        isLinux: platform.includes('Linux'),
+        isMobile: /Mobi|Android/i.test(userAgent)
+    };
+
+    // Screen vision is supported on Windows, Mac, and Android (excluding iOS)
+    platforms.supportsScreenVision = (platforms.isWindows || platforms.isMac || platforms.isAndroid) && !platforms.isIOS;
+
+    console.log('📱 Platform Detection:', platforms);
+    return platforms;
+}
+
+// Global platform info
+window.platformInfo = detectPlatform();
+
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, initializing AI portfolio...');
@@ -503,36 +527,41 @@ function setupAIChatbot() {
                 let response;
                 if (bestMatch.response) {
                     response = bestMatch.response;
-                } else if (bestMatch.intent === 'current_view' && window.visualContext.currentArtwork) {
-                    // Provide specific details about the artwork being viewed
-                    const artworkDetails = getArtworkDetails(window.visualContext.currentArtwork);
-                    response = `Ah, you're looking at "${window.visualContext.currentArtwork}"! ${artworkDetails.description} This piece was created using ${artworkDetails.technique} and represents ${artworkDetails.theme}. Would you like to know more about the creative process, cultural inspiration, or technical aspects?`;
-                } else if (bestMatch.intent === 'current_view' && window.visualContext.currentSection) {
-                    // Provide section overview
-                    response = `You're currently in the ${window.visualContext.currentSection} section. This collection features ${window.visualContext.currentSection === 'animations' ? 'three dynamic motion graphics pieces' : window.visualContext.currentSection === 'illustrations' ? 'three stunning digital illustrations' : window.visualContext.currentSection === 'drawings' ? 'three classical drawing studies' : 'the artist\'s creative workflow'}. Each piece showcases the beautiful fusion of Indian cultural heritage with modern digital techniques. Which specific work interests you?`;
-                } else if (window.visualContext.currentArtwork) {
-                    // User is viewing a specific artwork
-                    response = `I see you're looking at "${window.visualContext.currentArtwork}". This is a remarkable piece from the ${window.visualContext.currentSection} section. Would you like me to tell you more about its creation, cultural significance, or technical aspects?`;
-                } else if (window.visualContext.currentSection) {
-                    // User is in a specific section
-                    response = `I notice you're exploring the ${window.visualContext.currentSection} section. This collection showcases the artist's mastery in ${window.visualContext.currentSection === 'animations' ? 'motion graphics and 3D animation' : window.visualContext.currentSection === 'illustrations' ? 'digital painting and illustration' : window.visualContext.currentSection === 'drawings' ? 'traditional drawing techniques' : 'creative processes'}. What specific aspect interests you?`;
-                } else {
-                    // Smart fallback based on conversation history and message content
-                    const fallbackResponses = [
-                        'I\'m afraid I didn\'t quite catch that. Perhaps you\'d like to know about the animations, illustrations, drawings, or the creative workflow? I\'m here to provide comprehensive insights into any aspect of this beautiful portfolio.',
-                        'That\'s an interesting point! I specialize in discussing the artist\'s creative process, cultural influences, and technical expertise. What aspect would you like me to elaborate on?',
-                        'I want to make sure I address your question perfectly. Could you rephrase it, or would you like me to tell you about the portfolio\'s key sections?',
-                        'My knowledge focuses on this digital art portfolio and the artist\'s creative journey. I\'d be happy to share insights about the artworks, techniques, or cultural inspirations.'
-                    ];
-
-                    // Choose fallback based on conversation context
-                    if (window.conversationContext.topicsDiscussed.length > 0) {
-                        response = fallbackResponses[1]; // More contextual fallback
-                    } else if (isQuestion) {
-                        response = fallbackResponses[2]; // Question-specific fallback
-                    } else {
-                        response = fallbackResponses[0]; // General fallback
+                } else if (bestMatch.intent === 'current_view') {
+                    // Prioritize screen vision analysis if available and recent
+                    if (window.screenVision && window.screenVision.lastAnalysis &&
+                        Date.now() - (window.screenVision.lastAnalysis.timestamp || 0) < 5000) {
+                        const analysis = window.screenVision.lastAnalysis;
+                        if (analysis.artwork) {
+                            const artworkDetails = getArtworkDetails(analysis.artwork);
+                            response = `🎥 I can see you're looking at "${analysis.artwork}"! ${artworkDetails.description} This piece was created using ${artworkDetails.technique} and represents ${artworkDetails.theme}. Would you like to know more about the creative process, cultural inspiration, or technical aspects?`;
+                        } else if (analysis.section) {
+                            response = `🎥 I can see you're in the ${analysis.section} section. This collection features ${analysis.section === 'animations' ? 'three dynamic motion graphics pieces' : analysis.section === 'illustrations' ? 'three stunning digital illustrations' : analysis.section === 'drawings' ? 'three classical drawing studies' : 'the artist\'s creative workflow'}. Each piece showcases the beautiful fusion of Indian cultural heritage with modern digital techniques. Which specific work interests you?`;
+                        }
+                    } else if (window.visualContext.currentArtwork) {
+                        const artworkDetails = getArtworkDetails(window.visualContext.currentArtwork);
+                        response = `Ah, you're looking at "${window.visualContext.currentArtwork}"! ${artworkDetails.description} This piece was created using ${artworkDetails.technique} and represents ${artworkDetails.theme}. Would you like to know more about the creative process, cultural inspiration, or technical aspects?`;
+                    } else if (window.visualContext.currentSection) {
+                        response = `You're currently in the ${window.visualContext.currentSection} section. This collection features ${window.visualContext.currentSection === 'animations' ? 'three dynamic motion graphics pieces' : window.visualContext.currentSection === 'illustrations' ? 'three stunning digital illustrations' : window.visualContext.currentSection === 'drawings' ? 'three classical drawing studies' : 'the artist\'s creative workflow'}. Each piece showcases the beautiful fusion of Indian cultural heritage with modern digital techniques. Which specific work interests you?`;
                     }
+                } else {
+                    // Check for screen vision context even without explicit current_view intent
+                    if (window.screenVision && window.screenVision.lastAnalysis &&
+                        Date.now() - (window.screenVision.lastAnalysis.timestamp || 0) < 5000) {
+                        const analysis = window.screenVision.lastAnalysis;
+                        if (analysis.artwork) {
+                            const artworkDetails = getArtworkDetails(analysis.artwork);
+                            response = `🎥 I can see you're looking at "${analysis.artwork}". This is a remarkable piece from the ${analysis.section} section. Would you like me to tell you more about its creation, cultural significance, or technical aspects?`;
+                        } else if (analysis.section) {
+                            response = `🎥 I notice you're exploring the ${analysis.section} section. This collection showcases the artist's mastery in ${analysis.section === 'animations' ? 'motion graphics and 3D animation' : analysis.section === 'illustrations' ? 'digital painting and illustration' : analysis.section === 'drawings' ? 'traditional drawing techniques' : 'creative processes'}. What specific aspect interests you?`;
+                        }
+                    } else if (window.visualContext.currentArtwork) {
+                        const artworkDetails = getArtworkDetails(window.visualContext.currentArtwork);
+                        response = `I see you're looking at "${window.visualContext.currentArtwork}". This is a remarkable piece from the ${window.visualContext.currentSection} section. Would you like me to tell you more about its creation, cultural significance, or technical aspects?`;
+                    } else if (window.visualContext.currentSection) {
+                        response = `I notice you're exploring the ${window.visualContext.currentSection} section. This collection showcases the artist's mastery in ${window.visualContext.currentSection === 'animations' ? 'motion graphics and 3D animation' : window.visualContext.currentSection === 'illustrations' ? 'digital painting and illustration' : window.visualContext.currentSection === 'drawings' ? 'traditional drawing techniques' : 'creative processes'}. What specific aspect interests you?`;
+                    }
+                }
                 }
 
                 // Add contextual suggestions
@@ -719,10 +748,251 @@ function addTypingEffect(message, callback) {
     typeWriter();
 }
 
+// Screen Vision System for Gemini Live-style context tracking
+class ScreenVision {
+    constructor() {
+        this.stream = null;
+        this.canvas = null;
+        this.context = null;
+        this.isActive = false;
+        this.analysisInterval = null;
+        this.lastAnalysis = null;
+        this.geminiApiKey = null; // Will be set via environment or user input
+
+        // Analysis settings
+        this.analysisIntervalMs = 2000; // Analyze every 2 seconds
+        this.maxRetries = 3;
+        this.retryDelay = 1000;
+    }
+
+    async initialize() {
+        if (!window.platformInfo.supportsScreenVision) {
+            console.log('📱 Screen vision not supported on this platform');
+            return false;
+        }
+
+        try {
+            // Create canvas for screen capture processing
+            this.canvas = document.createElement('canvas');
+            this.canvas.width = 1280;
+            this.canvas.height = 720;
+            this.canvas.style.display = 'none';
+            document.body.appendChild(this.canvas);
+            this.context = this.canvas.getContext('2d');
+
+            console.log('🎥 Screen vision initialized');
+            return true;
+        } catch (error) {
+            console.error('❌ Failed to initialize screen vision:', error);
+            return false;
+        }
+    }
+
+    async startScreenCapture() {
+        if (!window.platformInfo.supportsScreenVision) {
+            console.log('📱 Screen vision not available on this platform');
+            return false;
+        }
+
+        try {
+            // Request screen capture permission
+            this.stream = await navigator.mediaDevices.getDisplayMedia({
+                video: {
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 },
+                    frameRate: { ideal: 5, max: 10 } // Low frame rate for analysis
+                },
+                audio: false
+            });
+
+            console.log('📺 Screen capture started');
+
+            // Set up video element for processing
+            const video = document.createElement('video');
+            video.srcObject = this.stream;
+            video.style.display = 'none';
+            document.body.appendChild(video);
+
+            video.onloadedmetadata = () => {
+                video.play();
+                this.startAnalysis(video);
+            };
+
+            return true;
+        } catch (error) {
+            console.error('❌ Screen capture failed:', error);
+            return false;
+        }
+    }
+
+    startAnalysis(video) {
+        this.isActive = true;
+
+        this.analysisInterval = setInterval(async () => {
+            if (!this.isActive) return;
+
+            try {
+                // Capture current frame
+                this.context.drawImage(video, 0, 0, this.canvas.width, this.canvas.height);
+
+                // Convert to base64 for API
+                const imageData = this.canvas.toDataURL('image/jpeg', 0.8);
+
+                // Analyze with Gemini
+                const analysis = await this.analyzeScreenWithGemini(imageData);
+
+                if (analysis) {
+                    this.updateVisualContextFromAnalysis(analysis);
+                }
+            } catch (error) {
+                console.error('❌ Screen analysis failed:', error);
+            }
+        }, this.analysisIntervalMs);
+    }
+
+    async analyzeScreenWithGemini(imageData) {
+        if (!this.geminiApiKey) {
+            console.warn('⚠️ Gemini API key not set');
+            return null;
+        }
+
+        const prompt = `Analyze this screenshot of a digital art portfolio website. Identify what the user is currently viewing:
+
+1. Which section are they in? (about, animations, illustrations, drawings, workflow, contact)
+2. Which specific artwork are they looking at? (if any)
+3. Are they viewing a modal or popup? (if yes, what artwork)
+4. What is the main focus of their attention?
+
+Return a JSON object with this structure:
+{
+  "section": "section_name",
+  "artwork": "artwork_title_or_null",
+  "isModalOpen": boolean,
+  "confidence": 0.0-1.0,
+  "description": "brief description of what's visible"
+}
+
+Only return valid JSON, no additional text.`;
+
+        try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${this.geminiApiKey}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [
+                            { text: prompt },
+                            {
+                                inline_data: {
+                                    mime_type: "image/jpeg",
+                                    data: imageData.split(',')[1] // Remove data URL prefix
+                                }
+                            }
+                        ]
+                    }],
+                    generationConfig: {
+                        temperature: 0.1,
+                        maxOutputTokens: 500,
+                    }
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Gemini API error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const analysisText = data.candidates[0].content.parts[0].text;
+
+            // Parse JSON response
+            const analysis = JSON.parse(analysisText.replace(/```json\n?|\n?```/g, ''));
+            console.log('🔍 Screen Analysis:', analysis);
+
+            return analysis;
+        } catch (error) {
+            console.error('❌ Gemini API call failed:', error);
+            return null;
+        }
+    }
+
+    updateVisualContextFromAnalysis(analysis) {
+        if (!analysis || analysis.confidence < 0.3) {
+            console.log('⚠️ Low confidence analysis, skipping context update');
+            return;
+        }
+
+        const { section, artwork, isModalOpen, confidence } = analysis;
+
+        // Update visual context based on screen analysis
+        if (isModalOpen && artwork) {
+            updateVisualContext(section, artwork, confidence, 'screen_vision_modal');
+        } else if (artwork) {
+            updateVisualContext(section, artwork, confidence, 'screen_vision_artwork');
+        } else if (section) {
+            updateVisualContext(section, null, confidence, 'screen_vision_section');
+        }
+
+        // Store analysis with timestamp
+        this.lastAnalysis = {
+            ...analysis,
+            timestamp: Date.now()
+        };
+    }
+
+    stop() {
+        this.isActive = false;
+
+        if (this.analysisInterval) {
+            clearInterval(this.analysisInterval);
+            this.analysisInterval = null;
+        }
+
+        if (this.stream) {
+            this.stream.getTracks().forEach(track => track.stop());
+            this.stream = null;
+        }
+
+        if (this.canvas) {
+            this.canvas.remove();
+            this.canvas = null;
+        }
+
+        console.log('🛑 Screen vision stopped');
+    }
+
+    // Fallback to traditional context tracking
+    fallbackToTraditionalTracking() {
+        console.log('🔄 Falling back to traditional visual context tracking');
+        // The existing intersection observers and viewport calculations will continue working
+        // This is called when screen vision fails or is not available
+    }
+
+    setGeminiApiKey(apiKey) {
+        this.geminiApiKey = apiKey;
+        console.log('🔑 Gemini API key set');
+    }
+}
+
+// Global screen vision instance
+window.screenVision = new ScreenVision();
+
 // Initialize Website
 function initializeWebsite() {
     setupAILoadingScreen();
     setupDarkMode();
+    setupScreenVisionControls();
+
+    // Initialize screen vision if supported
+    if (window.platformInfo.supportsScreenVision) {
+        window.screenVision.initialize().then(success => {
+            if (success) {
+                console.log('🎥 Screen vision ready');
+                // Optionally auto-start or wait for user permission
+            }
+        });
+    }
 }
 
 // After loading screen completes
@@ -2052,12 +2322,91 @@ function debugVisualContext() {
     return response;
 }
 
+// Screen Vision Controls
+function setupScreenVisionControls() {
+    if (!window.platformInfo.supportsScreenVision) {
+        console.log('📱 Screen vision controls not available on this platform');
+        return;
+    }
+
+    // Add screen vision toggle to chatbot
+    const chatbotHeader = document.querySelector('.chatbot-header');
+    if (chatbotHeader) {
+        const visionButton = document.createElement('button');
+        visionButton.className = 'screen-vision-toggle';
+        visionButton.innerHTML = '👁️';
+        visionButton.title = 'Toggle Screen Vision (Gemini Live-style)';
+        visionButton.style.cssText = `
+            background: none;
+            border: none;
+            color: #667eea;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        `;
+
+        visionButton.addEventListener('mouseenter', () => {
+            visionButton.style.background = 'rgba(102, 126, 234, 0.1)';
+        });
+
+        visionButton.addEventListener('mouseleave', () => {
+            visionButton.style.background = 'none';
+        });
+
+        visionButton.addEventListener('click', async () => {
+            if (window.screenVision.isActive) {
+                window.screenVision.stop();
+                visionButton.innerHTML = '👁️';
+                visionButton.title = 'Start Screen Vision';
+                visionButton.style.color = '#667eea';
+                visionButton.classList.remove('screen-vision-active');
+            } else {
+                // Check if API key is set
+                if (!window.screenVision.geminiApiKey) {
+                    const apiKey = prompt('Please enter your Google Gemini API key to enable screen vision:');
+                    if (apiKey) {
+                        window.screenVision.setGeminiApiKey(apiKey);
+                    } else {
+                        alert('Screen vision requires a Gemini API key. You can get one from Google AI Studio.');
+                        return;
+                    }
+                }
+
+                const started = await window.screenVision.startScreenCapture();
+                if (started) {
+                    visionButton.innerHTML = '🎥';
+                    visionButton.title = 'Stop Screen Vision (Gemini Live Active)';
+                    visionButton.style.color = '#4CAF50';
+                    visionButton.classList.add('screen-vision-active');
+                }
+            }
+        });
+
+        chatbotHeader.appendChild(visionButton);
+    }
+}
+
 // Add keyboard shortcut for debugging (Ctrl+Shift+D)
 document.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.shiftKey && e.key === 'D') {
         e.preventDefault();
         debugVisualContext();
         console.log('🎯 Debug: Visual context logged to console');
+    }
+});
+
+// Add keyboard shortcut for screen vision (Ctrl+Shift+V)
+document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && e.key === 'V') {
+        e.preventDefault();
+        if (window.platformInfo.supportsScreenVision) {
+            const toggle = document.querySelector('.screen-vision-toggle');
+            if (toggle) {
+                toggle.click();
+            }
+        }
     }
 });
 
