@@ -62,8 +62,8 @@ function detectPlatform() {
 // Global platform info
 window.platformInfo = detectPlatform();
 
-// Temporary: Disable screen vision for testing basic functionality
-window.platformInfo.supportsScreenVision = false;
+// Screen vision is now enabled (was temporarily disabled for testing)
+console.log('🎥 Screen vision status:', window.platformInfo.supportsScreenVision ? 'Enabled' : 'Disabled');
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
