@@ -1679,8 +1679,8 @@ function initializeWebsite() {
     setupDarkMode();
     setupScreenVisionControls();
 
-    // Initialize modern interactions
-    initializeModernInteractions();
+    // Initialize modern interactions (temporarily disabled for testing)
+    // initializeModernInteractions();
 
     // Initialize screen vision if supported
     if (window.platformInfo && window.platformInfo.supportsScreenVision) {
