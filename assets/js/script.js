@@ -62,6 +62,9 @@ function detectPlatform() {
 // Global platform info
 window.platformInfo = detectPlatform();
 
+// Temporary: Disable screen vision for testing basic functionality
+window.platformInfo.supportsScreenVision = false;
+
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, initializing AI portfolio...');
