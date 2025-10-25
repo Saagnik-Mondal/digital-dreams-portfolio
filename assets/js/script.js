@@ -225,25 +225,80 @@ function setupAIChatbot() {
     });
 
     function sendMessage(message, isUser = false) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+        if (isUser) {
+            // User message - display immediately
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message user-message`;
 
-        messageDiv.innerHTML = `
-            <div class="message-avatar">
-                <i class="fas ${isUser ? 'fa-user' : 'fa-brain'}"></i>
-            </div>
-            <div class="message-content">
-                <p>${message}</p>
-                <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
-            </div>
-        `;
+            messageDiv.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="message-content">
+                    <p>${message}</p>
+                    <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                </div>
+            `;
 
-        messages.appendChild(messageDiv);
-        messages.scrollTop = messages.scrollHeight;
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+        } else {
+            // AI message - use typing effect
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ai-message`;
 
-        if (!isUser) {
-            // AI responses
+            messageDiv.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="message-content">
+                    <p></p>
+                    <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                </div>
+            `;
+
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+
+            addTypingEffect(message, () => {
+                // Typing complete
+            });
+        }
+    }
+
+    function handleSend() {
+        const message = input.value.trim();
+        if (message) {
+            sendMessage(message, true);
+            input.value = '';
+
+            // Show typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message ai-message typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="message-content">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            `;
+            messages.appendChild(typingDiv);
+            messages.scrollTop = messages.scrollHeight;
+
+            // Process response after delay
             setTimeout(() => {
+                // Remove typing indicator
+                const typingIndicator = document.querySelector('.typing-indicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+
+                // Generate response
                 const responses = {
                     'hello': 'Namaste! I am Ronica, at your service. I\'ve analyzed this portfolio extensively and am prepared to provide detailed insights into each creative endeavor. How may I be of assistance?',
                     'about': 'Ah, the artist\'s background. This creator is a true maestro of digital craftsmanship with over five years of experience in visual storytelling. Their work beautifully blends traditional Indian aesthetics with modern digital techniques. The emotional depth and cultural sensitivity in their art is quite remarkable.',
@@ -265,17 +320,8 @@ function setupAIChatbot() {
                     }
                 }
 
-                sendMessage(response);
-            }, 1000 + Math.random() * 1000);
-        }
-    }
-
-    function handleSend() {
-        const message = input.value.trim();
-        if (message) {
-            sendMessage(message, true);
-            input.value = '';
-            sendMessage('Processing your inquiry...'); // Ronica thinking
+                sendMessage(response, false);
+            }, 1500 + Math.random() * 1000);
         }
     }
 
@@ -292,9 +338,58 @@ function setupAIChatbot() {
     }, 2000);
 }
 
+// Dark Mode Toggle
+function setupDarkMode() {
+    const themeSwitch = document.getElementById('theme-switch');
+    const body = document.body;
+
+    // Check for saved theme preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-mode');
+        themeSwitch.checked = true;
+    }
+
+    // Theme toggle functionality
+    themeSwitch.addEventListener('change', () => {
+        if (themeSwitch.checked) {
+            body.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            body.classList.remove('dark-mode');
+            localStorage.setItem('theme', 'light');
+        }
+    });
+}
+
+// Typing Effect for Chatbot
+function addTypingEffect(message, callback) {
+    const typingSpeed = 30; // milliseconds per character
+    let index = 0;
+    const target = document.querySelector('.chatbot-messages .message:last-child .message-content p');
+
+    if (!target) return callback();
+
+    const text = message;
+    target.textContent = '';
+
+    const typeWriter = () => {
+        if (index < text.length) {
+            target.textContent += text.charAt(index);
+            index++;
+            setTimeout(typeWriter, typingSpeed);
+        } else {
+            callback();
+        }
+    };
+
+    typeWriter();
+}
+
 // Initialize Website
 function initializeWebsite() {
     setupAILoadingScreen();
+    setupDarkMode();
 }
 
 // After loading screen completes
