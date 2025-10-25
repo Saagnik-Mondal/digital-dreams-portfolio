@@ -992,16 +992,6 @@ function setupAIChatbot() {
                 let response;
                 if (bestMatch.response) {
                     response = bestMatch.response;
-                } else {
-                    // Fallback responses when no intent is matched
-                    const fallbackResponses = [
-                        "I'd be happy to help you learn more about this portfolio! I have detailed information about the animations, illustrations, drawings, and the creative process. What specific aspect interests you?",
-                        "This portfolio showcases the beautiful fusion of Indian cultural heritage with modern digital techniques. I can tell you about the animations, illustrations, drawings, or the artist's workflow. What would you like to explore?",
-                        "I'm here to provide insights into this creative work. Whether you're interested in the technical aspects, cultural influences, or specific artworks, I'm ready to share detailed information. What would you like to know?",
-                        "The portfolio features three main categories: animations, illustrations, and drawings. Each represents a unique blend of tradition and innovation. Which area would you like me to elaborate on?"
-                    ];
-                    response = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
-                }
                 } else if (bestMatch.intent === 'current_view') {
                     // Prioritize screen vision analysis if available and recent
                     if (window.screenVision && window.screenVision.lastAnalysis &&
@@ -1036,6 +1026,17 @@ function setupAIChatbot() {
                     } else if (window.visualContext.currentSection) {
                         response = `I notice you're exploring the ${window.visualContext.currentSection} section. This collection showcases the artist's mastery in ${window.visualContext.currentSection === 'animations' ? 'motion graphics and 3D animation' : window.visualContext.currentSection === 'illustrations' ? 'digital painting and illustration' : window.visualContext.currentSection === 'drawings' ? 'traditional drawing techniques' : 'creative processes'}. What specific aspect interests you?`;
                     }
+                }
+
+                // Fallback responses when no response is set
+                if (!response) {
+                    const fallbackResponses = [
+                        "I'd be happy to help you learn more about this portfolio! I have detailed information about the animations, illustrations, drawings, and the creative process. What specific aspect interests you?",
+                        "This portfolio showcases the beautiful fusion of Indian cultural heritage with modern digital techniques. I can tell you about the animations, illustrations, drawings, or the artist's workflow. What would you like to explore?",
+                        "I'm here to provide insights into this creative work. Whether you're interested in the technical aspects, cultural influences, or specific artworks, I'm ready to share detailed information. What would you like to know?",
+                        "The portfolio features three main categories: animations, illustrations, and drawings. Each represents a unique blend of tradition and innovation. Which area would you like me to elaborate on?"
+                    ];
+                    response = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
                 }
 
                 // Add contextual suggestions
@@ -1690,20 +1691,6 @@ function initializeWebsite() {
                 } else {
                     console.log('📱 Screen vision initialization failed, using fallback methods');
                 }
-            }).catch(error => {
-                console.error('❌ Screen vision initialization error:', error);
-                console.log('📱 Continuing with traditional visual context tracking');
-            });
-        } catch (error) {
-            console.error('❌ Screen vision setup error:', error);
-            console.log('📱 Screen vision unavailable, using traditional methods');
-        }
-    } else {
-        console.log('📱 Screen vision not supported on this platform, using traditional visual context tracking');
-    }
-
-    console.log('✅ Website initialization complete');
-}
             }).catch(error => {
                 console.error('❌ Screen vision initialization error:', error);
                 console.log('📱 Continuing with traditional visual context tracking');
