@@ -15,112 +15,13 @@
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.0.27/bundled/lenis.min.js"></script>
 </head>
 <body>
-    <!-- Advanced Loading Screen -->
-    <div id="loading-screen">
-        <div class="loading-container">
-            <div class="loading-logo">
-                <svg class="logo-svg" viewBox="0 0 200 200">
-                    <defs>
-                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#667eea"/>
-                            <stop offset="50%" stop-color="#764ba2"/>
-                            <stop offset="100%" stop-color="#f093fb"/>
-                        </linearGradient>
-                    </defs>
-                    <circle class="logo-circle" cx="100" cy="100" r="90" fill="none" stroke="url(#logoGradient)" stroke-width="4"/>
-                    <path class="logo-brush" d="M70 70 Q100 50 130 70 Q100 90 70 70" fill="url(#logoGradient)"/>
-                    <path class="logo-paint" d="M80 120 Q100 140 120 120 Q100 100 80 120" fill="url(#logoGradient)" opacity="0.7"/>
-                </svg>
-                <div class="logo-text-loading">DIGITAL DREAMS</div>
-            </div>
-            
-            <div class="loading-progress">
-                <div class="progress-bar">
-                    <div class="progress-fill"></div>
-                </div>
-                <div class="progress-text">
-                    <span class="progress-percentage">0</span>%
-                </div>
-            </div>
-            
-            <div class="loading-stages">
-                <div class="stage active" data-stage="0">Initializing Creative Engine...</div>
-                <div class="stage" data-stage="1">Loading Particle Systems...</div>
-                <div class="stage" data-stage="2">Preparing Interactive Elements...</div>
-                <div class="stage" data-stage="3">Optimizing Visual Effects...</div>
-                <div class="stage" data-stage="4">Almost Ready...</div>
-                <div class="stage" data-stage="5">Welcome to Digital Dreams!</div>
-            </div>
-            
-            <div class="loading-particles">
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-            </div>
-            
-            <div class="loading-orbs">
-                <div class="orb orb-1"></div>
-                <div class="orb orb-2"></div>
-                <div class="orb orb-3"></div>
-                <div class="orb orb-4"></div>
-                <div class="orb orb-5"></div>
-            </div>
-            
-            <div class="loading-morphing-shapes">
-                <div class="morph-shape-loading morph-1"></div>
-                <div class="morph-shape-loading morph-2"></div>
-                <div class="morph-shape-loading morph-3"></div>
-            </div>
-        </div>
-        
-        <div class="loading-background">
-            <div class="bg-gradient"></div>
-            <div class="bg-shapes">
-                <div class="shape shape-1"></div>
-                <div class="shape shape-2"></div>
-                <div class="shape shape-3"></div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Custom Cursor -->
-    <div class="custom-cursor">
-        <div class="cursor-dot"></div>
-        <div class="cursor-outline"></div>
-    </div>
-    
-    <!-- Morphing Background -->
-    <div class="morphing-bg">
-        <div class="morph-shape"></div>
-        <div class="morph-shape"></div>
-        <div class="morph-shape"></div>
-    </div>
-    
-    <!-- Floating Elements -->
-    <div class="floating-elements">
-        <div class="floating-element"></div>
-        <div class="floating-element"></div>
-        <div class="floating-element"></div>
-    </div>
 
-    <!-- Enhanced Parallax Background Elements -->
-    <div class="parallax-bg-elements">
-        <div class="parallax-shape parallax-shape-1" data-speed="0.2"></div>
-        <div class="parallax-shape parallax-shape-2" data-speed="0.4"></div>
-        <div class="parallax-shape parallax-shape-3" data-speed="0.3"></div>
-        <div class="parallax-shape parallax-shape-4" data-speed="0.6"></div>
-        <div class="parallax-shape parallax-shape-5" data-speed="0.1"></div>
-        <div class="parallax-shape parallax-shape-6" data-speed="0.5"></div>
-    </div>
+    
+
+    
+
+
+
 
     <!-- Navigation -->
     <nav class="navbar">
@@ -128,19 +29,19 @@
             <div class="progress-line"></div>
         </div>
         <div class="nav-container">
-            <div class="logo magnetic-element" data-magnetic>
+            <div class="logo">
                 <span class="logo-text">Digital Dreams</span>
                 <div class="logo-subtitle">Portfolio</div>
             </div>
             <ul class="nav-menu">
-                <li><a href="#home" class="nav-link magnetic-element" data-magnetic>Home</a></li>
-                <li><a href="#about" class="nav-link magnetic-element" data-magnetic>About</a></li>
-                <li><a href="#animations" class="nav-link magnetic-element" data-magnetic>Animations</a></li>
-                <li><a href="#illustrations" class="nav-link magnetic-element" data-magnetic>Illustrations</a></li>
-                <li><a href="#drawings" class="nav-link magnetic-element" data-magnetic>Drawings</a></li>
-                <li><a href="#contact" class="nav-link magnetic-element" data-magnetic>Contact</a></li>
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#animations" class="nav-link">Animations</a></li>
+                <li><a href="#illustrations" class="nav-link">Illustrations</a></li>
+                <li><a href="#drawings" class="nav-link">Drawings</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
-            <div class="hamburger magnetic-element" data-magnetic>
+            <div class="hamburger">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -150,43 +51,30 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <div class="hero-background">
-            <canvas id="particle-canvas"></canvas>
-            <canvas id="fluid-canvas" class="fluid-canvas"></canvas>
-            <div id="webgl-container" class="webgl-container"></div>
-        </div>
         <div class="hero-content">
             <div class="hero-text">
-                <h1 class="hero-title" data-text="Bringing Ideas To Life">
-                    <span class="title-line text-reveal">Bringing Ideas</span>
-                    <span class="title-line text-reveal">To Life</span>
+                <h1 class="hero-title">
+                    <span class="title-line">Bringing Ideas</span>
+                    <span class="title-line">To Life</span>
                 </h1>
                 <p class="hero-subtitle">Through Animation, Illustration & Art</p>
                 <div class="hero-buttons">
-                    <button class="btn btn-primary magnetic-btn" onclick="scrollToSection('animations')" data-magnetic>
-                        <span class="btn-text">
-                            <i class="fas fa-play"></i> View Animations
-                        </span>
-                        <div class="btn-bg"></div>
-                        <div class="btn-ripple"></div>
+                    <button class="btn btn-primary" onclick="scrollToSection('animations')">
+                        <i class="fas fa-play"></i> View Animations
                     </button>
-                    <button class="btn btn-secondary magnetic-btn" onclick="scrollToSection('about')" data-magnetic>
-                        <span class="btn-text">
-                            <i class="fas fa-user"></i> About Me
-                        </span>
-                        <div class="btn-bg"></div>
-                        <div class="btn-ripple"></div>
+                    <button class="btn btn-secondary" onclick="scrollToSection('about')">
+                        <i class="fas fa-user"></i> About Me
                     </button>
                 </div>
             </div>
         </div>
         <div class="scroll-indicator">
-            <div class="scroll-arrow"></div>
+            <div class="scroll-mouse"></div>
         </div>
     </section>
 
     <!-- About Section -->
-    <section id="about" class="about section-parallax" data-parallax="true">
+    <section id="about" class="about">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">About Me</h2>
@@ -223,7 +111,7 @@
     </section>
 
     <!-- Animations Section -->
-    <section id="animations" class="portfolio-section parallax-container" data-parallax="true">
+    <section id="animations" class="portfolio-section">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Animations</h2>
@@ -278,7 +166,7 @@
     </section>
 
     <!-- Illustrations Section -->
-    <section id="illustrations" class="portfolio-section parallax-container" data-parallax="true">
+    <section id="illustrations" class="portfolio-section">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Illustrations</h2>
@@ -332,7 +220,7 @@
     </section>
 
     <!-- Drawings Section -->
-    <section id="drawings" class="portfolio-section parallax-container" data-parallax="true">
+    <section id="drawings" class="portfolio-section">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Drawings</h2>
@@ -466,36 +354,8 @@
         </div>
     </div>
 
-    <script src="assets/js/webgl-effects.js"></script>
     <script src="assets/js/script.js"></script>
     
-    <!-- Enhanced Loading & Parallax Integration Script -->
-    <script>
-        // Runs after all scripts are loaded
-        window.addEventListener('load', function() {
-            console.log('=== ENHANCED LOADING & PARALLAX SYSTEM ===');
-            
-            // Check enhanced loading elements
-            const loadingScreen = document.querySelector('#loading-screen');
-            const morphingShapes = document.querySelectorAll('.morph-shape-loading');
-            const enhancedOrbs = document.querySelectorAll('.orb');
-            console.log('✓ Enhanced loading screen found:', !!loadingScreen);
-            console.log('✓ Morphing shapes found:', morphingShapes.length);
-            console.log('✓ Enhanced orbs found:', enhancedOrbs.length);
-            
-            // Check integrated parallax elements
-            const parallaxShapes = document.querySelectorAll('.parallax-shape');
-            const parallaxSections = document.querySelectorAll('[data-parallax="true"]');
-            console.log('✓ Parallax background shapes found:', parallaxShapes.length);
-            console.log('✓ Parallax-enabled sections found:', parallaxSections.length);
-            
-            // Check if integrated functions exist
-            console.log('✓ setupIntegratedParallax function exists:', typeof setupIntegratedParallax === 'function');
-            console.log('✓ setupEnhancedLoadingScreen function exists:', typeof setupEnhancedLoadingScreen === 'function');
-            
-            console.log('=== INTEGRATION COMPLETE ===');
-            console.log('Enhanced loading and integrated parallax system active!');
-        });
-    </script>
+
 </body>
 </html>
