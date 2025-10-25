@@ -318,8 +318,22 @@ function setupAIChatbot() {
 
     // Welcome message after a delay
     setTimeout(() => {
+        console.log('Sending welcome message...');
         sendMessage('Namaste! I am Ronica, your intelligent creative assistant. I\'ve been designed to help you navigate through this digital portfolio and provide insights into the creative process. How may I assist you today?');
-    }, 2000);
+    }, 1000); // Reduced delay
+
+    // Temporary test button
+    const testBtn = document.getElementById('test-chatbot');
+    if (testBtn) {
+        testBtn.addEventListener('click', () => {
+            console.log('Test button clicked - opening chatbot');
+            if (windowEl) {
+                windowEl.style.display = 'flex';
+                isOpen = true;
+                toggle.style.transform = 'scale(0.9)';
+            }
+        });
+    }
 }
 
 // Dark Mode Toggle
