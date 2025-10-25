@@ -1205,14 +1205,17 @@ function openPortfolioModal(card) {
     const modalTitle = document.querySelector('.modal-title');
     const modalDescription = document.querySelector('.modal-description');
     const modalImage = document.querySelector('.modal-image');
-    
+
     const title = card.querySelector('h3').textContent;
     const description = card.querySelector('p').textContent;
     const category = card.closest('.portfolio-item').dataset.category;
-    
+
+    // Update visual context when modal opens (highest confidence)
+    updateVisualContext(category, title, 1.0, 'modal');
+
     modalTitle.textContent = title;
     modalDescription.textContent = `${description} - This is a ${category} piece showcasing creativity and technical skill. Full details and process documentation would be available here.`;
-    
+
     // Add placeholder content based on category
     if (category === 'animation') {
         modalImage.innerHTML = '<i class="fas fa-play-circle" style="font-size: 4rem; color: #f093fb;"></i>';
@@ -1221,10 +1224,10 @@ function openPortfolioModal(card) {
     } else if (category === 'drawing') {
         modalImage.innerHTML = '<i class="fas fa-pencil-alt" style="font-size: 4rem; color: #4facfe;"></i>';
     }
-    
+
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden';
-    
+
     // Animate modal appearance
     setTimeout(() => {
         modal.style.opacity = '1';
@@ -1397,7 +1400,7 @@ function calculateViewportContext() {
     // Find which section is most visible
     const sections = ['about', 'animations', 'illustrations', 'drawings', 'workflow', 'contact'];
     let bestSection = null;
-    let maxVisibility = 0;
+    let maxSectionVisibility = 0;
 
     sections.forEach(sectionId => {
         const element = document.getElementById(sectionId);
@@ -1413,18 +1416,61 @@ function calculateViewportContext() {
             const visibleHeight = Math.max(0, visibleBottom - visibleTop);
             const visibilityRatio = visibleHeight / elementHeight;
 
-            if (visibilityRatio > maxVisibility && visibilityRatio > 0.3) { // At least 30% visible
-                maxVisibility = visibilityRatio;
+            if (visibilityRatio > maxSectionVisibility && visibilityRatio > 0.3) { // At least 30% visible
+                maxSectionVisibility = visibilityRatio;
                 bestSection = sectionId;
             }
         }
     });
 
-    if (bestSection && bestSection !== window.visualContext.currentSection) {
-        updateVisualContext(bestSection, null, maxVisibility, 'viewport_scroll');
+    // Now check for individual artworks in the best section
+    let bestArtwork = null;
+    let maxArtworkVisibility = 0;
+
+    if (bestSection) {
+        const sectionElement = document.getElementById(bestSection);
+        if (sectionElement) {
+            const portfolioCards = sectionElement.querySelectorAll('.portfolio-card');
+
+            portfolioCards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const cardTop = rect.top + scrollY;
+                const cardBottom = rect.bottom + scrollY;
+                const cardHeight = rect.height;
+
+                // Calculate how much of the card is visible
+                const visibleTop = Math.max(scrollY, cardTop);
+                const visibleBottom = Math.min(scrollY + viewportHeight, cardBottom);
+                const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+                const visibilityRatio = visibleHeight / cardHeight;
+
+                // Check if card is significantly visible (at least 50% and in viewport center area)
+                const cardCenterY = cardTop + cardHeight / 2;
+                const viewportCenterY = scrollY + viewportHeight / 2;
+                const distanceFromCenter = Math.abs(cardCenterY - viewportCenterY);
+                const centerWeight = Math.max(0, 1 - (distanceFromCenter / (viewportHeight / 2)));
+
+                const weightedVisibility = visibilityRatio * (0.7 + 0.3 * centerWeight);
+
+                if (weightedVisibility > maxArtworkVisibility && visibilityRatio > 0.5) {
+                    maxArtworkVisibility = weightedVisibility;
+                    const titleElement = card.querySelector('h3');
+                    bestArtwork = titleElement ? titleElement.textContent.trim() : null;
+                }
+            });
+        }
     }
 
-    return bestSection;
+    // Update context based on what we found
+    if (bestArtwork && maxArtworkVisibility > 0.6) {
+        // High confidence artwork detection
+        updateVisualContext(bestSection, bestArtwork, maxArtworkVisibility, 'viewport_artwork');
+    } else if (bestSection && bestSection !== window.visualContext.currentSection) {
+        // Fallback to section tracking
+        updateVisualContext(bestSection, null, maxSectionVisibility, 'viewport_scroll');
+    }
+
+    return { section: bestSection, artwork: bestArtwork };
 }
 
 function setViewingModal(isViewing) {
@@ -1529,9 +1575,10 @@ function setupViewportContextTracking() {
     setTimeout(calculateViewportContext, 1000);
 }
 
-// Intelligent section context tracking
+// Intelligent section and artwork context tracking
 function setupSectionContextTracking() {
-    const observerOptions = {
+    // Section observer
+    const sectionObserverOptions = {
         threshold: [0.1, 0.3, 0.5, 0.7],
         rootMargin: '-10% 0px -10% 0px'
     };
@@ -1557,11 +1604,40 @@ function setupSectionContextTracking() {
                 updateVisualContext(sectionId, null, maxRatio, 'section_visibility');
             }
         }
-    }, observerOptions);
+    }, sectionObserverOptions);
 
     // Observe all main sections
     document.querySelectorAll('section[id]').forEach(section => {
         sectionObserver.observe(section);
+    });
+
+    // Artwork observer for individual portfolio cards
+    const artworkObserverOptions = {
+        threshold: [0.2, 0.4, 0.6, 0.8],
+        rootMargin: '-20% 0px -20% 0px'
+    };
+
+    const artworkObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const card = entry.target;
+            const item = card.closest('.portfolio-item');
+            if (!item) return;
+
+            const category = item.dataset.category;
+            const titleElement = card.querySelector('h3');
+            const title = titleElement ? titleElement.textContent.trim() : 'unknown';
+
+            if (entry.isIntersecting && entry.intersectionRatio > 0.4) {
+                // Card is prominently visible
+                console.log(`👁️ Artwork "${title}" is now visible (${Math.round(entry.intersectionRatio * 100)}% visible)`);
+                updateVisualContext(category, title, entry.intersectionRatio, 'artwork_visibility');
+            }
+        });
+    }, artworkObserverOptions);
+
+    // Observe all portfolio cards
+    document.querySelectorAll('.portfolio-card').forEach(card => {
+        artworkObserver.observe(card);
     });
 }
 
