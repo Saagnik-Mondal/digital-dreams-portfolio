@@ -108,25 +108,35 @@ function setupAILoadingScreen() {
 
 // AI Chatbot
 function setupAIChatbot() {
+    console.log('Setting up AI chatbot...');
     const chatbot = document.getElementById('ai-chatbot');
     const toggle = document.querySelector('.chatbot-toggle');
-    const window = document.querySelector('.chatbot-window');
+    const windowEl = document.querySelector('.chatbot-window');
     const closeBtn = document.querySelector('.chatbot-close');
     const input = document.querySelector('.chat-input');
     const sendBtn = document.querySelector('.send-btn');
     const messages = document.querySelector('.chatbot-messages');
 
+    console.log('Chatbot elements found:', { chatbot, toggle, windowEl, closeBtn, input, sendBtn, messages });
+
+    if (!chatbot || !toggle || !windowEl) {
+        console.error('Chatbot elements not found!');
+        return;
+    }
+
     let isOpen = false;
 
     toggle.addEventListener('click', () => {
+        console.log('Chatbot toggle clicked');
         isOpen = !isOpen;
-        window.style.display = isOpen ? 'flex' : 'none';
+        windowEl.style.display = isOpen ? 'flex' : 'none';
         toggle.style.transform = isOpen ? 'scale(0.9)' : 'scale(1)';
     });
 
     closeBtn.addEventListener('click', () => {
+        console.log('Chatbot close clicked');
         isOpen = false;
-        window.style.display = 'none';
+        windowEl.style.display = 'none';
         toggle.style.transform = 'scale(1)';
     });
 
@@ -206,6 +216,26 @@ function initializeWebsite() {
 // After loading screen completes
 function startMainExperience() {
     console.log('Starting main experience...');
+
+    // Make sure main content is visible
+    document.body.style.overflow = 'auto';
+    document.body.style.height = 'auto';
+
+    // Test if elements exist and are visible
+    const hero = document.querySelector('.hero');
+    const about = document.querySelector('.about');
+    const navbar = document.querySelector('.navbar');
+
+    console.log('Navigation element:', navbar);
+    console.log('Hero element:', hero);
+    console.log('About element:', about);
+    console.log('Chatbot element:', document.getElementById('ai-chatbot'));
+
+    // Force visibility
+    if (hero) hero.style.display = 'block';
+    if (about) about.style.display = 'block';
+    if (navbar) navbar.style.display = 'block';
+
     setupNavigation();
     setupScrollAnimations();
     setupPortfolioInteractions();
@@ -214,6 +244,14 @@ function startMainExperience() {
     setupModalSystem();
     setupSmoothScrolling();
     setupScrollProgress();
+
+    // Force show chatbot
+    const chatbot = document.getElementById('ai-chatbot');
+    if (chatbot) {
+        chatbot.style.display = 'block';
+        console.log('Chatbot should be visible now');
+    }
+
     console.log('Main experience initialized!');
 }
 
@@ -221,14 +259,18 @@ function startMainExperience() {
 
 // Scroll Progress
 function setupScrollProgress() {
+    console.log('Setting up scroll progress...');
     const progressLine = document.querySelector('.progress-line');
-    
+
     window.addEventListener('scroll', () => {
         const scrolled = window.scrollY;
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
         const progress = (scrolled / maxScroll) * 100;
-        
-        progressLine.style.width = progress + '%';
+
+        if (progressLine) {
+            progressLine.style.width = progress + '%';
+        }
+        console.log('Scroll progress:', progress + '%');
     });
 }
 
@@ -431,10 +473,13 @@ function setupEnhancedLoadingScreen() {
 
 // Navigation Setup
 function setupNavigation() {
+    console.log('Setting up navigation...');
     const navbar = document.querySelector('.navbar');
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
     const navLinks = document.querySelectorAll('.nav-link');
+
+    console.log('Navigation elements:', { navbar, hamburger, navMenu, navLinks });
     
     // Mobile menu toggle
     hamburger.addEventListener('click', () => {

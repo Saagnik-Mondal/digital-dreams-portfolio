@@ -294,10 +294,13 @@
 
 /* AI Chatbot */
 .ai-chatbot {
-    position: fixed;
+    position: fixed !important;
     bottom: 20px;
     right: 20px;
     z-index: 1000;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .chatbot-toggle {
@@ -700,12 +703,14 @@ html {
 /* Hero Section */
 .hero {
     min-height: 100vh;
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     position: relative;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
     overflow: hidden;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .hero-content {
@@ -818,6 +823,9 @@ html {
     padding: 5rem 0;
     background: white;
     color: var(--text-primary);
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .section-header {
