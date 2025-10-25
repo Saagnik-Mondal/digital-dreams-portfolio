@@ -278,47 +278,296 @@ function setupAIChatbot() {
                     typingIndicator.remove();
                 }
 
-                // Generate response
-                const responses = {
-                    'greetings': 'Namaste! I am Ronica, at your service. I\'ve analyzed this portfolio extensively and am prepared to provide detailed insights into each creative endeavor. How may I be of assistance?',
-                    'about': 'Ah, the artist\'s background. This creator is a true maestro of digital craftsmanship with over five years of experience in visual storytelling. Their work beautifully blends traditional Indian aesthetics with modern digital techniques. The emotional depth and cultural sensitivity in their art is quite remarkable.',
-                    'animations': 'The animations section features three remarkable pieces: "Divine Dance" - a Kathakali-inspired 3D character animation, "Mystic Forest" - an interactive forest with mythical creatures from Indian folklore, and "Cosmic Mandala" - an abstract exploration of the universe through traditional mandala patterns. Each demonstrates the beautiful fusion of cultural heritage and cutting-edge technology.',
-                    'illustrations': 'The illustrations showcase three beautiful pieces: "Sacred Waters" - a photorealistic digital painting of the Ganges at dawn, "Goddess Awakening" - a contemporary interpretation of Durga blending traditional iconography with modern aesthetics, and "Urban Mandala" - a geometric design incorporating Mumbai\'s architecture. Each piece tells a unique story of cultural fusion.',
-                    'drawings': 'The drawings section includes "Charcoal Portrait" - an intimate study using traditional charcoal techniques, "Ink Mandala" - an intricate mandala design created with dip pen and ink exploring spiritual geometry, and "Urban Sketch" - a mixed media capture of Mumbai street life. These pieces showcase the artist\'s foundation in classical techniques with contemporary vision.',
-                    'workflow': 'The creative process follows a beautifully structured approach: conceptualization sparks the vision, research provides depth, digital creation brings it to life, and refinement ensures perfection. Each phase is executed with the precision and artistic integrity that reflects our cultural values.',
-                    'contact': 'Most certainly. The artist welcomes professional inquiries and creative collaborations with great enthusiasm. I suggest reaching out to discuss potential projects - their expertise in blending traditional Indian aesthetics with modern digital art would be invaluable to any endeavor.',
-                    'default': 'I\'m afraid I didn\'t quite catch that. Perhaps you\'d like to know about the animations, illustrations, drawings, or the creative workflow? I\'m here to provide comprehensive insights into any aspect of this beautiful portfolio.'
-                };
-
+                // Advanced NLP Processing
                 const lowerMessage = message.toLowerCase();
-                let response = responses.default;
                 console.log('User message:', message);
-                console.log('Lower case message:', lowerMessage);
+                console.log('Processing with NLP...');
 
-                // Improved keyword matching with multiple variations
-                const keywords = {
-                    'greetings': ['hello', 'hi', 'hey', 'namaste', 'greetings', 'good morning', 'good afternoon', 'good evening', 'howdy', 'hola'],
-                    'about': ['about', 'artist', 'creator', 'background', 'experience', 'who', 'profile', 'bio', 'biography'],
-                    'animations': ['animation', 'animations', 'animated', 'motion', 'moving', 'divine dance', 'mystic forest', 'cosmic mandala'],
-                    'illustrations': ['illustration', 'illustrations', 'digital art', 'sacred waters', 'goddess awakening', 'urban mandala'],
-                    'drawings': ['drawing', 'drawings', 'sketch', 'sketches', 'charcoal', 'ink', 'urban sketch', 'mandala'],
-                    'workflow': ['workflow', 'process', 'how', 'creative', 'steps', 'method', 'approach'],
-                    'contact': ['contact', 'email', 'phone', 'reach', 'hire', 'work', 'collaborate', 'project']
+                // NLP Intent Recognition
+                const intents = {
+                    greeting: {
+                        patterns: [
+                            /\b(hi|hello|hey|namaste|greetings|good\s+(morning|afternoon|evening)|howdy|hola|salam|bonjour|ciao)\b/i,
+                            /\b(what'?s up|sup|yo|hai)\b/i,
+                            /\b(start|begin|initiate)\b.*\b(conversation|chat|talk)\b/i
+                        ],
+                        responses: [
+                            "Namaste! I am Ronica, your intelligent creative assistant. I've analyzed this portfolio extensively and am prepared to provide detailed insights into each creative endeavor. How may I be of assistance?",
+                            "Greetings! I'm Ronica, designed to help you explore this beautiful portfolio. What would you like to know about the artist's work?",
+                            "Hello there! I'm Ronica, your AI guide through this digital art collection. How can I help you today?"
+                        ]
+                    },
+
+                    about_artist: {
+                        patterns: [
+                            /\b(about|tell me about|who is|artist|creator|background|experience|bio|biography|profile)\b/i,
+                            /\b(how long|years|experience|skilled|expert)\b/i,
+                            /\b(what.*do|specializes|focus|work)\b/i
+                        ],
+                        responses: [
+                            "Ah, the artist's background. This creator is a true maestro of digital craftsmanship with over five years of experience in visual storytelling. Their work beautifully blends traditional Indian aesthetics with modern digital techniques. The emotional depth and cultural sensitivity in their art is quite remarkable.",
+                            "This talented artist brings five years of experience in digital art, seamlessly merging Indian cultural heritage with contemporary design. Their work tells stories that resonate deeply with audiences worldwide.",
+                            "The creator behind this portfolio is a skilled digital artist with extensive experience in visual storytelling, combining traditional Indian art forms with modern digital techniques."
+                        ]
+                    },
+
+                    animations: {
+                        patterns: [
+                            /\b(animation|animations|animated|motion|moving|video|film|cinematic)\b/i,
+                            /\b(divine dance|mystic forest|cosmic mandala|dance|forest|mandala)\b/i,
+                            /\b(show.*animation|see.*animation|what.*animation)\b/i
+                        ],
+                        responses: [
+                            'The animations section features three remarkable pieces: "Divine Dance" - a Kathakali-inspired 3D character animation, "Mystic Forest" - an interactive forest with mythical creatures from Indian folklore, and "Cosmic Mandala" - an abstract exploration of the universe through traditional mandala patterns. Each demonstrates the beautiful fusion of cultural heritage and cutting-edge technology.',
+                            'Let me show you the animated works: "Divine Dance" brings traditional Kathakali dance to life in 3D, "Mystic Forest" features interactive mythical creatures from Indian folklore, and "Cosmic Mandala" explores universal patterns through mesmerizing motion graphics.',
+                            'The animation collection includes: Kathakali-inspired character animation, interactive forest scenes with folklore elements, and abstract mandala explorations. Would you like me to elaborate on any specific piece?'
+                        ]
+                    },
+
+                    illustrations: {
+                        patterns: [
+                            /\b(illustration|illustrations|digital.*art|painting|drawing|graphic|design)\b/i,
+                            /\b(sacred waters|goddess awakening|urban mandala|water|goddess|urban)\b/i,
+                            /\b(show.*illustration|see.*illustration|what.*illustration)\b/i
+                        ],
+                        responses: [
+                            'The illustrations showcase three beautiful pieces: "Sacred Waters" - a photorealistic digital painting of the Ganges at dawn, "Goddess Awakening" - a contemporary interpretation of Durga blending traditional iconography with modern aesthetics, and "Urban Mandala" - a geometric design incorporating Mumbai\'s architecture. Each piece tells a unique story of cultural fusion.',
+                            'The digital illustrations include: A serene depiction of the sacred Ganges river, a modern take on Goddess Durga awakening, and an urban mandala inspired by Mumbai\'s architecture. These pieces beautifully merge tradition with contemporary digital art.',
+                            'You\'ll find stunning digital illustrations featuring sacred waters of the Ganges, a contemporary goddess interpretation, and urban mandala designs. Each artwork carries deep cultural significance while embracing modern aesthetics.'
+                        ]
+                    },
+
+                    drawings: {
+                        patterns: [
+                            /\b(drawing|drawings|sketch|sketches|charcoal|ink|pencil|traditional)\b/i,
+                            /\b(charcoal portrait|ink mandala|urban sketch|portrait|mandala|sketch)\b/i,
+                            /\b(show.*drawing|see.*drawing|what.*drawing)\b/i
+                        ],
+                        responses: [
+                            'The drawings section includes "Charcoal Portrait" - an intimate study using traditional charcoal techniques, "Ink Mandala" - an intricate mandala design created with dip pen and ink exploring spiritual geometry, and "Urban Sketch" - a mixed media capture of Mumbai street life. These pieces showcase the artist\'s foundation in classical techniques with contemporary vision.',
+                            'The traditional drawing collection features: A charcoal portrait capturing human emotion, an intricate ink mandala with spiritual geometry, and an urban sketch of Mumbai street life using mixed media techniques.',
+                            'These classical drawings demonstrate mastery of traditional techniques: charcoal portraiture, dip pen mandala art, and mixed media urban sketching. Each piece reflects the artist\'s deep understanding of both traditional and contemporary approaches.'
+                        ]
+                    },
+
+                    workflow: {
+                        patterns: [
+                            /\b(workflow|process|how.*work|steps|method|approach|creative.*process)\b/i,
+                            /\b(create|make|design|develop|produce)\b/i,
+                            /\b(technique|method|approach|way)\b/i
+                        ],
+                        responses: [
+                            'The creative process follows a beautifully structured approach: conceptualization sparks the vision, research provides depth, digital creation brings it to life, and refinement ensures perfection. Each phase is executed with the precision and artistic integrity that reflects our cultural values.',
+                            'The workflow involves four key phases: 1) Conceptualization - developing the core idea, 2) Research - gathering inspiration and cultural references, 3) Digital Creation - bringing concepts to life using modern tools, and 4) Refinement - perfecting every detail.',
+                            'This artist follows a systematic creative process: starting with conceptualization, moving through research and development, executing with digital precision, and finishing with meticulous refinement. Each step honors both tradition and innovation.'
+                        ]
+                    },
+
+                    contact: {
+                        patterns: [
+                            /\b(contact|email|phone|reach|hire|work|collaborate|project|commission)\b/i,
+                            /\b(get.*touch|connect|message|call|write)\b/i,
+                            /\b(work.*with|hire.*artist|commission.*art)\b/i
+                        ],
+                        responses: [
+                            'Most certainly. The artist welcomes professional inquiries and creative collaborations with great enthusiasm. I suggest reaching out to discuss potential projects - their expertise in blending traditional Indian aesthetics with modern digital art would be invaluable to any endeavor.',
+                            'I\'d be happy to help you connect! The artist is always excited about new creative collaborations. You can reach out via email or phone to discuss your project ideas. Their unique blend of traditional and modern techniques could be perfect for your vision.',
+                            'Wonderful! The artist loves working on meaningful projects. Feel free to reach out for collaborations, commissions, or professional inquiries. Their expertise in cultural fusion and digital art makes them an excellent partner for creative endeavors.'
+                        ]
+                    },
+
+                    appreciation: {
+                        patterns: [
+                            /\b(amazing|beautiful|wonderful|great|awesome|love|like|impressed|stunning|brilliant)\b/i,
+                            /\b(thank|thanks|appreciate|grateful)\b/i,
+                            /\b(good|nice|excellent|fantastic|superb)\b/i
+                        ],
+                        responses: [
+                            'Thank you for your kind words! I\'m delighted that you appreciate the artistry and cultural depth in this portfolio. The creator pours their heart and soul into each piece, honoring both tradition and innovation.',
+                            'Your appreciation means a lot! This portfolio represents the beautiful marriage of ancient Indian wisdom and modern digital craftsmanship. Each piece tells a story that transcends time and culture.',
+                            'I\'m touched by your positive feedback! The artist\'s work is indeed special - a harmonious blend of traditional Indian aesthetics with contemporary digital techniques that creates something truly unique and meaningful.'
+                        ]
+                    },
+
+                    questions: {
+                        patterns: [
+                            /\b(what|how|when|where|why|who|which|whose)\b.*\?/i,
+                            /\b(tell me|explain|describe|show me)\b/i,
+                            /\b(can you|could you|would you)\b/i
+                        ],
+                        responses: [
+                            'I\'d be happy to help answer your questions! Feel free to ask about the artist\'s background, specific artworks, creative process, or how to get in touch for collaborations.',
+                            'Great question! I have detailed information about the portfolio, the artist\'s journey, and the creative process behind each piece. What specifically would you like to know?',
+                            'I\'m here to provide comprehensive insights into this creative portfolio. Whether you want to know about the artworks, the artist, or the creative process, I\'m ready to share detailed information.'
+                        ]
+                    },
+
+                    specific_artwork: {
+                        patterns: [
+                            /\b(divine dance|mystic forest|cosmic mandala|sacred waters|goddess awakening|urban mandala|charcoal portrait|ink mandala|urban sketch)\b/i,
+                            /\b(tell me about|show me|what about|more about)\b.*\b(dance|forest|mandala|water|goddess|portrait|sketch)\b/i
+                        ],
+                        responses: [
+                            'I\'d be delighted to share more about that specific piece! Each artwork has its own unique story and cultural significance. Which particular artwork caught your attention?',
+                            'Wonderful choice! That piece represents a beautiful fusion of traditional Indian elements with modern digital techniques. Would you like me to elaborate on its creation process or cultural inspiration?',
+                            'Excellent selection! That artwork showcases the artist\'s mastery in blending ancient wisdom with contemporary aesthetics. I can tell you about the techniques used, the inspiration behind it, or how it fits into the overall portfolio vision.'
+                        ]
+                    },
+
+                    technical_questions: {
+                        patterns: [
+                            /\b(software|tools|programs|photoshop|blender|after effects|cinema 4d|procreate|illustrator)\b/i,
+                            /\b(how.*made|what.*used|technique|method|process|create)\b/i,
+                            /\b(digital|3d|animation|render|effects)\b/i
+                        ],
+                        responses: [
+                            'The artist employs a sophisticated toolkit including Adobe Creative Suite (Photoshop, Illustrator, After Effects), Blender for 3D work, Cinema 4D for motion graphics, and Procreate for digital painting. Each tool is chosen specifically for the creative vision of each piece.',
+                            'Technically speaking, this portfolio showcases expertise in multiple digital mediums: 2D/3D animation, digital painting, vector illustration, and motion graphics. The artist adapts their technical approach to best serve each creative concept.',
+                            'The technical craftsmanship is impressive - combining traditional artistic principles with cutting-edge digital tools. From charcoal studies to complex 3D animations, each piece demonstrates deep technical proficiency and artistic vision.'
+                        ]
+                    },
+
+                    cultural_questions: {
+                        patterns: [
+                            /\b(culture|cultural|indian|tradition|traditional|folklore|mythology|hindu|spiritual|sacred)\b/i,
+                            /\b(kathakali|durga|ganges|mandala|mythical|folklore|spiritual)\b/i,
+                            /\b(indian.*art|traditional.*indian|cultural.*fusion)\b/i
+                        ],
+                        responses: [
+                            'The cultural depth in this portfolio is truly remarkable. Each piece honors Indian traditions while embracing modern expression. The artist beautifully weaves ancient wisdom with contemporary digital techniques, creating work that resonates across cultures and generations.',
+                            'Culturally, this portfolio represents a bridge between India\'s rich artistic heritage and modern digital innovation. From Kathakali dance forms to sacred mandala geometry, each piece carries deep cultural significance while speaking to universal themes.',
+                            'The cultural fusion is what makes this work so special. Traditional Indian motifs, spiritual symbolism, and classical techniques are reimagined through digital mediums, creating contemporary art that honors ancient wisdom while embracing modern aesthetics.'
+                        ]
+                    }
                 };
 
-                // Check for keyword matches
-                for (const [category, words] of Object.entries(keywords)) {
-                    for (const word of words) {
-                        if (lowerMessage.includes(word)) {
-                            response = responses[category];
-                            console.log(`✅ Matched keyword: "${word}" in category: "${category}"`);
-                            break;
+                // Sentiment Analysis
+                const positiveWords = ['amazing', 'beautiful', 'wonderful', 'great', 'awesome', 'love', 'like', 'impressed', 'stunning', 'brilliant', 'excellent', 'fantastic', 'superb', 'incredible', 'magnificent', 'spectacular'];
+                const questionWords = ['what', 'how', 'when', 'where', 'why', 'who', 'which', 'whose', 'can', 'could', 'would', 'do', 'does', 'is', 'are', 'tell', 'show', 'explain'];
+
+                const hasPositiveSentiment = positiveWords.some(word => lowerMessage.includes(word));
+                const isQuestion = questionWords.some(word => lowerMessage.includes(word)) || lowerMessage.includes('?');
+
+                console.log('Sentiment analysis:', { hasPositiveSentiment, isQuestion });
+
+                // Advanced NLP Processing
+                let bestMatch = { intent: null, confidence: 0, response: null };
+
+                for (const [intentName, intentData] of Object.entries(intents)) {
+                    for (const pattern of intentData.patterns) {
+                        const matches = message.match(pattern);
+                        if (matches) {
+                            const confidence = matches.length / message.split(' ').length; // Simple confidence score
+                            if (confidence > bestMatch.confidence) {
+                                bestMatch = {
+                                    intent: intentName,
+                                    confidence: confidence,
+                                    response: intentData.responses[Math.floor(Math.random() * intentData.responses.length)]
+                                };
+                            }
                         }
                     }
-                    if (response !== responses.default) break;
                 }
 
-                console.log('Selected response:', response.substring(0, 50) + '...');
+                // Intelligent fallback responses based on context
+                let response;
+                if (bestMatch.response) {
+                    response = bestMatch.response;
+                } else {
+                    // Smart fallback based on conversation history and message content
+                    const fallbackResponses = [
+                        'I\'m afraid I didn\'t quite catch that. Perhaps you\'d like to know about the animations, illustrations, drawings, or the creative workflow? I\'m here to provide comprehensive insights into any aspect of this beautiful portfolio.',
+                        'That\'s an interesting point! I specialize in discussing the artist\'s creative process, cultural influences, and technical expertise. What aspect would you like me to elaborate on?',
+                        'I want to make sure I address your question perfectly. Could you rephrase it, or would you like me to tell you about the portfolio\'s key sections?',
+                        'My knowledge focuses on this digital art portfolio and the artist\'s creative journey. I\'d be happy to share insights about the artworks, techniques, or cultural inspirations.'
+                    ];
+
+                    // Choose fallback based on conversation context
+                    if (window.conversationContext.topicsDiscussed.length > 0) {
+                        response = fallbackResponses[1]; // More contextual fallback
+                    } else if (isQuestion) {
+                        response = fallbackResponses[2]; // Question-specific fallback
+                    } else {
+                        response = fallbackResponses[0]; // General fallback
+                    }
+                }
+
+                // Add contextual suggestions
+                if (bestMatch.intent === 'animations') {
+                    response += ' Would you like me to tell you more about any specific animation?';
+                } else if (bestMatch.intent === 'illustrations') {
+                    response += ' Which illustration interests you most?';
+                } else if (bestMatch.intent === 'drawings') {
+                    response += ' I can share more details about the drawing techniques used.';
+                }
+
+                // Add conversation memory (simple context tracking)
+                if (!window.conversationContext) {
+                    window.conversationContext = { lastIntent: null, messageCount: 0, topicsDiscussed: [] };
+                }
+
+                window.conversationContext.messageCount++;
+                window.conversationContext.lastIntent = bestMatch.intent;
+
+                if (bestMatch.intent && !window.conversationContext.topicsDiscussed.includes(bestMatch.intent)) {
+                    window.conversationContext.topicsDiscussed.push(bestMatch.intent);
+                }
+
+                // Enhanced response processing with personality and context
+                if (bestMatch.intent === 'greeting' && window.conversationContext.messageCount === 1) {
+                    // First interaction - be extra welcoming with cultural touch
+                    response = response.replace('How may I be of assistance?', 'I\'m honored to share insights about this beautiful fusion of Indian tradition and digital innovation. What aspect of the portfolio intrigues you most?');
+                }
+
+                // Add enthusiasm for positive sentiment
+                if (hasPositiveSentiment && bestMatch.intent) {
+                    const enthusiasmPhrases = [
+                        ' I\'m delighted you feel that way!',
+                        ' Your appreciation warms my digital heart!',
+                        ' I\'m thrilled you\'re enjoying the portfolio!',
+                        ' Your positive feedback means so much!'
+                    ];
+                    response += enthusiasmPhrases[Math.floor(Math.random() * enthusiasmPhrases.length)];
+                }
+
+                // Handle questions more intelligently
+                if (isQuestion && !bestMatch.intent) {
+                    response = 'That\'s an excellent question! I have detailed insights about the artist\'s creative process, the cultural influences in their work, and the technical aspects of each piece. Could you be more specific about what you\'d like to know?';
+                }
+
+                // Dynamic follow-up suggestions based on conversation flow
+                if (window.conversationContext.topicsDiscussed.length >= 2) {
+                    const undiscussedTopics = ['animations', 'illustrations', 'drawings', 'workflow'].filter(
+                        topic => !window.conversationContext.topicsDiscussed.includes(topic)
+                    );
+                    if (undiscussedTopics.length > 0) {
+                        const suggestions = [
+                            ` You might also be interested in learning about the ${undiscussedTopics[0]} section.`,
+                            ` Would you like to explore the ${undiscussedTopics[0]} as well?`,
+                            ` I also have fascinating insights about the ${undiscussedTopics[0]} if you're curious.`,
+                            ` The ${undiscussedTopics[0]} section has some remarkable pieces too!`
+                        ];
+                        response += suggestions[Math.floor(Math.random() * suggestions.length)];
+                    }
+                }
+
+                // Add cultural warmth and personality
+                if (bestMatch.intent && Math.random() > 0.7) { // 30% chance to add personality
+                    const personalityPhrases = [
+                        ' 🙏',
+                        ' ✨',
+                        ' 🌟',
+                        ' With great cultural reverence,',
+                        ' As they say in Indian tradition,',
+                        ' Drawing from ancient wisdom,',
+                        ' In the spirit of artistic innovation,'
+                    ];
+                    response += personalityPhrases[Math.floor(Math.random() * personalityPhrases.length)];
+                }
+
+                console.log(`🎯 Best match: ${bestMatch.intent} (confidence: ${(bestMatch.confidence * 100).toFixed(1)}%)`);
+                console.log('Conversation context:', window.conversationContext);
+                console.log('Selected response:', response.substring(0, 80) + '...');
 
                 sendMessage(response, false);
             }, 1500 + Math.random() * 1000);
