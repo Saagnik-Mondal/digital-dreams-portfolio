@@ -117,57 +117,77 @@ function initializePortfolio() {
     console.log('✅ Fluid portfolio ready with enhanced interactions! ✨');
 }
 
-    console.log('🎨 Starting unique artistic loading sequence...');
+// Sophisticated Loading Sequence
+function startLoadingSequence() {
+    const loadingScreen = document.getElementById('loading-screen');
+
+    if (!loadingScreen) {
+        console.log('No loading screen found, initializing directly...');
+        initializePortfolio();
+        return;
+    }
+
+    console.log('🎯 Starting sophisticated loading sequence...');
 
     // Show loading screen
     loadingScreen.style.display = 'flex';
 
-    // Creative loading sequence (5 seconds for artistic experience)
-    // Phase 1: Canvas preparation (0-1s)
-    setTimeout(() => {
-        console.log('🎨 Phase 1: Canvas awakening...');
-        // Canvas elements start animating
-    }, 500);
+    // Update progress and status
+    const progressFill = document.querySelector('.progress-fill');
+    const progressPercentage = document.querySelector('.progress-percentage');
+    const loadingStatus = document.querySelector('.loading-status');
+    const indicatorDots = document.querySelectorAll('.indicator-dot');
 
-    // Phase 2: Color mixing (1-2s)
-    setTimeout(() => {
-        console.log('🎨 Phase 2: Colors coming alive...');
-        // Color dots start mixing
-    }, 1500);
+    let progress = 0;
+    const totalTime = 3000; // 3 seconds total
+    const updateInterval = 50; // Update every 50ms
+    const progressIncrement = (updateInterval / totalTime) * 100;
 
-    // Phase 3: Creative sparkles (2-3s)
-    setTimeout(() => {
-        console.log('🎨 Phase 3: Creative inspiration flowing...');
-        // Sparkles and art elements animate
-    }, 2500);
+    const progressInterval = setInterval(() => {
+        progress += progressIncrement;
 
-    // Phase 4: Title reveal (3-4s)
-    setTimeout(() => {
-        console.log('🎨 Phase 4: Title taking shape...');
-        // Characters reveal one by one
-    }, 3500);
+        if (progressFill) {
+            progressFill.style.width = Math.min(progress, 100) + '%';
+        }
 
-    // Phase 5: Final creation (4-5s)
-    setTimeout(() => {
-        console.log('🎨 Phase 5: Artwork complete...');
-        // Progress bar completes
-    }, 4500);
+        if (progressPercentage) {
+            progressPercentage.textContent = Math.round(Math.min(progress, 100)) + '%';
+        }
 
-    // Complete loading sequence
-    setTimeout(() => {
-        console.log('🎨 Loading sequence complete!');
+        // Update status messages
+        if (loadingStatus) {
+            if (progress < 30) {
+                loadingStatus.textContent = 'Loading assets...';
+                if (indicatorDots[0]) indicatorDots[0].style.background = 'var(--glow-color)';
+            } else if (progress < 70) {
+                loadingStatus.textContent = 'Preparing interface...';
+                if (indicatorDots[1]) indicatorDots[1].style.background = 'var(--glow-color)';
+            } else if (progress < 100) {
+                loadingStatus.textContent = 'Almost ready...';
+                if (indicatorDots[2]) indicatorDots[2].style.background = 'var(--glow-color)';
+            }
+        }
 
-        // Artistic fade-out with creative transition
-        loadingScreen.style.transition = 'all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-        loadingScreen.style.opacity = '0';
-        loadingScreen.style.transform = 'scale(1.05) rotate(-1deg)';
+        if (progress >= 100) {
+            clearInterval(progressInterval);
 
-        // Remove loading screen and initialize portfolio
-        setTimeout(() => {
-            loadingScreen.style.display = 'none';
-            initializePortfolio();
-        }, 1200);
-    }, 5500);
+            // Complete loading
+            setTimeout(() => {
+                console.log('✅ Loading sequence complete!');
+
+                // Smooth fade-out
+                loadingScreen.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                loadingScreen.style.opacity = '0';
+                loadingScreen.style.transform = 'scale(1.02)';
+
+                // Initialize portfolio
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                    initializePortfolio();
+                }, 800);
+            }, 500);
+        }
+    }, updateInterval);
 }
 
 // Initialize the main portfolio
