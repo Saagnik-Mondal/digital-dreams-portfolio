@@ -24,12 +24,31 @@ window.addEventListener('error', function(e) {
     alert('JavaScript Error: ' + e.error.message);
 });
 
-// Modern Interactive Elements (igloo.inc style)
-function initializeModernInteractions() {
-    console.log('🎨 Initializing modern interactions...');
+// Safe GSAP wrapper
+function safeGSAP() {
+    return typeof gsap !== 'undefined' ? gsap : null;
+}
 
-    // Initialize GSAP plugins
-    gsap.registerPlugin(ScrollTrigger);
+// Global safe GSAP reference
+window.safeGSAP = safeGSAP();
+
+// Modern Interactive Elements (igloo.inc style) - DISABLED
+function initializeModernInteractions() {
+    console.log('🎨 Modern interactions disabled for stability...');
+    return; // Early return to disable all modern interactions
+
+    const gsap = safeGSAP();
+
+    // Initialize GSAP plugins (with error handling)
+    try {
+        if (gsap && gsap.registerPlugin) {
+            gsap.registerPlugin(ScrollTrigger);
+        } else {
+            console.warn('⚠️ GSAP not loaded, skipping ScrollTrigger registration');
+        }
+    } catch (error) {
+        console.error('❌ GSAP registration error:', error);
+    }
 
     // Smooth scroll setup
     setupSmoothScroll();
@@ -46,30 +65,43 @@ function initializeModernInteractions() {
 
 // Smooth scroll with Lenis
 function setupSmoothScroll() {
-    // Initialize Lenis for smooth scrolling
-    const lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        direction: 'vertical',
-        gestureDirection: 'vertical',
-        smooth: true,
-        mouseMultiplier: 1,
-        smoothTouch: false,
-        touchMultiplier: 2,
-        infinite: false,
-    });
+    try {
+        // Check if Lenis is available
+        if (typeof Lenis === 'undefined') {
+            console.warn('⚠️ Lenis not loaded, skipping smooth scroll');
+            return;
+        }
 
-    // Update ScrollTrigger on scroll
-    lenis.on('scroll', ScrollTrigger.update);
+        // Initialize Lenis for smooth scrolling
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+            infinite: false,
+        });
 
-    // Use GSAP ticker for smooth animation loop
-    gsap.ticker.add((time) => {
-        lenis.raf(time * 1000);
-    });
+        // Update ScrollTrigger on scroll (if available)
+        if (typeof ScrollTrigger !== 'undefined') {
+            lenis.on('scroll', ScrollTrigger.update);
+        }
 
-    gsap.ticker.lagSmoothing(0);
+        // Use GSAP ticker for smooth animation loop (if available)
+        if (typeof gsap !== 'undefined' && gsap.ticker) {
+            gsap.ticker.add((time) => {
+                lenis.raf(time * 1000);
+            });
+            gsap.ticker.lagSmoothing(0);
+        }
 
-    console.log('🍃 Smooth scroll initialized');
+        console.log('🍃 Smooth scroll initialized');
+    } catch (error) {
+        console.error('❌ Smooth scroll initialization error:', error);
+    }
 }
 
 // Magnetic elements that follow cursor
@@ -85,21 +117,35 @@ function setupMagneticElements() {
             const deltaX = (e.clientX - centerX) * 0.3;
             const deltaY = (e.clientY - centerY) * 0.3;
 
-            gsap.to(element, {
+        if (typeof gsap !== 'undefined') {
+        if (window.safeGSAP) {
+            window.safeGSAP.to(element, {
                 x: deltaX,
                 y: deltaY,
                 duration: 0.3,
                 ease: 'power2.out'
             });
+        }
+        });
+        if (window.safeGSAP) {
+            window.safeGSAP.to(element, {
+                x: 0,
+                y: 0,
+                duration: 0.5,
+                ease: 'elastic.out(1, 0.3)'
+            });
+        }
         });
 
         element.addEventListener('mouseleave', () => {
+        if (typeof gsap !== 'undefined') {
             gsap.to(element, {
                 x: 0,
                 y: 0,
                 duration: 0.5,
                 ease: 'elastic.out(1, 0.3)'
             });
+        }
         });
     });
 
@@ -288,10 +334,17 @@ function setupScrollAnimations() {
 
 // Modern cursor effects
 function setupCursorEffects() {
-    const cursor = document.createElement('div');
-    cursor.className = 'custom-cursor';
-    cursor.innerHTML = '<div class="cursor-dot"></div><div class="cursor-outline"></div>';
-    document.body.appendChild(cursor);
+    try {
+        // Check if cursor already exists
+        if (document.querySelector('.custom-cursor')) {
+            console.log('🖱️ Cursor already exists, skipping setup');
+            return;
+        }
+
+        const cursor = document.createElement('div');
+        cursor.className = 'custom-cursor';
+        cursor.innerHTML = '<div class="cursor-dot"></div><div class="cursor-outline"></div>';
+        document.body.appendChild(cursor);
 
     let mouseX = 0;
     let mouseY = 0;
@@ -335,15 +388,20 @@ function setupCursorEffects() {
 
         element.addEventListener('mouseleave', () => {
             cursor.classList.remove('cursor-hover');
-            gsap.to('.cursor-outline', {
-                scale: 1,
-                duration: 0.3,
-                ease: 'power2.out'
-            });
+            if (typeof gsap !== 'undefined') {
+                gsap.to('.cursor-outline', {
+                    scale: 1,
+                    duration: 0.3,
+                    ease: 'power2.out'
+                });
+            }
         });
     });
 
     console.log('🖱️ Cursor effects initialized');
+    } catch (error) {
+        console.error('❌ Cursor effects initialization error:', error);
+    }
 }
 
 // Micro-interactions and feedback
@@ -1679,8 +1737,8 @@ function initializeWebsite() {
     setupDarkMode();
     setupScreenVisionControls();
 
-    // Initialize modern interactions (temporarily disabled for testing)
-    // initializeModernInteractions();
+    // Modern interactions disabled - focus on basic functionality first
+    console.log('ℹ️ Modern interactions disabled for stability');
 
     // Initialize screen vision if supported
     if (window.platformInfo && window.platformInfo.supportsScreenVision) {
