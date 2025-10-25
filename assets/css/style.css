@@ -2248,3 +2248,292 @@ Enhanced Loading Screen Animations */
         margin-top: 1.5rem;
     }
 }
+
+/* ============================================================ */
+/* PARALLAX SCROLL ANIMATION SECTION */
+/* ============================================================ */
+
+.parallax-showcase {
+    position: relative;
+    width: 100%;
+    background: var(--bg-dark);
+    overflow: hidden;
+}
+
+.parallax-header {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    position: relative;
+    z-index: 10;
+}
+
+.parallax-header h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    animation: slideInDown 0.8s ease-out;
+}
+
+.parallax-header p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    animation: slideInUp 0.8s ease-out 0.2s forwards;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Parallax Layers */
+.parallax-layer {
+    position: relative;
+    height: 600px;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.parallax-layer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.2) 100%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.parallax-bg-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    will-change: transform;
+}
+
+/* Layer specific styles */
+.layer-1 {
+    z-index: 50;
+}
+
+.layer-2 {
+    z-index: 40;
+    margin-top: -100px;
+}
+
+.layer-3 {
+    z-index: 30;
+    margin-top: -100px;
+}
+
+.layer-4 {
+    z-index: 20;
+    margin-top: -100px;
+}
+
+.layer-5 {
+    z-index: 10;
+    margin-top: -100px;
+    min-height: 700px;
+}
+
+/* Parallax Content */
+.parallax-content-layer {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.parallax-text {
+    text-align: center;
+    color: white;
+    max-width: 600px;
+    padding: 2rem;
+    transform: translateZ(100px);
+    animation: fadeInScale 1s ease-out;
+}
+
+.parallax-text-right {
+    text-align: right;
+    margin-left: auto;
+    margin-right: 5%;
+}
+
+.parallax-text h3 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    letter-spacing: -1px;
+}
+
+.parallax-text p {
+    font-size: 1.3rem;
+    opacity: 0.95;
+    margin-bottom: 2rem;
+    text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    line-height: 1.6;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: translateZ(100px) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translateZ(100px) scale(1);
+    }
+}
+
+/* CTA Button in Parallax */
+.parallax-cta {
+    margin-top: 2rem;
+    animation: bounceIn 1.2s ease-out;
+}
+
+.parallax-cta .btn {
+    font-size: 1.1rem;
+    padding: 1.2rem 3rem;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid white;
+    color: white;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.parallax-cta .btn:hover {
+    background: white;
+    color: var(--primary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.8);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Parallax Effects on Scroll */
+.parallax-layer.active {
+    animation: layerReveal 0.8s ease-out forwards;
+}
+
+@keyframes layerReveal {
+    from {
+        opacity: 0;
+        transform: translateY(100px) rotateX(10deg);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0);
+    }
+}
+
+/* Enhanced Parallax Animation */
+.parallax-bg-img.animate {
+    animation: parallaxShift 3s ease-in-out infinite;
+}
+
+@keyframes parallaxShift {
+    0%, 100% {
+        filter: brightness(1) contrast(1);
+    }
+    50% {
+        filter: brightness(1.1) contrast(1.05);
+    }
+}
+
+/* Responsive Parallax */
+@media (max-width: 768px) {
+    .parallax-layer {
+        height: 400px;
+    }
+    
+    .parallax-text h3 {
+        font-size: 2.2rem;
+    }
+    
+    .parallax-text p {
+        font-size: 1rem;
+    }
+    
+    .parallax-text-right {
+        text-align: center;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .parallax-header h2 {
+        font-size: 2rem;
+    }
+    
+    .parallax-header p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .parallax-layer {
+        height: 300px;
+        margin-top: -50px;
+    }
+    
+    .parallax-text {
+        padding: 1rem;
+    }
+    
+    .parallax-text h3 {
+        font-size: 1.8rem;
+    }
+    
+    .parallax-text p {
+        font-size: 0.95rem;
+    }
+    
+    .parallax-header {
+        padding: 2rem 1rem;
+    }
+}

@@ -875,6 +875,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!prefersReducedMotion && !isMobile) {
         setupParallaxScrolling();
         setupMouseParallax();
+        setupParallaxShowcase();
     }
 });
 
@@ -1309,3 +1310,232 @@ function createMagneticField() {
 // Export functions for global use
 window.scrollToSection = scrollToSection;
 window.createPageTransition = createPageTransition;
+
+// ============================================================
+// PARALLAX SHOWCASE SECTION
+// ============================================================
+
+/**
+ * Setup Parallax Showcase with scroll-based parallax effects
+ * Each layer moves at different speeds creating depth illusion
+ */
+function setupParallaxShowcase() {
+    const parallaxLayers = document.querySelectorAll('.parallax-layer');
+    
+    if (parallaxLayers.length === 0) return;
+    
+    const handleParallaxShowcaseScroll = throttle(() => {
+        parallaxLayers.forEach((layer) => {
+            const speed = parseFloat(layer.dataset.speed) || 0.5;
+            const rect = layer.getBoundingClientRect();
+            const layerTop = rect.top;
+            const windowHeight = window.innerHeight;
+            
+            // Calculate parallax offset based on position and speed
+            const yOffset = (windowHeight - layerTop) * speed * -0.1;
+            
+            const bgImg = layer.querySelector('.parallax-bg-img');
+            if (bgImg) {
+                bgImg.style.transform = `translateY(${yOffset}px) scale(1.1)`;
+            }
+            
+            // Add visibility class when layer enters viewport
+            if (layerTop < windowHeight && rect.bottom > 0) {
+                layer.classList.add('active');
+            }
+        });
+        
+        // Optional: Enhance text animations
+        const parallaxTexts = document.querySelectorAll('.parallax-text');
+        parallaxTexts.forEach((text) => {
+            const rect = text.getBoundingClientRect();
+            const opacity = Math.max(0, 1 - Math.abs(rect.top - window.innerHeight / 2) / (window.innerHeight / 2));
+            text.style.opacity = (0.5 + opacity * 0.5).toString();
+        });
+    }, 16);
+    
+    window.addEventListener('scroll', handleParallaxShowcaseScroll);
+    
+    // Initial call
+    handleParallaxShowcaseScroll();
+}
+
+/**
+ * Load images from various sources
+ * Supports: External URLs, Local paths, or Data URIs
+ */
+function loadParallaxImages() {
+    const parallaxImages = document.querySelectorAll('.parallax-bg-img');
+    
+    // You can customize these image sources
+    const imageSources = [
+        // Unsplash free images (replace with your actual image URLs)
+        'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=600&fit=crop', // Mountain
+        'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=1200&h=600&fit=crop', // Space
+        'https://images.unsplash.com/photo-1494783367193-149034c05e41?w=1200&h=600&fit=crop', // Gradient
+        'https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=1200&h=600&fit=crop', // Ocean
+        'https://images.unsplash.com/photo-1500375592092-40eb305acc11?w=1200&h=600&fit=crop'  // Sunset
+    ];
+    
+    parallaxImages.forEach((img, index) => {
+        // If the element already has a background-image (SVG), keep it
+        // Otherwise, load from external source
+        if (!img.style.backgroundImage || img.style.backgroundImage === '') {
+            const imageUrl = imageSources[index % imageSources.length];
+            
+            // Preload image for smooth loading
+            const preloadImg = new Image();
+            preloadImg.onload = () => {
+                img.style.backgroundImage = `url('${imageUrl}')`;
+                img.classList.add('animate');
+            };
+            preloadImg.onerror = () => {
+                // Fallback to gradient if image fails to load
+                img.style.backgroundImage = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            };
+            preloadImg.src = imageUrl;
+        }
+    });
+}
+
+/**
+ * Alternative: Load images from local assets
+ * Place images in assets/parallax/ folder
+ */
+function loadLocalParallaxImages() {
+    const parallaxImages = document.querySelectorAll('.parallax-bg-img');
+    
+    const localImagePaths = [
+        'assets/parallax/layer1.jpg',
+        'assets/parallax/layer2.jpg',
+        'assets/parallax/layer3.jpg',
+        'assets/parallax/layer4.jpg',
+        'assets/parallax/layer5.jpg'
+    ];
+    
+    parallaxImages.forEach((img, index) => {
+        const imagePath = localImagePaths[index % localImagePaths.length];
+        
+        const preloadImg = new Image();
+        preloadImg.onload = () => {
+            img.style.backgroundImage = `url('${imagePath}')`;
+            img.classList.add('animate');
+        };
+        preloadImg.onerror = () => {
+            console.warn(`Could not load image: ${imagePath}`);
+        };
+        preloadImg.src = imagePath;
+    });
+}
+
+/**
+ * Generate random gradients for parallax layers
+ * No external images needed - uses pure CSS gradients
+ */
+function generateGradientParallaxImages() {
+    const parallaxImages = document.querySelectorAll('.parallax-bg-img');
+    const gradients = [
+        'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+        'linear-gradient(45deg, #f093fb 0%, #f5576c 50%, #667eea 100%)',
+        'linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #667eea 100%)',
+        'linear-gradient(135deg, #764ba2 0%, #f093fb 50%, #4facfe 100%)',
+        'linear-gradient(45deg, #f5576c 0%, #667eea 50%, #00f2fe 100%)'
+    ];
+    
+    parallaxImages.forEach((img, index) => {
+        const gradient = gradients[index % gradients.length];
+        img.style.background = gradient;
+        img.classList.add('animate');
+    });
+}
+
+// Initialize parallax images on page load
+document.addEventListener('DOMContentLoaded', () => {
+    // Choose one of these methods:
+    
+    // Option 1: Use embedded SVG gradients (already in HTML) - NO SETUP NEEDED
+    
+    // Option 2: Load from Unsplash (free, no registration needed)
+    // Uncomment the line below to use external images
+    // loadParallaxImages();
+    
+    // Option 3: Load from local assets folder
+    // Uncomment the line below and create assets/parallax/ folder with images
+    // loadLocalParallaxImages();
+    
+    // Option 4: Generate random gradients (default - already working)
+    // generateGradientParallaxImages();
+});
+
+// ============================================================
+// PARALLAX CONFIGURATION & DOCUMENTATION
+// ============================================================
+
+/**
+ * PARALLAX SCROLL ANIMATION - IMAGE & SETUP GUIDE
+ * 
+ * The parallax section is already set up with 5 beautiful gradient layers
+ * that animate as you scroll. Here are your options:
+ * 
+ * OPTION 1: Keep Current SVG Gradients (DEFAULT)
+ * ✓ Already working - no setup needed
+ * ✓ Beautiful, smooth gradients
+ * ✓ No external dependencies
+ * ✓ Best for performance
+ * 
+ * OPTION 2: Use Free External Images (Unsplash)
+ * - Uncomment: loadParallaxImages() in the DOMContentLoaded event
+ * - No registration needed
+ * - High-quality images
+ * - Free to use commercially
+ * - Supported URLs:
+ *   • Mountain: unsplash.com/photos/...
+ *   • Space: unsplash.com/photos/...
+ *   • Gradients: unsplash.com/photos/...
+ *   • Ocean: unsplash.com/photos/...
+ *   • Sunset: unsplash.com/photos/...
+ * 
+ * OPTION 3: Use Local Images
+ * 1. Create folder: assets/parallax/
+ * 2. Add 5 images (1200x600px recommended):
+ *    - layer1.jpg
+ *    - layer2.jpg
+ *    - layer3.jpg
+ *    - layer4.jpg
+ *    - layer5.jpg
+ * 3. Uncomment: loadLocalParallaxImages()
+ * 4. Best image sizes for parallax:
+ *    • Desktop: 1200x600px or higher
+ *    • Mobile: 800x400px
+ *    • Format: JPG (best compression), PNG, WebP
+ * 
+ * OPTION 4: Generate Random Gradients
+ * - Uncomment: generateGradientParallaxImages()
+ * - Creates unique, colorful gradients
+ * - No external files needed
+ * 
+ * RECOMMENDED SETUP:
+ * For best results, use local images with these characteristics:
+ * 
+ * 1. Color Palette: Complementary colors for smooth transitions
+ * 2. Aspect Ratio: 2:1 (width:height) - e.g., 1200x600px
+ * 3. File Size: <200KB per image for fast loading
+ * 4. Quality: High resolution (1920x960px) for Retina displays
+ * 5. Content: Abstract/landscape works best for parallax
+ * 
+ * FREE IMAGE RESOURCES:
+ * • Unsplash: https://unsplash.com
+ * • Pexels: https://www.pexels.com
+ * • Pixabay: https://pixabay.com
+ * • Gradient Art: https://www.colordot.it/
+ * 
+ * PARALLAX EFFECT EXPLANATION:
+ * Each layer has a different speed (data-speed attribute):
+ * - Layer 1: 0.3 (slowest - far back)
+ * - Layer 2: 0.5
+ * - Layer 3: 0.7
+ * - Layer 4: 0.2 (very slow)
+ * - Layer 5: 0.4
+ * 
+ * This creates a 3D depth effect as you scroll!
+ */
