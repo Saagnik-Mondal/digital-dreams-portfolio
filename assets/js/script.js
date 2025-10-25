@@ -162,6 +162,26 @@ function setupAIChatbot() {
         return;
     }
 
+    if (!windowEl) {
+        console.error('Chatbot window not found!');
+        return;
+    }
+
+    if (!input) {
+        console.error('Chatbot input not found!');
+        return;
+    }
+
+    if (!sendBtn) {
+        console.error('Send button not found!');
+        return;
+    }
+
+    if (!messages) {
+        console.error('Messages container not found!');
+        return;
+    }
+
     // Make sure chatbot is visible
     chatbot.style.display = 'block';
     chatbot.style.visibility = 'visible';
