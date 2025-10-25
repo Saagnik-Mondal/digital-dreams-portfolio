@@ -1506,7 +1506,6 @@ function setupEnhancedPortfolioInteractions() {
 
     // Set up viewport context tracking
     setupViewportContextTracking();
-}
 
     // Set up intelligent section tracking
     setupSectionContextTracking();
@@ -1564,7 +1563,6 @@ function setupSectionContextTracking() {
     document.querySelectorAll('section[id]').forEach(section => {
         sectionObserver.observe(section);
     });
-}
 }
 
 // Artwork details database
