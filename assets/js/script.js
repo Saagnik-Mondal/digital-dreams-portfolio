@@ -26,23 +26,37 @@ window.addEventListener('error', function(e) {
 
 // Platform detection for screen vision capabilities
 function detectPlatform() {
-    const userAgent = navigator.userAgent;
-    const platform = navigator.platform;
+    try {
+        const userAgent = navigator.userAgent || '';
+        const platform = navigator.platform || '';
 
-    const platforms = {
-        isWindows: platform.includes('Win'),
-        isMac: platform.includes('Mac'),
-        isAndroid: /Android/i.test(userAgent),
-        isIOS: /iPad|iPhone|iPod/.test(userAgent) || (platform === 'MacIntel' && navigator.maxTouchPoints > 1),
-        isLinux: platform.includes('Linux'),
-        isMobile: /Mobi|Android/i.test(userAgent)
-    };
+        const platforms = {
+            isWindows: platform.includes('Win'),
+            isMac: platform.includes('Mac'),
+            isAndroid: /Android/i.test(userAgent),
+            isIOS: /iPad|iPhone|iPod/.test(userAgent) || (platform === 'MacIntel' && navigator.maxTouchPoints > 1),
+            isLinux: platform.includes('Linux'),
+            isMobile: /Mobi|Android/i.test(userAgent)
+        };
 
-    // Screen vision is supported on Windows, Mac, and Android (excluding iOS)
-    platforms.supportsScreenVision = (platforms.isWindows || platforms.isMac || platforms.isAndroid) && !platforms.isIOS;
+        // Screen vision is supported on Windows, Mac, and Android (excluding iOS)
+        platforms.supportsScreenVision = (platforms.isWindows || platforms.isMac || platforms.isAndroid) && !platforms.isIOS;
 
-    console.log('📱 Platform Detection:', platforms);
-    return platforms;
+        console.log('📱 Platform Detection:', platforms);
+        return platforms;
+    } catch (error) {
+        console.error('❌ Platform detection error:', error);
+        // Fallback: assume screen vision is not supported
+        return {
+            isWindows: false,
+            isMac: false,
+            isAndroid: false,
+            isIOS: false,
+            isLinux: false,
+            isMobile: false,
+            supportsScreenVision: false
+        };
+    }
 }
 
 // Global platform info
@@ -1198,19 +1212,33 @@ window.screenVision = new ScreenVision();
 
 // Initialize Website
 function initializeWebsite() {
+    console.log('🚀 Initializing website...');
     setupAILoadingScreen();
     setupDarkMode();
     setupScreenVisionControls();
 
-    // Initialize screen vision if supported
-    if (window.platformInfo.supportsScreenVision) {
-        window.screenVision.initialize().then(success => {
-            if (success) {
-                console.log('🎥 Screen vision ready');
-                // Optionally auto-start or wait for user permission
-            }
-        });
+    // Initialize screen vision if supported (with error handling)
+    if (window.platformInfo && window.platformInfo.supportsScreenVision) {
+        try {
+            window.screenVision.initialize().then(success => {
+                if (success) {
+                    console.log('🎥 Screen vision ready');
+                } else {
+                    console.log('📱 Screen vision initialization failed, using fallback methods');
+                }
+            }).catch(error => {
+                console.error('❌ Screen vision initialization error:', error);
+                console.log('📱 Continuing with traditional visual context tracking');
+            });
+        } catch (error) {
+            console.error('❌ Screen vision setup error:', error);
+            console.log('📱 Screen vision unavailable, using traditional methods');
+        }
+    } else {
+        console.log('📱 Screen vision not supported on this platform, using traditional visual context tracking');
     }
+
+    console.log('✅ Website initialization complete');
 }
 
 // After loading screen completes
@@ -2542,7 +2570,7 @@ function debugVisualContext() {
 
 // Screen Vision Controls
 function setupScreenVisionControls() {
-    if (!window.platformInfo.supportsScreenVision) {
+    if (!window.platformInfo || !window.platformInfo.supportsScreenVision) {
         console.log('📱 Screen vision controls not available on this platform');
         return;
     }
