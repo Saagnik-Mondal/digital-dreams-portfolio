@@ -12,6 +12,13 @@ window.addEventListener('error', function(e) {
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, initializing AI portfolio...');
+
+    // Force show content after 15 seconds as ultimate fallback
+    setTimeout(() => {
+        console.log('Ultimate fallback: forcing content visibility...');
+        window.forceShowContent();
+    }, 15000);
+
     initializeWebsite();
 });
 
@@ -31,6 +38,15 @@ function setupAILoadingScreen() {
 
     console.log('AI loading screen found, starting animation...');
 
+    // Allow user to skip loading by clicking
+    loadingScreen.addEventListener('click', () => {
+        console.log('User clicked loading screen, skipping to main experience...');
+        loadingScreen.style.display = 'none';
+        startMainExperience();
+        setupCustomCursor();
+        setupAIChatbot();
+    });
+
     // Fallback timeout in case loading gets stuck
     setTimeout(() => {
         if (loadingScreen.style.display !== 'none') {
@@ -40,7 +56,7 @@ function setupAILoadingScreen() {
             setupCustomCursor();
             setupAIChatbot();
         }
-    }, 10000); // 10 second fallback
+    }, 8000); // 8 second fallback
 
     let currentProgress = 0;
     let currentStage = 0;
@@ -94,95 +110,20 @@ function setupAILoadingScreen() {
             if (currentStage < loadingStages.length) {
                 setTimeout(nextStage, stageDuration + 200);
             } else {
+                // Loading complete - ensure it happens
+                console.log('All loading stages complete, transitioning...');
                 setTimeout(() => {
                     loadingScreen.style.opacity = '0';
                     loadingScreen.style.transform = 'scale(1.1)';
-                setTimeout(() => {
-                    console.log('Loading complete, starting main experience...');
-                    loadingScreen.style.display = 'none';
-                    startMainExperience();
-                    setupCustomCursor();
-                    setupAIChatbot();
-                }, 800);
-                }, 1000);
-            }
-        }
-    }
-
-    setTimeout(nextStage, 500);
-}
-
-    let currentProgress = 0;
-    let currentStage = 0;
-
-    const loadingStages = [
-        { duration: 1500, text: 'Neural Network Activation', color: '#667eea' },
-        { duration: 1200, text: 'Loading Creative Assets', color: '#764ba2' },
-        { duration: 1000, text: 'Initializing AI Guide', color: '#f093fb' },
-        { duration: 800, text: 'Launching Experience', color: '#00f2fe' }
-    ];
-
-    function updateProgress(target, duration, stageColor) {
-        const startProgress = currentProgress;
-        const progressDiff = target - startProgress;
-        const startTime = Date.now();
-
-        function animateProgress() {
-            const elapsed = Date.now() - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const easeProgress = 1 - Math.pow(1 - progress, 3);
-
-            currentProgress = startProgress + (progressDiff * easeProgress);
-            const circumference = 339.292;
-            const offset = circumference - (currentProgress / 100) * circumference;
-            progressFill.style.strokeDashoffset = offset;
-            progressPercentage.textContent = Math.round(currentProgress) + '%';
-
-            if (progress < 1) {
-                requestAnimationFrame(animateProgress);
-            }
-        }
-
-        animateProgress();
-    }
-
-    function nextStage() {
-        if (currentStage < loadingStages.length) {
-            stages.forEach(stage => stage.classList.remove('active'));
-            const currentStageElement = stages[currentStage];
-            if (currentStageElement) {
-                currentStageElement.classList.add('active');
-            }
-
-            const targetProgress = ((currentStage + 1) / loadingStages.length) * 100;
-            const stageDuration = loadingStages[currentStage].duration;
-
-            updateProgress(targetProgress, stageDuration);
-
-            currentStage++;
-
-            if (currentStage < loadingStages.length) {
-                setTimeout(nextStage, stageDuration + 200);
-            } else {
-                setTimeout(() => {
-                    loadingScreen.style.opacity = '0';
-                    loadingScreen.style.transform = 'scale(1.1)';
-                setTimeout(() => {
-                    console.log('Loading complete, starting main experience...');
-                    loadingScreen.style.display = 'none';
-
-                    // Update debug message
-                    const debugEl = document.getElementById('debug-test');
-                    if (debugEl) {
-                        debugEl.innerHTML = 'DEBUG: Loading Complete - Main Experience Starting';
-                        debugEl.style.background = 'green';
-                    }
-
-                    startMainExperience();
-                    setupCustomCursor();
-                    setupAIChatbot();
-                }, 800);
-                }, 1000);
+                    setTimeout(() => {
+                        console.log('Loading complete, starting main experience...');
+                        loadingScreen.style.display = 'none';
+                        loadingScreen.style.visibility = 'hidden';
+                        startMainExperience();
+                        setupCustomCursor();
+                        setupAIChatbot();
+                    }, 500); // Reduced from 800ms
+                }, 500); // Reduced from 1000ms
             }
         }
     }
@@ -203,10 +144,19 @@ function setupAIChatbot() {
 
     console.log('Chatbot elements found:', { chatbot, toggle, windowEl, closeBtn, input, sendBtn, messages });
 
-    if (!chatbot || !toggle || !windowEl) {
-        console.error('Chatbot elements not found!');
+    if (!chatbot) {
+        console.error('Chatbot container not found!');
         return;
     }
+
+    if (!toggle) {
+        console.error('Chatbot toggle not found!');
+        return;
+    }
+
+    // Make sure chatbot is visible
+    chatbot.style.display = 'block';
+    chatbot.style.visibility = 'visible';
 
     let isOpen = false;
 
@@ -395,6 +345,14 @@ function initializeWebsite() {
 // After loading screen completes
 function startMainExperience() {
     console.log('Starting main experience...');
+
+    // Force remove loading screen if it still exists
+    const loadingScreen = document.getElementById('ai-loading-screen');
+    if (loadingScreen) {
+        loadingScreen.style.display = 'none';
+        loadingScreen.style.visibility = 'hidden';
+        console.log('Loading screen forcibly hidden');
+    }
 
     // Make sure main content is visible
     document.body.style.overflow = 'auto';
