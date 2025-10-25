@@ -3,6 +3,12 @@ let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.
 
 console.log('Script loaded successfully!');
 
+// Global error handler
+window.addEventListener('error', function(e) {
+    console.error('JavaScript Error:', e.error);
+    alert('JavaScript Error: ' + e.error.message);
+});
+
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, initializing AI portfolio...');
@@ -94,6 +100,14 @@ function setupAILoadingScreen() {
                 setTimeout(() => {
                     console.log('Loading complete, starting main experience...');
                     loadingScreen.style.display = 'none';
+
+                    // Update debug message
+                    const debugEl = document.getElementById('debug-test');
+                    if (debugEl) {
+                        debugEl.innerHTML = 'DEBUG: Loading Complete - Main Experience Starting';
+                        debugEl.style.background = 'green';
+                    }
+
                     startMainExperience();
                     setupCustomCursor();
                     setupAIChatbot();
@@ -809,6 +823,40 @@ function animateCounter(element) {
 
 // Export functions for global use
 window.scrollToSection = scrollToSection;
+
+// Debug function to force show content
+window.forceShowContent = function() {
+    console.log('Force showing content...');
+    document.body.style.overflow = 'auto';
+    document.getElementById('ai-loading-screen').style.display = 'none';
+
+    const hero = document.querySelector('.hero');
+    const navbar = document.querySelector('.navbar');
+    const chatbot = document.getElementById('ai-chatbot');
+    const sections = document.querySelectorAll('.about, .portfolio-section, .workflow-section, .contact');
+
+    if (hero) {
+        hero.style.display = 'flex';
+        hero.style.opacity = '1';
+        console.log('Hero shown');
+    }
+    if (navbar) {
+        navbar.style.display = 'block';
+        console.log('Navbar shown');
+    }
+    if (chatbot) {
+        chatbot.style.display = 'block';
+        console.log('Chatbot shown');
+    }
+    sections.forEach(section => {
+        section.style.display = 'block';
+        section.style.opacity = '1';
+        console.log('Section shown:', section.className);
+    });
+
+    // Start main experience
+    startMainExperience();
+};
 // Integrated Parallax System - Works throughout the entire site
 function setupIntegratedParallax() {
     const parallaxElements = document.querySelectorAll('.parallax-shape');
