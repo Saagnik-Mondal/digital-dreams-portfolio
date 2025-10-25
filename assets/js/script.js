@@ -124,39 +124,84 @@ function setupScrollProgress() {
     });
 }
 
-// Advanced Loading Screen
+// Enhanced Loading Screen with Beautiful Animations
 function setupLoadingScreen() {
     const loadingScreen = document.getElementById('loading-screen');
     const progressFill = document.querySelector('.progress-fill');
     const progressPercentage = document.querySelector('.progress-percentage');
     const stages = document.querySelectorAll('.stage');
+    const logoSvg = document.querySelector('.logo-svg');
+    const particles = document.querySelectorAll('.particle');
+    const orbs = document.querySelectorAll('.orb');
     
     let currentProgress = 0;
     let currentStage = 0;
     
-    // Loading stages with different durations
+    // Enhanced loading stages with more detailed descriptions
     const loadingStages = [
-        { duration: 800, text: 'Initializing Creative Engine...' },
-        { duration: 1000, text: 'Loading Particle Systems...' },
-        { duration: 600, text: 'Preparing Interactive Elements...' },
-        { duration: 700, text: 'Optimizing Visual Effects...' },
-        { duration: 500, text: 'Almost Ready...' },
-        { duration: 400, text: 'Welcome to Digital Dreams!' }
+        { duration: 1000, text: 'Initializing Creative Engine...', color: '#667eea' },
+        { duration: 1200, text: 'Loading Particle Systems...', color: '#f093fb' },
+        { duration: 800, text: 'Preparing Interactive Elements...', color: '#4facfe' },
+        { duration: 900, text: 'Optimizing Visual Effects...', color: '#764ba2' },
+        { duration: 600, text: 'Calibrating Parallax Systems...', color: '#f5576c' },
+        { duration: 500, text: 'Almost Ready...', color: '#00f2fe' },
+        { duration: 400, text: 'Welcome to Digital Dreams!', color: '#667eea' }
     ];
     
-    function updateProgress(target, duration) {
+    // Animate logo on load
+    if (logoSvg) {
+        logoSvg.style.transform = 'scale(0) rotate(-180deg)';
+        logoSvg.style.opacity = '0';
+        
+        setTimeout(() => {
+            logoSvg.style.transition = 'all 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            logoSvg.style.transform = 'scale(1) rotate(0deg)';
+            logoSvg.style.opacity = '1';
+        }, 300);
+    }
+    
+    // Animate particles with stagger
+    particles.forEach((particle, index) => {
+        particle.style.animationDelay = `${index * 0.2}s`;
+        particle.style.opacity = '0';
+        setTimeout(() => {
+            particle.style.opacity = '1';
+        }, index * 200);
+    });
+    
+    // Animate orbs with different timings
+    orbs.forEach((orb, index) => {
+        orb.style.transform = 'scale(0)';
+        orb.style.opacity = '0';
+        setTimeout(() => {
+            orb.style.transition = 'all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            orb.style.transform = 'scale(1)';
+            orb.style.opacity = '1';
+        }, 500 + (index * 300));
+    });
+    
+    function updateProgress(target, duration, stageColor) {
         const startProgress = currentProgress;
         const progressDiff = target - startProgress;
         const startTime = Date.now();
         
+        // Update progress bar color
+        if (stageColor) {
+            progressFill.style.background = `linear-gradient(90deg, ${stageColor}, #fff)`;
+        }
+        
         function animateProgress() {
             const elapsed = Date.now() - startTime;
             const progress = Math.min(elapsed / duration, 1);
-            const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
+            const easeProgress = 1 - Math.pow(1 - progress, 4); // Ease out quart
             
             currentProgress = startProgress + (progressDiff * easeProgress);
             progressFill.style.width = currentProgress + '%';
             progressPercentage.textContent = Math.round(currentProgress);
+            
+            // Add pulsing effect to percentage
+            const pulseScale = 1 + Math.sin(elapsed * 0.01) * 0.1;
+            progressPercentage.style.transform = `scale(${pulseScale})`;
             
             if (progress < 1) {
                 requestAnimationFrame(animateProgress);
@@ -168,38 +213,107 @@ function setupLoadingScreen() {
     
     function nextStage() {
         if (currentStage < loadingStages.length) {
-            // Update stage text
-            stages.forEach(stage => stage.classList.remove('active'));
-            stages[currentStage].classList.add('active');
+            // Update stage text with enhanced animation
+            stages.forEach(stage => {
+                stage.classList.remove('active');
+                stage.style.transform = 'translateY(20px)';
+                stage.style.opacity = '0';
+            });
+            
+            const currentStageElement = stages[currentStage];
+            if (currentStageElement) {
+                currentStageElement.classList.add('active');
+                currentStageElement.style.color = loadingStages[currentStage].color;
+                
+                // Animate stage text in
+                setTimeout(() => {
+                    currentStageElement.style.transform = 'translateY(0)';
+                    currentStageElement.style.opacity = '1';
+                }, 100);
+            }
             
             const targetProgress = ((currentStage + 1) / loadingStages.length) * 100;
             const stageDuration = loadingStages[currentStage].duration;
+            const stageColor = loadingStages[currentStage].color;
             
-            updateProgress(targetProgress, stageDuration);
+            updateProgress(targetProgress, stageDuration, stageColor);
+            
+            // Add particle burst effect for each stage
+            createParticleBurst();
             
             currentStage++;
             
             if (currentStage < loadingStages.length) {
-                setTimeout(nextStage, stageDuration + 200);
+                setTimeout(nextStage, stageDuration + 300);
             } else {
-                // Loading complete
+                // Loading complete with enhanced exit animation
                 setTimeout(() => {
-                    loadingScreen.classList.add('hide');
-                    isLoading = false;
+                    // Final animation sequence
+                    logoSvg.style.transform = 'scale(1.2) rotate(360deg)';
+                    progressFill.style.background = 'linear-gradient(90deg, #667eea, #764ba2, #f093fb)';
                     
                     setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                        startHeroAnimations();
-                        setupCustomCursor();
-                        setupMagneticElements();
+                        loadingScreen.classList.add('hide');
+                        loadingScreen.style.transform = 'scale(1.1)';
+                        loadingScreen.style.filter = 'blur(10px)';
+                        isLoading = false;
                         
-                        // Initialize advanced WebGL effects
-                        if (typeof window.initAdvancedEffects === 'function') {
-                            window.initAdvancedEffects();
-                        }
-                    }, 1000);
-                }, 800);
+                        setTimeout(() => {
+                            loadingScreen.style.display = 'none';
+                            startHeroAnimations();
+                            setupCustomCursor();
+                            setupMagneticElements();
+                            
+                            // Initialize advanced WebGL effects
+                            if (typeof window.initAdvancedEffects === 'function') {
+                                window.initAdvancedEffects();
+                            }
+                        }, 1200);
+                    }, 500);
+                }, 1000);
             }
+        }
+    }
+    
+    // Create particle burst effect
+    function createParticleBurst() {
+        const burstContainer = document.querySelector('.loading-container');
+        
+        for (let i = 0; i < 8; i++) {
+            const burstParticle = document.createElement('div');
+            burstParticle.style.cssText = `
+                position: absolute;
+                width: 4px;
+                height: 4px;
+                background: ${loadingStages[currentStage]?.color || '#fff'};
+                border-radius: 50%;
+                top: 50%;
+                left: 50%;
+                pointer-events: none;
+                z-index: 10;
+            `;
+            
+            burstContainer.appendChild(burstParticle);
+            
+            const angle = (i / 8) * Math.PI * 2;
+            const distance = 50 + Math.random() * 30;
+            const duration = 800 + Math.random() * 400;
+            
+            burstParticle.animate([
+                {
+                    transform: 'translate(-50%, -50%) scale(0)',
+                    opacity: 1
+                },
+                {
+                    transform: `translate(${Math.cos(angle) * distance - 50}%, ${Math.sin(angle) * distance - 50}%) scale(1)`,
+                    opacity: 0
+                }
+            ], {
+                duration: duration,
+                easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+            }).onfinish = () => {
+                burstParticle.remove();
+            };
         }
     }
     
@@ -661,18 +775,108 @@ function debounce(func, wait) {
     };
 }
 
-// Enhanced scroll performance
-const optimizedScrollHandler = throttle(() => {
-    const scrolled = window.scrollY;
-    const rate = scrolled * -0.5;
+// Enhanced Parallax Scroll Effects
+const setupParallaxScrolling = () => {
+    const parallaxElements = document.querySelectorAll('.parallax-element, .scroll-parallax');
     const heroBackground = document.querySelector('.hero-background');
+    const parallaxShapes = document.querySelectorAll('.parallax-shape');
     
-    if (heroBackground && scrolled < window.innerHeight) {
-        heroBackground.style.transform = `translateY(${rate}px)`;
-    }
-}, 16);
+    const handleParallaxScroll = throttle(() => {
+        const scrolled = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        
+        // Hero background parallax
+        if (heroBackground && scrolled < windowHeight) {
+            const rate = scrolled * -0.3;
+            heroBackground.style.transform = `translate3d(0, ${rate}px, 0)`;
+        }
+        
+        // Parallax shapes movement
+        parallaxShapes.forEach((shape, index) => {
+            const speed = 0.1 + (index * 0.05);
+            const yPos = scrolled * speed;
+            const rotation = scrolled * 0.02 * (index + 1);
+            shape.style.transform = `translate3d(0, ${yPos}px, 0) rotate(${rotation}deg)`;
+        });
+        
+        // Portfolio cards parallax
+        const portfolioCards = document.querySelectorAll('.portfolio-card');
+        portfolioCards.forEach((card, index) => {
+            const rect = card.getBoundingClientRect();
+            const cardCenter = rect.top + rect.height / 2;
+            const windowCenter = windowHeight / 2;
+            const distance = cardCenter - windowCenter;
+            const parallaxValue = distance * -0.1;
+            
+            if (rect.top < windowHeight && rect.bottom > 0) {
+                card.style.transform = `translateY(${parallaxValue}px)`;
+            }
+        });
+        
+        // Section titles parallax
+        const sectionTitles = document.querySelectorAll('.section-title');
+        sectionTitles.forEach((title) => {
+            const rect = title.getBoundingClientRect();
+            if (rect.top < windowHeight && rect.bottom > 0) {
+                const parallaxValue = (windowHeight - rect.top) * 0.05;
+                title.style.transform = `translateY(${parallaxValue}px)`;
+            }
+        });
+        
+        // Floating elements parallax
+        const floatingElements = document.querySelectorAll('.floating-element');
+        floatingElements.forEach((element, index) => {
+            const speed = 0.2 + (index * 0.1);
+            const yPos = scrolled * speed;
+            const rotation = scrolled * 0.05 * (index + 1);
+            element.style.transform = `translate3d(0, ${yPos}px, 0) rotate(${rotation}deg)`;
+        });
+        
+    }, 16);
+    
+    window.addEventListener('scroll', handleParallaxScroll);
+    
+    // Initial call
+    handleParallaxScroll();
+};
 
-window.addEventListener('scroll', optimizedScrollHandler);
+// Mouse parallax effect
+const setupMouseParallax = () => {
+    let mouseX = 0;
+    let mouseY = 0;
+    
+    document.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+        mouseY = (e.clientY / window.innerHeight) * 2 - 1;
+        
+        // Apply mouse parallax to floating elements
+        const floatingElements = document.querySelectorAll('.floating-element');
+        floatingElements.forEach((element, index) => {
+            const intensity = 10 + (index * 5);
+            const x = mouseX * intensity;
+            const y = mouseY * intensity;
+            element.style.transform += ` translate3d(${x}px, ${y}px, 0)`;
+        });
+        
+        // Apply mouse parallax to parallax shapes
+        const parallaxShapes = document.querySelectorAll('.parallax-shape');
+        parallaxShapes.forEach((shape, index) => {
+            const intensity = 15 + (index * 8);
+            const x = mouseX * intensity;
+            const y = mouseY * intensity;
+            shape.style.transform += ` translate3d(${x}px, ${y}px, 0)`;
+        });
+    });
+};
+
+// Initialize parallax effects
+document.addEventListener('DOMContentLoaded', () => {
+    if (!prefersReducedMotion && !isMobile) {
+        setupParallaxScrolling();
+        setupMouseParallax();
+    }
+});
 
 // Preload images for better performance
 function preloadImages() {

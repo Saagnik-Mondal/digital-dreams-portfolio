@@ -335,8 +335,153 @@ class SmoothScroll {
     }
 }
 
+// Enhanced Parallax Scroll Manager
+class ParallaxScrollManager {
+    constructor() {
+        this.elements = [];
+        this.isScrolling = false;
+        this.init();
+    }
+    
+    init() {
+        this.bindEvents();
+        this.registerElements();
+    }
+    
+    bindEvents() {
+        window.addEventListener('scroll', this.handleScroll.bind(this), { passive: true });
+        window.addEventListener('resize', this.handleResize.bind(this));
+    }
+    
+    registerElements() {
+        // Register different types of parallax elements
+        this.registerElement('.hero-background', { speed: 0.5, direction: 'up' });
+        this.registerElement('.parallax-shape', { speed: 0.3, direction: 'down' });
+        this.registerElement('.portfolio-card', { speed: 0.1, direction: 'up' });
+        this.registerElement('.section-title', { speed: 0.2, direction: 'up' });
+    }
+    
+    registerElement(selector, options = {}) {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach((element, index) => {
+            this.elements.push({
+                element,
+                speed: options.speed || 0.1,
+                direction: options.direction || 'up',
+                offset: options.offset || 0,
+                index
+            });
+        });
+    }
+    
+    handleScroll() {
+        if (!this.isScrolling) {
+            requestAnimationFrame(this.updateElements.bind(this));
+            this.isScrolling = true;
+        }
+    }
+    
+    updateElements() {
+        const scrollY = window.pageYOffset;
+        const windowHeight = window.innerHeight;
+        
+        this.elements.forEach(({ element, speed, direction, offset, index }) => {
+            const rect = element.getBoundingClientRect();
+            const elementTop = rect.top + scrollY;
+            const elementHeight = rect.height;
+            
+            // Check if element is in viewport
+            if (rect.bottom >= 0 && rect.top <= windowHeight) {
+                const progress = (scrollY - elementTop + windowHeight) / (windowHeight + elementHeight);
+                const clampedProgress = Math.max(0, Math.min(1, progress));
+                
+                let translateY = 0;
+                if (direction === 'up') {
+                    translateY = (clampedProgress - 0.5) * speed * 100;
+                } else {
+                    translateY = -(clampedProgress - 0.5) * speed * 100;
+                }
+                
+                // Add some variation based on index
+                const variation = Math.sin(index * 0.5) * 10;
+                translateY += variation;
+                
+                element.style.transform = `translate3d(0, ${translateY + offset}px, 0)`;
+            }
+        });
+        
+        this.isScrolling = false;
+    }
+    
+    handleResize() {
+        // Recalculate on resize
+        this.updateElements();
+    }
+}
+
+// Enhanced Mouse Parallax Effect
+class MouseParallaxEffect {
+    constructor() {
+        this.mouse = { x: 0, y: 0 };
+        this.elements = [];
+        this.init();
+    }
+    
+    init() {
+        this.registerElements();
+        this.bindEvents();
+    }
+    
+    registerElements() {
+        // Register elements for mouse parallax
+        const shapes = document.querySelectorAll('.parallax-shape');
+        const floatingElements = document.querySelectorAll('.floating-element');
+        
+        shapes.forEach((element, index) => {
+            this.elements.push({
+                element,
+                intensity: 20 + (index * 5),
+                speed: 0.1 + (index * 0.02)
+            });
+        });
+        
+        floatingElements.forEach((element, index) => {
+            this.elements.push({
+                element,
+                intensity: 15 + (index * 3),
+                speed: 0.08 + (index * 0.01)
+            });
+        });
+    }
+    
+    bindEvents() {
+        document.addEventListener('mousemove', this.handleMouseMove.bind(this));
+    }
+    
+    handleMouseMove(e) {
+        this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        this.mouse.y = (e.clientY / window.innerHeight) * 2 - 1;
+        
+        this.updateElements();
+    }
+    
+    updateElements() {
+        this.elements.forEach(({ element, intensity, speed }) => {
+            const x = this.mouse.x * intensity;
+            const y = this.mouse.y * intensity;
+            
+            // Smooth transition
+            const currentTransform = element.style.transform || '';
+            const newTransform = `translate3d(${x}px, ${y}px, 0)`;
+            
+            element.style.transition = `transform ${speed}s ease-out`;
+            element.style.transform = newTransform;
+        });
+    }
+}
+
 // Initialize all effects
-let fluidEffect, threeJSBackground, liquidCursor, smoothScroll;
+let fluidEffect, threeJSBackground, liquidCursor, smoothScroll, parallaxScrollManager, mouseParallaxEffect;
 
 function initAdvancedEffects() {
     // Skip heavy effects on mobile
@@ -361,6 +506,10 @@ function initAdvancedEffects() {
     if (typeof Lenis !== 'undefined') {
         smoothScroll = new SmoothScroll();
     }
+    
+    // Initialize enhanced parallax effects
+    parallaxScrollManager = new ParallaxScrollManager();
+    mouseParallaxEffect = new MouseParallaxEffect();
 }
 
 // Export for use in main script
