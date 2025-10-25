@@ -371,7 +371,9 @@ function setupAIChatbot() {
                         patterns: [
                             /\b(animation|animations|animated|motion|moving|video|film|cinematic)\b/i,
                             /\b(divine dance|mystic forest|cosmic mandala|dance|forest|mandala)\b/i,
-                            /\b(show.*animation|see.*animation|what.*animation)\b/i
+                            /\b(show.*animation|see.*animation|what.*animation|tell.*animation)\b/i,
+                            /\b(what.*animations|about.*animations|animations.*like)\b/i,
+                            /\b(3d|character|kathakali|folk|mythical|creatures)\b/i
                         ],
                         responses: [
                             'The animations section features three remarkable pieces: "Divine Dance" - a Kathakali-inspired 3D character animation, "Mystic Forest" - an interactive forest with mythical creatures from Indian folklore, and "Cosmic Mandala" - an abstract exploration of the universe through traditional mandala patterns. Each demonstrates the beautiful fusion of cultural heritage and cutting-edge technology.',
@@ -384,7 +386,9 @@ function setupAIChatbot() {
                         patterns: [
                             /\b(illustration|illustrations|digital.*art|painting|drawing|graphic|design)\b/i,
                             /\b(sacred waters|goddess awakening|urban mandala|water|goddess|urban)\b/i,
-                            /\b(show.*illustration|see.*illustration|what.*illustration)\b/i
+                            /\b(show.*illustration|see.*illustration|what.*illustration|tell.*illustration)\b/i,
+                            /\b(what.*illustrations|about.*illustrations|illustrations.*like)\b/i,
+                            /\b(ganges|durga|mumbai|photorealistic|contemporary|iconography)\b/i
                         ],
                         responses: [
                             'The illustrations showcase three beautiful pieces: "Sacred Waters" - a photorealistic digital painting of the Ganges at dawn, "Goddess Awakening" - a contemporary interpretation of Durga blending traditional iconography with modern aesthetics, and "Urban Mandala" - a geometric design incorporating Mumbai\'s architecture. Each piece tells a unique story of cultural fusion.',
@@ -397,7 +401,9 @@ function setupAIChatbot() {
                         patterns: [
                             /\b(drawing|drawings|sketch|sketches|charcoal|ink|pencil|traditional)\b/i,
                             /\b(charcoal portrait|ink mandala|urban sketch|portrait|mandala|sketch)\b/i,
-                            /\b(show.*drawing|see.*drawing|what.*drawing)\b/i
+                            /\b(show.*drawing|see.*drawing|what.*drawing|tell.*drawing)\b/i,
+                            /\b(what.*drawings|about.*drawings|drawings.*like)\b/i,
+                            /\b(classical|techniques|mixed.*media|street.*life|human.*emotion)\b/i
                         ],
                         responses: [
                             'The drawings section includes "Charcoal Portrait" - an intimate study using traditional charcoal techniques, "Ink Mandala" - an intricate mandala design created with dip pen and ink exploring spiritual geometry, and "Urban Sketch" - a mixed media capture of Mumbai street life. These pieces showcase the artist\'s foundation in classical techniques with contemporary vision.',
@@ -528,8 +534,27 @@ function setupAIChatbot() {
                     for (const pattern of intentData.patterns) {
                         const matches = message.match(pattern);
                         if (matches) {
-                            const confidence = matches.length / message.split(' ').length; // Simple confidence score
-                            if (confidence > bestMatch.confidence) {
+                            // Improved confidence scoring based on match quality
+                            const matchLength = matches[0].length; // Length of the matched text
+                            const messageWords = message.split(' ').length;
+                            const matchWords = matches[0].split(' ').length;
+
+                            // Confidence based on: match length, word coverage, and pattern specificity
+                            let confidence = (matchWords / messageWords) * 0.6 + // Word coverage (60%)
+                                           (matchLength / message.length) * 0.4; // Character coverage (40%)
+
+                            // Boost confidence for exact matches or key terms
+                            if (matches[0].toLowerCase() === intentName.toLowerCase()) {
+                                confidence += 0.3; // Exact match bonus
+                            }
+
+                            // Ensure minimum confidence for valid matches
+                            confidence = Math.max(confidence, 0.1);
+
+                            console.log(`Intent match: ${intentName}, pattern: ${pattern}, confidence: ${confidence.toFixed(2)}, message: "${message}"`);
+
+                            // Lower confidence threshold for better matching
+                            if (confidence > bestMatch.confidence && confidence > 0.05) {
                                 bestMatch = {
                                     intent: intentName,
                                     confidence: confidence,
@@ -544,6 +569,16 @@ function setupAIChatbot() {
                 let response;
                 if (bestMatch.response) {
                     response = bestMatch.response;
+                } else {
+                    // Fallback responses when no intent is matched
+                    const fallbackResponses = [
+                        "I'd be happy to help you learn more about this portfolio! I have detailed information about the animations, illustrations, drawings, and the creative process. What specific aspect interests you?",
+                        "This portfolio showcases the beautiful fusion of Indian cultural heritage with modern digital techniques. I can tell you about the animations, illustrations, drawings, or the artist's workflow. What would you like to explore?",
+                        "I'm here to provide insights into this creative work. Whether you're interested in the technical aspects, cultural influences, or specific artworks, I'm ready to share detailed information. What would you like to know?",
+                        "The portfolio features three main categories: animations, illustrations, and drawings. Each represents a unique blend of tradition and innovation. Which area would you like me to elaborate on?"
+                    ];
+                    response = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+                }
                 } else if (bestMatch.intent === 'current_view') {
                     // Prioritize screen vision analysis if available and recent
                     if (window.screenVision && window.screenVision.lastAnalysis &&
