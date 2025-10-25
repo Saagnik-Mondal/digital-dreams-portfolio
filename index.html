@@ -155,11 +155,7 @@
         <div class="cursor-outline"></div>
     </div>
 
-    <!-- DEBUG: Test Content Visibility -->
-    <div id="debug-test" style="position: fixed; top: 10px; left: 10px; background: red; color: white; padding: 10px; z-index: 9999; font-size: 12px;">
-        DEBUG: Page Loaded
-        <button onclick="forceShowContent()" style="margin-left: 10px; padding: 5px;">Force Show Content</button>
-    </div>
+
 
     <!-- Navigation -->
     <nav class="navbar">
@@ -585,32 +581,7 @@
         </div>
     </div>
 
-    <script>
-        // Immediate test
-        console.log('HTML script tag executed');
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOMContentLoaded fired');
-            // Force show main content immediately
-            document.body.style.overflow = 'auto';
-            const hero = document.querySelector('.hero');
-            const navbar = document.querySelector('.navbar');
-            const chatbot = document.getElementById('ai-chatbot');
 
-            if (hero) {
-                hero.style.display = 'flex';
-                hero.style.opacity = '1';
-                console.log('Hero forced visible');
-            }
-            if (navbar) {
-                navbar.style.display = 'block';
-                console.log('Navbar forced visible');
-            }
-            if (chatbot) {
-                chatbot.style.display = 'block';
-                console.log('Chatbot forced visible');
-            }
-        });
-    </script>
     <script src="assets/js/script.js"></script>
     
 
