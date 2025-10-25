@@ -1406,25 +1406,23 @@ function loadLocalParallaxImages() {
     const parallaxImages = document.querySelectorAll('.parallax-bg-img');
     
     const localImagePaths = [
-        'assets/parallax/layer1.jpg',
-        'assets/parallax/layer2.jpg',
-        'assets/parallax/layer3.jpg',
-        'assets/parallax/layer4.jpg',
-        'assets/parallax/layer5.jpg'
+        'assets/parallax/layer1.png',
+        'assets/parallax/layer2.png',
+        'assets/parallax/layer3.png',
+        'assets/parallax/layer4.png',
+        'assets/parallax/layer5.png'
     ];
     
     parallaxImages.forEach((img, index) => {
         const imagePath = localImagePaths[index % localImagePaths.length];
         
-        const preloadImg = new Image();
-        preloadImg.onload = () => {
-            img.style.backgroundImage = `url('${imagePath}')`;
-            img.classList.add('animate');
-        };
-        preloadImg.onerror = () => {
-            console.warn(`Could not load image: ${imagePath}`);
-        };
-        preloadImg.src = imagePath;
+        // Directly set the background image without preloading
+        img.style.backgroundImage = `url('${imagePath}')`;
+        img.style.backgroundSize = 'cover';
+        img.style.backgroundPosition = 'center';
+        img.classList.add('animate');
+        
+        console.log(`Loading parallax image ${index + 1}: ${imagePath}`);
     });
 }
 
