@@ -1,16 +1,185 @@
 // Global Variables
 let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-// DOM Content Loaded Event
-document.addEventListener('DOMContentLoaded', function() {
-    initializeWebsite();
-});
+// AI Loading Screen
+function setupAILoadingScreen() {
+    const loadingScreen = document.getElementById('ai-loading-screen');
+    const progressFill = document.querySelector('.progress-circle-fill');
+    const progressPercentage = document.querySelector('.progress-percentage');
+    const stages = document.querySelectorAll('.stage');
+
+    let currentProgress = 0;
+    let currentStage = 0;
+
+    const loadingStages = [
+        { duration: 1500, text: 'Neural Network Activation', color: '#667eea' },
+        { duration: 1200, text: 'Loading Creative Assets', color: '#764ba2' },
+        { duration: 1000, text: 'Initializing AI Guide', color: '#f093fb' },
+        { duration: 800, text: 'Launching Experience', color: '#00f2fe' }
+    ];
+
+    function updateProgress(target, duration, stageColor) {
+        const startProgress = currentProgress;
+        const progressDiff = target - startProgress;
+        const startTime = Date.now();
+
+        function animateProgress() {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easeProgress = 1 - Math.pow(1 - progress, 3);
+
+            currentProgress = startProgress + (progressDiff * easeProgress);
+            const circumference = 339.292;
+            const offset = circumference - (currentProgress / 100) * circumference;
+            progressFill.style.strokeDashoffset = offset;
+            progressPercentage.textContent = Math.round(currentProgress) + '%';
+
+            if (progress < 1) {
+                requestAnimationFrame(animateProgress);
+            }
+        }
+
+        animateProgress();
+    }
+
+    function nextStage() {
+        if (currentStage < loadingStages.length) {
+            stages.forEach(stage => stage.classList.remove('active'));
+            const currentStageElement = stages[currentStage];
+            if (currentStageElement) {
+                currentStageElement.classList.add('active');
+            }
+
+            const targetProgress = ((currentStage + 1) / loadingStages.length) * 100;
+            const stageDuration = loadingStages[currentStage].duration;
+
+            updateProgress(targetProgress, stageDuration);
+
+            currentStage++;
+
+            if (currentStage < loadingStages.length) {
+                setTimeout(nextStage, stageDuration + 200);
+            } else {
+                setTimeout(() => {
+                    loadingScreen.style.opacity = '0';
+                    loadingScreen.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                        startMainExperience();
+                        setupCustomCursor();
+                        setupAIChatbot();
+                    }, 800);
+                }, 1000);
+            }
+        }
+    }
+
+    setTimeout(nextStage, 500);
+}
+
+// AI Chatbot
+function setupAIChatbot() {
+    const chatbot = document.getElementById('ai-chatbot');
+    const toggle = document.querySelector('.chatbot-toggle');
+    const window = document.querySelector('.chatbot-window');
+    const closeBtn = document.querySelector('.chatbot-close');
+    const input = document.querySelector('.chat-input');
+    const sendBtn = document.querySelector('.send-btn');
+    const messages = document.querySelector('.chatbot-messages');
+
+    let isOpen = false;
+
+    toggle.addEventListener('click', () => {
+        isOpen = !isOpen;
+        window.style.display = isOpen ? 'flex' : 'none';
+        toggle.style.transform = isOpen ? 'scale(0.9)' : 'scale(1)';
+    });
+
+    closeBtn.addEventListener('click', () => {
+        isOpen = false;
+        window.style.display = 'none';
+        toggle.style.transform = 'scale(1)';
+    });
+
+    function sendMessage(message, isUser = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+
+        messageDiv.innerHTML = `
+            <div class="message-avatar">
+                <i class="fas ${isUser ? 'fa-user' : 'fa-brain'}"></i>
+            </div>
+            <div class="message-content">
+                <p>${message}</p>
+                <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+            </div>
+        `;
+
+        messages.appendChild(messageDiv);
+        messages.scrollTop = messages.scrollHeight;
+
+        if (!isUser) {
+            // AI responses
+            setTimeout(() => {
+                const responses = {
+                    'hello': 'Hello! Welcome to my creative portfolio. I\'m here to guide you through my work and answer any questions you have about my creative process.',
+                    'about': 'I\'m a digital artist specializing in animations, illustrations, and creative storytelling. Each piece tells a unique story and showcases different techniques.',
+                    'animations': 'My animations section features fluid motion graphics and character animations. Click on any piece to see the workflow behind it!',
+                    'illustrations': 'The illustrations showcase my digital art style, from concept art to finished pieces. Each one represents hours of creative exploration.',
+                    'drawings': 'My traditional drawings combine classic techniques with modern themes. They show the foundation of my artistic journey.',
+                    'workflow': 'My workflow typically involves concept development, sketching, digital creation, and final refinement. Each step is crucial to the final result.',
+                    'contact': 'Feel free to reach out! I\'m always excited to discuss new projects and creative collaborations.',
+                    'default': 'I\'d love to tell you more about my creative process! Ask me about animations, illustrations, drawings, or my workflow.'
+                };
+
+                const lowerMessage = message.toLowerCase();
+                let response = responses.default;
+
+                for (const [key, value] of Object.entries(responses)) {
+                    if (lowerMessage.includes(key)) {
+                        response = value;
+                        break;
+                    }
+                }
+
+                sendMessage(response);
+            }, 1000 + Math.random() * 1000);
+        }
+    }
+
+    function handleSend() {
+        const message = input.value.trim();
+        if (message) {
+            sendMessage(message, true);
+            input.value = '';
+            sendMessage('...'); // AI thinking
+        }
+    }
+
+    sendBtn.addEventListener('click', handleSend);
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleSend();
+        }
+    });
+
+    // Welcome message after a delay
+    setTimeout(() => {
+        sendMessage('Welcome to my AI-powered portfolio! I can help you explore my creative work and understand the process behind each piece. What interests you most?');
+    }, 2000);
+}
 
 // Initialize Website
 function initializeWebsite() {
+    setupAILoadingScreen();
+}
+
+// After loading screen completes
+function startMainExperience() {
     setupNavigation();
     setupScrollAnimations();
     setupPortfolioInteractions();
+    setupWorkflowAnimations();
     setupContactForm();
     setupModalSystem();
     setupSmoothScrolling();
@@ -308,15 +477,96 @@ function setupScrollAnimations() {
     });
 }
 
-// Portfolio Interactions
+// Custom Cursor
+function setupCustomCursor() {
+    if (isMobile) return;
+
+    const cursor = document.querySelector('.custom-cursor');
+    const cursorDot = document.querySelector('.cursor-dot');
+    const cursorOutline = document.querySelector('.cursor-outline');
+
+    let mouseX = 0;
+    let mouseY = 0;
+    let cursorX = 0;
+    let cursorY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    function animateCursor() {
+        cursorX += (mouseX - cursorX) * 0.15;
+        cursorY += (mouseY - cursorY) * 0.15;
+
+        cursorDot.style.left = mouseX + 'px';
+        cursorDot.style.top = mouseY + 'px';
+        cursorOutline.style.left = cursorX + 'px';
+        cursorOutline.style.top = cursorY + 'px';
+
+        requestAnimationFrame(animateCursor);
+    }
+
+    animateCursor();
+
+    // Hover effects
+    document.querySelectorAll('a, button, .portfolio-card, .workflow-step').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursor.classList.add('hover');
+        });
+
+        el.addEventListener('mouseleave', () => {
+            cursor.classList.remove('hover');
+        });
+    });
+}
+
+// Enhanced Portfolio Interactions
 function setupPortfolioInteractions() {
     const portfolioCards = document.querySelectorAll('.portfolio-card');
 
-    portfolioCards.forEach(card => {
+    portfolioCards.forEach((card, index) => {
+        // 3D hover effect
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = (y - centerY) / 12;
+            const rotateY = (centerX - x) / 12;
+
+            card.style.transform = `translateY(-15px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(0) rotateX(0deg) rotateY(0deg) scale(1)';
+        });
+
         // Click to open modal
         card.addEventListener('click', () => {
             openPortfolioModal(card);
         });
+
+        // Stagger animation
+        card.style.animationDelay = `${index * 0.1}s`;
+    });
+}
+
+// Workflow Animations
+function setupWorkflowAnimations() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                entry.target.style.animationDelay = `${index * 0.2}s`;
+                entry.target.classList.add('animate-in');
+            }
+        });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.workflow-step').forEach(step => {
+        observer.observe(step);
     });
 }
 

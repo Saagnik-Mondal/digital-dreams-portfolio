@@ -15,13 +15,145 @@
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.0.27/bundled/lenis.min.js"></script>
 </head>
 <body>
+    <!-- Advanced AI Loading Screen -->
+    <div id="ai-loading-screen">
+        <div class="ai-loading-container">
+            <!-- AI Brain Visualization -->
+            <div class="ai-brain">
+                <div class="brain-outline">
+                    <svg viewBox="0 0 200 200" class="brain-svg">
+                        <path d="M100 20 C130 20 160 40 160 70 C160 90 140 110 120 110 C100 110 80 90 80 70 C80 50 90 30 100 20 Z" fill="none" stroke="url(#brainGradient)" stroke-width="3" class="brain-path"/>
+                        <path d="M40 80 C40 60 60 40 80 40 C100 40 120 60 120 80 C120 100 100 120 80 120 C60 120 40 100 40 80 Z" fill="none" stroke="url(#brainGradient)" stroke-width="3" class="brain-path"/>
+                        <path d="M160 80 C160 60 140 40 120 40 C100 40 80 60 80 80 C80 100 100 120 120 120 C140 120 160 100 160 80 Z" fill="none" stroke="url(#brainGradient)" stroke-width="3" class="brain-path"/>
+                        <circle cx="100" cy="80" r="15" fill="url(#brainGradient)" class="brain-core"/>
+                        <defs>
+                            <linearGradient id="brainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#667eea"/>
+                                <stop offset="50%" stop-color="#764ba2"/>
+                                <stop offset="100%" stop-color="#f093fb"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="neural-network">
+                    <div class="neuron"></div>
+                    <div class="neuron"></div>
+                    <div class="neuron"></div>
+                    <div class="neuron"></div>
+                    <div class="neuron"></div>
+                    <div class="neuron"></div>
+                </div>
+            </div>
 
-    
+            <!-- AI Loading Text -->
+            <div class="ai-loading-text">
+                <h2 class="ai-title">DIGITAL DREAMS AI</h2>
+                <p class="ai-subtitle">Initializing Creative Intelligence...</p>
+            </div>
 
-    
+            <!-- Advanced Progress System -->
+            <div class="ai-progress-system">
+                <div class="progress-ring">
+                    <svg class="progress-circle" width="120" height="120">
+                        <circle cx="60" cy="60" r="54" stroke="#e5e7eb" stroke-width="6" fill="none"/>
+                        <circle cx="60" cy="60" r="54" stroke="url(#progressGradient)" stroke-width="6" fill="none" stroke-linecap="round" class="progress-circle-fill"/>
+                    </svg>
+                    <div class="progress-percentage">0%</div>
+                </div>
 
+                <div class="loading-stages">
+                    <div class="stage active" data-stage="0">
+                        <i class="fas fa-brain"></i>
+                        <span>Neural Network Activation</span>
+                    </div>
+                    <div class="stage" data-stage="1">
+                        <i class="fas fa-palette"></i>
+                        <span>Loading Creative Assets</span>
+                    </div>
+                    <div class="stage" data-stage="2">
+                        <i class="fas fa-magic"></i>
+                        <span>Initializing AI Guide</span>
+                    </div>
+                    <div class="stage" data-stage="3">
+                        <i class="fas fa-rocket"></i>
+                        <span>Launching Experience</span>
+                    </div>
+                </div>
+            </div>
 
+            <!-- AI Particles -->
+            <div class="ai-particles">
+                <div class="particle particle-1"></div>
+                <div class="particle particle-2"></div>
+                <div class="particle particle-3"></div>
+                <div class="particle particle-4"></div>
+                <div class="particle particle-5"></div>
+                <div class="particle particle-6"></div>
+            </div>
 
+            <!-- Data Streams -->
+            <div class="data-streams">
+                <div class="data-stream stream-1"></div>
+                <div class="data-stream stream-2"></div>
+                <div class="data-stream stream-3"></div>
+            </div>
+        </div>
+
+        <!-- AI Background Effects -->
+        <div class="ai-background">
+            <div class="circuit-pattern"></div>
+            <div class="glow-effects">
+                <div class="glow-sphere sphere-1"></div>
+                <div class="glow-sphere sphere-2"></div>
+                <div class="glow-sphere sphere-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chatbot -->
+    <div id="ai-chatbot" class="ai-chatbot">
+        <div class="chatbot-toggle">
+            <i class="fas fa-robot"></i>
+            <div class="chatbot-pulse"></div>
+        </div>
+        <div class="chatbot-window">
+            <div class="chatbot-header">
+                <div class="ai-avatar">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="chatbot-info">
+                    <h4>AI Creative Guide</h4>
+                    <span class="status">Online</span>
+                </div>
+                <button class="chatbot-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chatbot-messages">
+                <div class="message ai-message">
+                    <div class="message-avatar">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="message-content">
+                        <p>Hello! I'm your AI Creative Guide. I can help you explore this portfolio and learn about the creative process behind each piece. What would you like to know?</p>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" placeholder="Ask me anything about the portfolio..." class="chat-input">
+                <button class="send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor">
+        <div class="cursor-dot"></div>
+        <div class="cursor-outline"></div>
+    </div>
 
     <!-- Navigation -->
     <nav class="navbar">
@@ -39,6 +171,7 @@
                 <li><a href="#animations" class="nav-link">Animations</a></li>
                 <li><a href="#illustrations" class="nav-link">Illustrations</a></li>
                 <li><a href="#drawings" class="nav-link">Drawings</a></li>
+                <li><a href="#workflow" class="nav-link">Workflow</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
             <div class="hamburger">
@@ -267,6 +400,98 @@
                             <h3>Mixed Media</h3>
                             <p>Combined traditional techniques</p>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflow Section -->
+    <section id="workflow" class="workflow-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Creative Workflow</h2>
+                <div class="section-subtitle">Behind the scenes of my creative process</div>
+            </div>
+
+            <div class="workflow-timeline">
+                <div class="workflow-step">
+                    <div class="step-number">01</div>
+                    <div class="step-content">
+                        <h3>Concept & Ideation</h3>
+                        <p>Every project starts with a spark of inspiration. I spend time brainstorming ideas, researching themes, and developing the core concept that will drive the piece.</p>
+                        <div class="step-tools">
+                            <span>Mind Mapping</span>
+                            <span>Sketchbook</span>
+                            <span>Mood Boards</span>
+                        </div>
+                    </div>
+                    <div class="step-visual">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-number">02</div>
+                    <div class="step-content">
+                        <h3>Research & Planning</h3>
+                        <p>Detailed research into techniques, color theory, and composition. I create thumbnails and rough sketches to explore different approaches.</p>
+                        <div class="step-tools">
+                            <span>Reference Images</span>
+                            <span>Color Studies</span>
+                            <span>Composition Planning</span>
+                        </div>
+                    </div>
+                    <div class="step-visual">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-number">03</div>
+                    <div class="step-content">
+                        <h3>Digital Creation</h3>
+                        <p>Bringing the concept to life using digital tools. This involves layering, texturing, and refining details to achieve the desired effect.</p>
+                        <div class="step-tools">
+                            <span>Adobe Suite</span>
+                            <span>Procreate</span>
+                            <span>Blender</span>
+                        </div>
+                    </div>
+                    <div class="step-visual">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-number">04</div>
+                    <div class="step-content">
+                        <h3>Animation & Effects</h3>
+                        <p>For animated pieces, I add motion and effects. This includes timing, easing, and ensuring smooth transitions that enhance the storytelling.</p>
+                        <div class="step-tools">
+                            <span>After Effects</span>
+                            <span>Principle</span>
+                            <span>Custom Scripts</span>
+                        </div>
+                    </div>
+                    <div class="step-visual">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-number">05</div>
+                    <div class="step-content">
+                        <h3>Review & Refinement</h3>
+                        <p>Final review, feedback incorporation, and polishing. Every detail is examined to ensure the piece meets the highest standards.</p>
+                        <div class="step-tools">
+                            <span>Client Feedback</span>
+                            <span>Quality Assurance</span>
+                            <span>Final Export</span>
+                        </div>
+                    </div>
+                    <div class="step-visual">
+                        <i class="fas fa-check-circle"></i>
                     </div>
                 </div>
             </div>
