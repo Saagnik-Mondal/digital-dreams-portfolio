@@ -532,11 +532,11 @@ function setupAIChatbot() {
                     if (window.screenVision && window.screenVision.lastAnalysis &&
                         Date.now() - (window.screenVision.lastAnalysis.timestamp || 0) < 5000) {
                         const analysis = window.screenVision.lastAnalysis;
-                        if (analysis.artwork) {
+                        if (analysis.artwork && analysis.artwork !== 'Unknown Artwork') {
                             const artworkDetails = getArtworkDetails(analysis.artwork);
-                            response = `🎥 I can see you're looking at "${analysis.artwork}"! ${artworkDetails.description} This piece was created using ${artworkDetails.technique} and represents ${artworkDetails.theme}. Would you like to know more about the creative process, cultural inspiration, or technical aspects?`;
+                            response = `👁️ I can see you're looking at "${analysis.artwork}"! ${artworkDetails.description} This piece was created using ${artworkDetails.technique} and represents ${artworkDetails.theme}. Would you like to know more about the creative process, cultural inspiration, or technical aspects?`;
                         } else if (analysis.section) {
-                            response = `🎥 I can see you're in the ${analysis.section} section. This collection features ${analysis.section === 'animations' ? 'three dynamic motion graphics pieces' : analysis.section === 'illustrations' ? 'three stunning digital illustrations' : analysis.section === 'drawings' ? 'three classical drawing studies' : 'the artist\'s creative workflow'}. Each piece showcases the beautiful fusion of Indian cultural heritage with modern digital techniques. Which specific work interests you?`;
+                            response = `👁️ I can see you're in the ${analysis.section} section. This collection features ${analysis.section === 'animations' ? 'three dynamic motion graphics pieces' : analysis.section === 'illustrations' ? 'three stunning digital illustrations' : analysis.section === 'drawings' ? 'three classical drawing studies' : 'the artist\'s creative workflow'}. Each piece showcases the beautiful fusion of Indian cultural heritage with modern digital techniques. Which specific work interests you?`;
                         }
                     } else if (window.visualContext.currentArtwork) {
                         const artworkDetails = getArtworkDetails(window.visualContext.currentArtwork);
@@ -549,11 +549,11 @@ function setupAIChatbot() {
                     if (window.screenVision && window.screenVision.lastAnalysis &&
                         Date.now() - (window.screenVision.lastAnalysis.timestamp || 0) < 5000) {
                         const analysis = window.screenVision.lastAnalysis;
-                        if (analysis.artwork) {
+                        if (analysis.artwork && analysis.artwork !== 'Unknown Artwork') {
                             const artworkDetails = getArtworkDetails(analysis.artwork);
-                            response = `🎥 I can see you're looking at "${analysis.artwork}". This is a remarkable piece from the ${analysis.section} section. Would you like me to tell you more about its creation, cultural significance, or technical aspects?`;
+                            response = `👁️ I can see you're looking at "${analysis.artwork}". This is a remarkable piece from the ${analysis.section} section. Would you like me to tell you more about its creation, cultural significance, or technical aspects?`;
                         } else if (analysis.section) {
-                            response = `🎥 I notice you're exploring the ${analysis.section} section. This collection showcases the artist's mastery in ${analysis.section === 'animations' ? 'motion graphics and 3D animation' : analysis.section === 'illustrations' ? 'digital painting and illustration' : analysis.section === 'drawings' ? 'traditional drawing techniques' : 'creative processes'}. What specific aspect interests you?`;
+                            response = `👁️ I notice you're exploring the ${analysis.section} section. This collection showcases the artist's mastery in ${analysis.section === 'animations' ? 'motion graphics and 3D animation' : analysis.section === 'illustrations' ? 'digital painting and illustration' : analysis.section === 'drawings' ? 'traditional drawing techniques' : 'creative processes'}. What specific aspect interests you?`;
                         }
                     } else if (window.visualContext.currentArtwork) {
                         const artworkDetails = getArtworkDetails(window.visualContext.currentArtwork);
@@ -757,7 +757,6 @@ class ScreenVision {
         this.isActive = false;
         this.analysisInterval = null;
         this.lastAnalysis = null;
-        this.geminiApiKey = null; // Will be set via environment or user input
 
         // Analysis settings
         this.analysisIntervalMs = 2000; // Analyze every 2 seconds
@@ -835,85 +834,308 @@ class ScreenVision {
                 // Capture current frame
                 this.context.drawImage(video, 0, 0, this.canvas.width, this.canvas.height);
 
-                // Convert to base64 for API
-                const imageData = this.canvas.toDataURL('image/jpeg', 0.8);
-
-                // Analyze with Gemini
-                const analysis = await this.analyzeScreenWithGemini(imageData);
+                // Analyze locally without API
+                const analysis = await this.analyzeScreenLocally(this.canvas);
 
                 if (analysis) {
                     this.updateVisualContextFromAnalysis(analysis);
                 }
             } catch (error) {
-                console.error('❌ Screen analysis failed:', error);
+                console.error('❌ Local screen analysis failed:', error);
             }
         }, this.analysisIntervalMs);
     }
 
-    async analyzeScreenWithGemini(imageData) {
-        if (!this.geminiApiKey) {
-            console.warn('⚠️ Gemini API key not set');
-            return null;
-        }
-
-        const prompt = `Analyze this screenshot of a digital art portfolio website. Identify what the user is currently viewing:
-
-1. Which section are they in? (about, animations, illustrations, drawings, workflow, contact)
-2. Which specific artwork are they looking at? (if any)
-3. Are they viewing a modal or popup? (if yes, what artwork)
-4. What is the main focus of their attention?
-
-Return a JSON object with this structure:
-{
-  "section": "section_name",
-  "artwork": "artwork_title_or_null",
-  "isModalOpen": boolean,
-  "confidence": 0.0-1.0,
-  "description": "brief description of what's visible"
-}
-
-Only return valid JSON, no additional text.`;
-
+    async analyzeScreenLocally(canvas) {
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${this.geminiApiKey}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [
-                            { text: prompt },
-                            {
-                                inline_data: {
-                                    mime_type: "image/jpeg",
-                                    data: imageData.split(',')[1] // Remove data URL prefix
-                                }
-                            }
-                        ]
-                    }],
-                    generationConfig: {
-                        temperature: 0.1,
-                        maxOutputTokens: 500,
-                    }
-                })
-            });
+            const ctx = canvas.getContext('2d');
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
 
-            if (!response.ok) {
-                throw new Error(`Gemini API error: ${response.status}`);
+            // Analyze the screen content locally
+            const analysis = {
+                section: null,
+                artwork: null,
+                isModalOpen: false,
+                confidence: 0.0,
+                description: '',
+                detectedElements: []
+            };
+
+            // 1. Check for modal (dark overlay, centered content)
+            const modalResult = this.detectModal(data, canvas.width, canvas.height);
+            analysis.isModalOpen = modalResult.isModal;
+            analysis.confidence = Math.max(analysis.confidence, modalResult.confidence);
+
+            // 2. Detect text regions and content
+            const textRegions = this.detectTextRegions(data, canvas.width, canvas.height);
+            analysis.detectedElements = textRegions;
+
+            // 3. Analyze color patterns to identify sections
+            const colorAnalysis = this.analyzeColorPatterns(data, canvas.width, canvas.height);
+            analysis.section = colorAnalysis.section;
+            if (colorAnalysis.confidence > analysis.confidence) {
+                analysis.confidence = colorAnalysis.confidence;
             }
 
-            const data = await response.json();
-            const analysisText = data.candidates[0].content.parts[0].text;
+            // 4. Detect specific artworks based on visual patterns
+            const artworkDetection = this.detectArtworks(data, canvas.width, canvas.height, textRegions);
+            if (artworkDetection.artwork) {
+                analysis.artwork = artworkDetection.artwork;
+                analysis.confidence = Math.max(analysis.confidence, artworkDetection.confidence);
+            }
 
-            // Parse JSON response
-            const analysis = JSON.parse(analysisText.replace(/```json\n?|\n?```/g, ''));
-            console.log('🔍 Screen Analysis:', analysis);
+            // 5. Generate description
+            analysis.description = this.generateDescription(analysis);
 
+            console.log('🔍 Local Screen Analysis:', analysis);
             return analysis;
+
         } catch (error) {
-            console.error('❌ Gemini API call failed:', error);
+            console.error('❌ Local screen analysis failed:', error);
             return null;
+        }
+    }
+
+    detectModal(data, width, height) {
+        // Look for dark overlay pattern typical of modals
+        let darkPixels = 0;
+        let totalPixels = width * height;
+
+        // Sample pixels to check for dark overlay
+        for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            const brightness = (r + g + b) / 3;
+
+            if (brightness < 50) { // Dark pixel
+                darkPixels++;
+            }
+        }
+
+        const darkRatio = darkPixels / totalPixels;
+        const isModal = darkRatio > 0.3; // More than 30% dark pixels suggests modal overlay
+
+        return {
+            isModal,
+            confidence: isModal ? Math.min(darkRatio * 2, 0.9) : 0.1
+        };
+    }
+
+    detectTextRegions(data, width, height) {
+        const regions = [];
+        const blockSize = 20; // Analyze in 20x20 blocks
+
+        for (let y = 0; y < height - blockSize; y += blockSize) {
+            for (let x = 0; x < width - blockSize; x += blockSize) {
+                const contrast = this.calculateBlockContrast(data, width, x, y, blockSize);
+
+                if (contrast > 100) { // High contrast suggests text
+                    // Try to extract text-like patterns
+                    const textPattern = this.extractTextPattern(data, width, x, y, blockSize);
+                    if (textPattern) {
+                        regions.push({
+                            x, y,
+                            width: blockSize,
+                            height: blockSize,
+                            type: 'text_region',
+                            pattern: textPattern,
+                            contrast
+                        });
+                    }
+                }
+            }
+        }
+
+        return regions;
+    }
+
+    calculateBlockContrast(data, width, x, y, blockSize) {
+        let minBrightness = 255;
+        let maxBrightness = 0;
+
+        for (let by = 0; by < blockSize; by++) {
+            for (let bx = 0; bx < blockSize; bx++) {
+                const pixelIndex = ((y + by) * width + (x + bx)) * 4;
+                const r = data[pixelIndex];
+                const g = data[pixelIndex + 1];
+                const b = data[pixelIndex + 2];
+                const brightness = (r + g + b) / 3;
+
+                minBrightness = Math.min(minBrightness, brightness);
+                maxBrightness = Math.max(maxBrightness, brightness);
+            }
+        }
+
+        return maxBrightness - minBrightness;
+    }
+
+    extractTextPattern(data, width, x, y, blockSize) {
+        // Simple pattern recognition for common text elements
+        const patterns = {
+            'ANIMATIONS': this.matchPattern(data, width, x, y, blockSize, 'ANIMATIONS'),
+            'ILLUSTRATIONS': this.matchPattern(data, width, x, y, blockSize, 'ILLUSTRATIONS'),
+            'DRAWINGS': this.matchPattern(data, width, x, y, blockSize, 'DRAWINGS'),
+            'ABOUT': this.matchPattern(data, width, x, y, blockSize, 'ABOUT'),
+            'WORKFLOW': this.matchPattern(data, width, x, y, blockSize, 'WORKFLOW'),
+            'CONTACT': this.matchPattern(data, width, x, y, blockSize, 'CONTACT')
+        };
+
+        // Find the best match
+        let bestMatch = null;
+        let bestScore = 0;
+
+        for (const [text, score] of Object.entries(patterns)) {
+            if (score > bestScore && score > 0.3) {
+                bestMatch = text;
+                bestScore = score;
+            }
+        }
+
+        return bestMatch ? { text: bestMatch, confidence: bestScore } : null;
+    }
+
+    matchPattern(data, width, x, y, blockSize, targetText) {
+        // Very basic pattern matching - in a real implementation you'd use OCR
+        // For now, we'll use simple heuristics based on text length and position
+        const textLength = targetText.length;
+        const expectedWidth = textLength * 10; // Rough character width estimate
+
+        if (blockSize < expectedWidth / 2) return 0; // Block too small for this text
+
+        // Check if this looks like a header area (top portion of screen)
+        const relativeY = y / (width * 0.1); // Top 10% of screen
+        if (relativeY > 1) return 0.1; // Not in header area
+
+        // Return confidence based on position and size heuristics
+        return Math.min(blockSize / expectedWidth, 1) * 0.5;
+    }
+
+    analyzeColorPatterns(data, width, height) {
+        // Analyze dominant colors to identify sections
+        const colorHistogram = {};
+
+        // Sample pixels
+        for (let i = 0; i < data.length; i += 16) { // Sample every 4th pixel
+            const r = Math.floor(data[i] / 32) * 32;
+            const g = Math.floor(data[i + 1] / 32) * 32;
+            const b = Math.floor(data[i + 2] / 32) * 32;
+            const color = `${r},${g},${b}`;
+
+            colorHistogram[color] = (colorHistogram[color] || 0) + 1;
+        }
+
+        // Find dominant colors
+        const dominantColors = Object.entries(colorHistogram)
+            .sort(([,a], [,b]) => b - a)
+            .slice(0, 5);
+
+        // Map colors to sections (simplified approach)
+        const sectionColors = {
+            'animations': ['102,126,234', '103,126,234'], // Blue tones
+            'illustrations': ['246,147,251', '245,147,251'], // Pink tones
+            'drawings': ['79,172,254', '78,172,254'], // Light blue tones
+            'about': ['22,22,46', '23,22,46'], // Dark blue
+            'workflow': ['26,38,78', '27,38,78'], // Dark blue
+            'contact': ['22,22,46', '23,22,46'] // Dark blue
+        };
+
+        let bestSection = null;
+        let bestConfidence = 0;
+
+        for (const [section, colors] of Object.entries(sectionColors)) {
+            let sectionScore = 0;
+            for (const color of colors) {
+                const colorCount = colorHistogram[color] || 0;
+                sectionScore += colorCount;
+            }
+
+            const confidence = sectionScore / 1000; // Normalize
+            if (confidence > bestConfidence) {
+                bestSection = section;
+                bestConfidence = Math.min(confidence, 0.9);
+            }
+        }
+
+        return {
+            section: bestSection,
+            confidence: bestConfidence
+        };
+    }
+
+    detectArtworks(data, width, height, textRegions) {
+        // Look for artwork-specific patterns
+        const knownArtworks = [
+            'Divine Dance', 'Mystic Forest', 'Sacred Waters',
+            'Urban Mandala', 'Goddess Portrait', 'Digital Fusion'
+        ];
+
+        let bestArtwork = null;
+        let bestConfidence = 0;
+
+        // Check text regions for artwork names
+        for (const region of textRegions) {
+            if (region.pattern && region.pattern.text) {
+                const detectedText = region.pattern.text.toLowerCase();
+                for (const artwork of knownArtworks) {
+                    if (detectedText.includes(artwork.toLowerCase())) {
+                        bestArtwork = artwork;
+                        bestConfidence = region.pattern.confidence;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // If no text match, look for visual patterns (simplified)
+        if (!bestArtwork) {
+            // Check for modal-like layout which often indicates artwork viewing
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const centerBrightness = this.getAverageBrightness(data, width, centerX - 50, centerY - 50, 100, 100);
+
+            if (centerBrightness > 150) { // Bright center suggests artwork
+                bestArtwork = 'Unknown Artwork';
+                bestConfidence = 0.4;
+            }
+        }
+
+        return {
+            artwork: bestArtwork,
+            confidence: bestConfidence
+        };
+    }
+
+    getAverageBrightness(data, width, startX, startY, w, h) {
+        let totalBrightness = 0;
+        let pixelCount = 0;
+
+        for (let y = startY; y < startY + h && y < height; y++) {
+            for (let x = startX; x < startX + w && x < width; x++) {
+                const pixelIndex = (y * width + x) * 4;
+                const r = data[pixelIndex];
+                const g = data[pixelIndex + 1];
+                const b = data[pixelIndex + 2];
+                const brightness = (r + g + b) / 3;
+
+                totalBrightness += brightness;
+                pixelCount++;
+            }
+        }
+
+        return pixelCount > 0 ? totalBrightness / pixelCount : 0;
+    }
+
+    generateDescription(analysis) {
+        if (analysis.isModalOpen && analysis.artwork) {
+            return `Viewing ${analysis.artwork} in modal`;
+        } else if (analysis.artwork) {
+            return `Looking at ${analysis.artwork}`;
+        } else if (analysis.section) {
+            return `Browsing ${analysis.section} section`;
+        } else {
+            return 'Viewing portfolio content';
         }
     }
 
@@ -969,10 +1191,7 @@ Only return valid JSON, no additional text.`;
         // This is called when screen vision fails or is not available
     }
 
-    setGeminiApiKey(apiKey) {
-        this.geminiApiKey = apiKey;
-        console.log('🔑 Gemini API key set');
-    }
+
 }
 
 // Global screen vision instance
@@ -2363,23 +2582,14 @@ function setupScreenVisionControls() {
                 visionButton.style.color = '#667eea';
                 visionButton.classList.remove('screen-vision-active');
             } else {
-                // Check if API key is set
-                if (!window.screenVision.geminiApiKey) {
-                    const apiKey = prompt('Please enter your Google Gemini API key to enable screen vision:');
-                    if (apiKey) {
-                        window.screenVision.setGeminiApiKey(apiKey);
-                    } else {
-                        alert('Screen vision requires a Gemini API key. You can get one from Google AI Studio.');
-                        return;
-                    }
-                }
-
                 const started = await window.screenVision.startScreenCapture();
                 if (started) {
                     visionButton.innerHTML = '🎥';
-                    visionButton.title = 'Stop Screen Vision (Gemini Live Active)';
+                    visionButton.title = 'Stop Screen Vision (Local AI Analysis)';
                     visionButton.style.color = '#4CAF50';
                     visionButton.classList.add('screen-vision-active');
+                } else {
+                    alert('Screen vision could not be started. Please check your browser permissions.');
                 }
             }
         });

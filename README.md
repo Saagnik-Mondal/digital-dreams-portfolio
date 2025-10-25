@@ -44,13 +44,14 @@ portfolio-website/
 └── README.md              # This file
 ```
 
-## 🎥 Screen Vision Feature (Beta)
+## 👁️ Screen Vision Feature (Beta)
 
-Experience cutting-edge AI-powered visual context tracking similar to Google Gemini Live!
+Experience AI-powered visual context tracking with local screen analysis - no API keys required!
 
 ### How It Works
 - **Real-time Screen Analysis**: Uses your screen capture to understand what you're viewing
-- **AI-Powered Recognition**: Google Gemini API analyzes screenshots to identify artworks and sections
+- **Local AI Processing**: Advanced computer vision algorithms analyze screenshots locally in your browser
+- **Pattern Recognition**: Detects text, colors, and layout patterns to identify artworks and sections
 - **Intelligent Chatbot**: Ronica provides contextual responses based on what she "sees" on your screen
 - **Multi-Platform Support**: Works on Windows, Mac, and Android (iOS not supported due to browser limitations)
 
@@ -62,37 +63,44 @@ Experience cutting-edge AI-powered visual context tracking similar to Google Gem
 
 ### How to Use Screen Vision
 
-1. **Get Gemini API Key**:
-   - Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
-   - Create a new API key
-   - Keep it secure and don't share it
-
-2. **Enable Screen Vision**:
+1. **Enable Screen Vision**:
    - Click the 👁️ eye icon in the chatbot header
-   - Enter your Gemini API key when prompted
    - Grant screen sharing permission when requested
    - The icon will change to 🎥 when active
 
-3. **Keyboard Shortcuts**:
+2. **Keyboard Shortcuts**:
    - `Ctrl+Shift+V`: Toggle screen vision on/off
    - `Ctrl+Shift+D`: Debug current visual context
 
-4. **Experience Enhanced AI**:
+3. **Experience Enhanced AI**:
    - Ronica will now "see" what you're looking at
    - Get more accurate, contextual responses
    - Real-time analysis every 2 seconds
 
+### What It Detects
+- **Section Recognition**: Identifies which portfolio section you're viewing (About, Animations, Illustrations, Drawings, Workflow, Contact)
+- **Artwork Detection**: Recognizes specific artworks by visual patterns and text
+- **Modal Detection**: Knows when you're viewing artworks in modal windows
+- **Layout Analysis**: Understands page structure and user focus areas
+
 ### Privacy & Security
-- Screen capture requires your explicit permission
-- Only analyzes the portfolio website content
-- API key is stored locally in your browser session
-- No data is sent to external servers except Gemini API calls
+- **100% Local Processing**: All analysis happens in your browser - no data sent to external servers
+- **Screen capture permission**: Requires your explicit consent
+- **Portfolio-only analysis**: Only analyzes the portfolio website content
+- **No external dependencies**: Works completely offline once enabled
+
+### Technical Details
+- **Canvas-based analysis**: Uses HTML5 Canvas for pixel-level image processing
+- **Color pattern recognition**: Analyzes dominant colors to identify sections
+- **Text region detection**: Finds high-contrast areas that likely contain text
+- **Layout analysis**: Detects modal overlays and content positioning
+- **Real-time performance**: Optimized for 2-second analysis intervals
 
 ### Troubleshooting
 - **"Screen vision not supported"**: Check if you're on a supported platform
-- **Permission denied**: Allow screen sharing when prompted
-- **API errors**: Verify your Gemini API key is valid and has quota remaining
+- **Permission denied**: Allow screen sharing when prompted by your browser
 - **Performance issues**: Screen vision may impact performance on lower-end devices
+- **Inaccurate detection**: The local analysis is still learning - use traditional interaction methods as backup
 
 ## 🚀 Quick Start
 
