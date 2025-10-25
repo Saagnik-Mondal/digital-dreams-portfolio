@@ -112,7 +112,7 @@
 
     <!-- AI Chatbot -->
     <div id="ai-chatbot" class="ai-chatbot">
-        <div class="chatbot-toggle">
+        <div class="chatbot-toggle magnetic">
             <i class="fas fa-robot"></i>
             <div class="chatbot-pulse"></div>
         </div>
@@ -140,11 +140,7 @@
         </div>
     </div>
 
-    <!-- Custom Cursor -->
-    <div class="custom-cursor">
-        <div class="cursor-dot"></div>
-        <div class="cursor-outline"></div>
-    </div>
+
 
     <!-- Debug button for visual context -->
     <button id="debug-context" style="position: fixed; top: 20px; left: 20px; z-index: 10000; padding: 8px 12px; background: #ff6b6b; color: white; border: none; border-radius: 20px; font-size: 12px; cursor: pointer; opacity: 0.8;">🔍 Debug Context</button>
@@ -214,7 +210,7 @@
     <section id="about" class="about">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">About Me</h2>
+                <h2 class="section-title reveal-text">About Me</h2>
                 <div class="section-subtitle">Creative mind behind the art</div>
             </div>
              <div class="about-content">
@@ -262,13 +258,13 @@
     <section id="animations" class="portfolio-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Animations</h2>
+                <h2 class="section-title reveal-text">Animations</h2>
                 <div class="section-subtitle">Motion brings stories to life</div>
             </div>
              <div class="portfolio-grid" id="animations-grid">
                  <!-- Animation items will be populated by JavaScript -->
-                 <div class="portfolio-item" data-category="animation">
-                     <div class="portfolio-card">
+                 <div class="portfolio-item stagger-item" data-category="animation">
+                     <div class="portfolio-card magnetic">
                          <div class="ask-ronica-indicator" onclick="updateVisualContext('illustrations', 'Goddess Awakening'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
                          <div class="card-image">
                              <img src="assets/illustrations/goddess-awakening.jpg" alt="Goddess Awakening">
@@ -295,8 +291,8 @@
                          </div>
                      </div>
                  </div>
-                 <div class="portfolio-item" data-category="animation">
-                     <div class="portfolio-card">
+                 <div class="portfolio-item stagger-item" data-category="animation">
+                     <div class="portfolio-card magnetic">
                          <div class="ask-ronica-indicator" onclick="updateVisualContext('drawings', 'Charcoal Portrait'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
                          <div class="card-image">
                              <img src="assets/drawings/charcoal-portrait.jpg" alt="Charcoal Portrait">
@@ -323,8 +319,8 @@
                          </div>
                      </div>
                  </div>
-                 <div class="portfolio-item" data-category="animation">
-                     <div class="portfolio-card">
+                 <div class="portfolio-item stagger-item" data-category="animation">
+                     <div class="portfolio-card magnetic">
                          <div class="ask-ronica-indicator" onclick="updateVisualContext('animations', 'Divine Dance'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
                          <div class="card-image">
                              <img src="assets/animations/divine-dance.jpg" alt="Divine Dance">
@@ -359,12 +355,12 @@
     <section id="illustrations" class="portfolio-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Illustrations</h2>
+                <h2 class="section-title reveal-text">Illustrations</h2>
                 <div class="section-subtitle">Digital art that speaks volumes</div>
             </div>
              <div class="portfolio-grid" id="illustrations-grid">
                  <div class="portfolio-item" data-category="illustration">
-                     <div class="portfolio-card">
+                     <div class="portfolio-card magnetic">
                          <div class="ask-ronica-indicator" onclick="updateVisualContext('drawings', 'Urban Sketch'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
                          <div class="card-image">
                              <img src="assets/drawings/urban-sketch.jpg" alt="Urban Sketch">
@@ -392,7 +388,7 @@
                      </div>
                  </div>
                  <div class="portfolio-item" data-category="illustration">
-                     <div class="portfolio-card">
+                     <div class="portfolio-card magnetic">
                          <div class="ask-ronica-indicator" onclick="updateVisualContext('animations', 'Mystic Forest'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
                          <div class="card-image">
                              <img src="assets/animations/mystic-forest.jpg" alt="Mystic Forest">
@@ -420,7 +416,7 @@
                      </div>
                  </div>
                  <div class="portfolio-item" data-category="illustration">
-                     <div class="portfolio-card">
+                     <div class="portfolio-card magnetic">
                          <div class="ask-ronica-indicator" onclick="updateVisualContext('animations', 'Cosmic Mandala'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
                          <div class="card-image">
                              <img src="assets/animations/cosmic-mandala.jpg" alt="Cosmic Mandala">
@@ -455,12 +451,12 @@
     <section id="drawings" class="portfolio-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Drawings</h2>
+                <h2 class="section-title reveal-text">Drawings</h2>
                 <div class="section-subtitle">Traditional art with a modern twist</div>
             </div>
              <div class="portfolio-grid" id="drawings-grid">
                  <div class="portfolio-item" data-category="drawing">
-                     <div class="portfolio-card">
+                     <div class="portfolio-card magnetic">
                          <div class="ask-ronica-indicator" onclick="updateVisualContext('illustrations', 'Urban Mandala'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
                          <div class="card-image">
                              <img src="assets/illustrations/urban-mandala.jpg" alt="Urban Mandala">
@@ -488,7 +484,7 @@
                      </div>
                  </div>
                  <div class="portfolio-item" data-category="drawing">
-                     <div class="portfolio-card">
+                     <div class="portfolio-card magnetic">
                          <div class="ask-ronica-indicator" onclick="updateVisualContext('illustrations', 'Sacred Waters'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
                          <div class="card-image">
                              <img src="assets/illustrations/sacred-waters.jpg" alt="Sacred Waters">
@@ -516,7 +512,7 @@
                      </div>
                  </div>
                  <div class="portfolio-item" data-category="drawing">
-                     <div class="portfolio-card">
+                     <div class="portfolio-card magnetic">
                          <div class="ask-ronica-indicator" onclick="updateVisualContext('drawings', 'Ink Mandala'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
                          <div class="card-image">
                              <img src="assets/drawings/ink-mandala.jpg" alt="Ink Mandala">
@@ -551,7 +547,7 @@
     <section id="workflow" class="workflow-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Creative Workflow</h2>
+                <h2 class="section-title reveal-text">Creative Workflow</h2>
                 <div class="section-subtitle">Behind the scenes of my creative process</div>
             </div>
 
@@ -645,7 +641,7 @@
     <section id="contact" class="contact">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Get In Touch</h2>
+                <h2 class="section-title reveal-text">Get In Touch</h2>
                 <div class="section-subtitle">Let's create something amazing together</div>
             </div>
             <div class="contact-content">

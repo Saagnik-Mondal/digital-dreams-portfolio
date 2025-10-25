@@ -24,6 +24,429 @@ window.addEventListener('error', function(e) {
     alert('JavaScript Error: ' + e.error.message);
 });
 
+// Modern Interactive Elements (igloo.inc style)
+function initializeModernInteractions() {
+    console.log('🎨 Initializing modern interactions...');
+
+    // Initialize GSAP plugins
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Smooth scroll setup
+    setupSmoothScroll();
+
+    // Interactive elements
+    setupMagneticElements();
+    setupHoverEffects();
+    setupScrollAnimations();
+    setupCursorEffects();
+    setupMicroInteractions();
+
+    console.log('✨ Modern interactions initialized');
+}
+
+// Smooth scroll with Lenis
+function setupSmoothScroll() {
+    // Initialize Lenis for smooth scrolling
+    const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: 'vertical',
+        gestureDirection: 'vertical',
+        smooth: true,
+        mouseMultiplier: 1,
+        smoothTouch: false,
+        touchMultiplier: 2,
+        infinite: false,
+    });
+
+    // Update ScrollTrigger on scroll
+    lenis.on('scroll', ScrollTrigger.update);
+
+    // Use GSAP ticker for smooth animation loop
+    gsap.ticker.add((time) => {
+        lenis.raf(time * 1000);
+    });
+
+    gsap.ticker.lagSmoothing(0);
+
+    console.log('🍃 Smooth scroll initialized');
+}
+
+// Magnetic elements that follow cursor
+function setupMagneticElements() {
+    const magneticElements = document.querySelectorAll('.magnetic, .portfolio-card, .btn, .chatbot-toggle');
+
+    magneticElements.forEach(element => {
+        element.addEventListener('mousemove', (e) => {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            const deltaX = (e.clientX - centerX) * 0.3;
+            const deltaY = (e.clientY - centerY) * 0.3;
+
+            gsap.to(element, {
+                x: deltaX,
+                y: deltaY,
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+        });
+
+        element.addEventListener('mouseleave', () => {
+            gsap.to(element, {
+                x: 0,
+                y: 0,
+                duration: 0.5,
+                ease: 'elastic.out(1, 0.3)'
+            });
+        });
+    });
+
+    console.log('🧲 Magnetic elements initialized');
+}
+
+// Advanced hover effects
+function setupHoverEffects() {
+    // Portfolio cards hover effects
+    const portfolioCards = document.querySelectorAll('.portfolio-card');
+
+    portfolioCards.forEach(card => {
+        const image = card.querySelector('img');
+        const overlay = card.querySelector('.card-overlay');
+
+        card.addEventListener('mouseenter', () => {
+            gsap.to(card, {
+                scale: 1.05,
+                rotationY: 5,
+                duration: 0.4,
+                ease: 'power2.out'
+            });
+
+            if (image) {
+                gsap.to(image, {
+                    scale: 1.1,
+                    duration: 0.4,
+                    ease: 'power2.out'
+                });
+            }
+
+            if (overlay) {
+                gsap.to(overlay, {
+                    opacity: 1,
+                    duration: 0.3
+                });
+            }
+        });
+
+        card.addEventListener('mouseleave', () => {
+            gsap.to(card, {
+                scale: 1,
+                rotationY: 0,
+                duration: 0.5,
+                ease: 'elastic.out(1, 0.3)'
+            });
+
+            if (image) {
+                gsap.to(image, {
+                    scale: 1,
+                    duration: 0.5,
+                    ease: 'elastic.out(1, 0.3)'
+                });
+            }
+
+            if (overlay) {
+                gsap.to(overlay, {
+                    opacity: 0,
+                    duration: 0.3
+                });
+            }
+        });
+    });
+
+    // Button hover effects
+    const buttons = document.querySelectorAll('.btn, button, .ask-ronica-indicator');
+
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', () => {
+            gsap.to(button, {
+                scale: 1.05,
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+        });
+
+        button.addEventListener('mouseleave', () => {
+            gsap.to(button, {
+                scale: 1,
+                backgroundColor: 'transparent',
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+        });
+
+        button.addEventListener('mousedown', () => {
+            gsap.to(button, {
+                scale: 0.95,
+                duration: 0.1,
+                ease: 'power2.out'
+            });
+        });
+
+        button.addEventListener('mouseup', () => {
+            gsap.to(button, {
+                scale: 1.05,
+                duration: 0.2,
+                ease: 'elastic.out(1, 0.3)'
+            });
+        });
+    });
+
+    console.log('🎯 Hover effects initialized');
+}
+
+// Scroll-triggered animations
+function setupScrollAnimations() {
+    // Hero section animations
+    gsap.from('.hero-title', {
+        scrollTrigger: {
+            trigger: '.hero',
+            start: 'top 80%',
+            end: 'bottom 20%',
+            toggleActions: 'play none none reverse'
+        },
+        y: 100,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out'
+    });
+
+    gsap.from('.hero-subtitle', {
+        scrollTrigger: {
+            trigger: '.hero',
+            start: 'top 70%',
+            end: 'bottom 30%',
+            toggleActions: 'play none none reverse'
+        },
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        delay: 0.2,
+        ease: 'power3.out'
+    });
+
+    // Section reveals
+    gsap.utils.toArray('section').forEach((section, i) => {
+        gsap.from(section, {
+            scrollTrigger: {
+                trigger: section,
+                start: 'top 80%',
+                end: 'bottom 20%',
+                toggleActions: 'play none none reverse'
+            },
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            delay: i * 0.1,
+            ease: 'power3.out'
+        });
+    });
+
+    // Portfolio cards stagger animation
+    gsap.from('.portfolio-item', {
+        scrollTrigger: {
+            trigger: '.portfolio-grid',
+            start: 'top 80%',
+            end: 'bottom 20%',
+            toggleActions: 'play none none reverse'
+        },
+        y: 100,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: 'power3.out'
+    });
+
+    // Text reveal animations
+    gsap.utils.toArray('.reveal-text').forEach(text => {
+        gsap.from(text, {
+            scrollTrigger: {
+                trigger: text,
+                start: 'top 80%',
+                toggleActions: 'play none none reverse'
+            },
+            y: 30,
+            opacity: 0,
+            duration: 0.8,
+            ease: 'power3.out'
+        });
+    });
+
+    console.log('📜 Scroll animations initialized');
+}
+
+// Modern cursor effects
+function setupCursorEffects() {
+    const cursor = document.createElement('div');
+    cursor.className = 'custom-cursor';
+    cursor.innerHTML = '<div class="cursor-dot"></div><div class="cursor-outline"></div>';
+    document.body.appendChild(cursor);
+
+    let mouseX = 0;
+    let mouseY = 0;
+    let cursorX = 0;
+    let cursorY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    // Smooth cursor following
+    function updateCursor() {
+        const dx = mouseX - cursorX;
+        const dy = mouseY - cursorY;
+
+        cursorX += dx * 0.15;
+        cursorY += dy * 0.15;
+
+        gsap.set(cursor, {
+            x: cursorX,
+            y: cursorY
+        });
+
+        requestAnimationFrame(updateCursor);
+    }
+    updateCursor();
+
+    // Cursor interactions
+    const interactiveElements = document.querySelectorAll('a, button, .portfolio-card, .magnetic, .chatbot-toggle');
+
+    interactiveElements.forEach(element => {
+        element.addEventListener('mouseenter', () => {
+            cursor.classList.add('cursor-hover');
+            gsap.to('.cursor-outline', {
+                scale: 1.5,
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+        });
+
+        element.addEventListener('mouseleave', () => {
+            cursor.classList.remove('cursor-hover');
+            gsap.to('.cursor-outline', {
+                scale: 1,
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+        });
+    });
+
+    console.log('🖱️ Cursor effects initialized');
+}
+
+// Micro-interactions and feedback
+function setupMicroInteractions() {
+    // Loading state for buttons
+    const interactiveButtons = document.querySelectorAll('.btn, .ask-ronica-indicator');
+
+    interactiveButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Add loading state
+            button.classList.add('loading');
+            gsap.to(button, {
+                scale: 0.98,
+                duration: 0.1
+            });
+
+            // Remove loading state after animation
+            setTimeout(() => {
+                button.classList.remove('loading');
+                gsap.to(button, {
+                    scale: 1,
+                    duration: 0.3,
+                    ease: 'elastic.out(1, 0.3)'
+                });
+            }, 300);
+        });
+    });
+
+    // Form input focus effects
+    const inputs = document.querySelectorAll('input, textarea');
+
+    inputs.forEach(input => {
+        input.addEventListener('focus', () => {
+            gsap.to(input, {
+                borderColor: '#667eea',
+                boxShadow: '0 0 0 3px rgba(102, 126, 234, 0.1)',
+                duration: 0.3
+            });
+        });
+
+        input.addEventListener('blur', () => {
+            gsap.to(input, {
+                borderColor: '#e5e7eb',
+                boxShadow: 'none',
+                duration: 0.3
+            });
+        });
+    });
+
+    // Success feedback for form submissions
+    const forms = document.querySelectorAll('form');
+
+    forms.forEach(form => {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Success animation
+            gsap.to(form, {
+                scale: 0.98,
+                duration: 0.1,
+                yoyo: true,
+                repeat: 1,
+                ease: 'power2.inOut',
+                onComplete: () => {
+                    // Show success message
+                    const successMsg = document.createElement('div');
+                    successMsg.textContent = 'Message sent successfully! ✨';
+                    successMsg.style.cssText = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: #4CAF50;
+                        color: white;
+                        padding: 1rem 2rem;
+                        border-radius: 8px;
+                        z-index: 1000;
+                        font-weight: 600;
+                    `;
+                    document.body.appendChild(successMsg);
+
+                    gsap.from(successMsg, {
+                        scale: 0,
+                        duration: 0.3,
+                        ease: 'back.out(1.7)'
+                    });
+
+                    setTimeout(() => {
+                        gsap.to(successMsg, {
+                            scale: 0,
+                            opacity: 0,
+                            duration: 0.3,
+                            onComplete: () => successMsg.remove()
+                        });
+                    }, 2000);
+                }
+            });
+        });
+    });
+
+    console.log('⚡ Micro-interactions initialized');
+}
+
 // Platform detection for screen vision capabilities
 function detectPlatform() {
     try {
@@ -1255,7 +1678,10 @@ function initializeWebsite() {
     setupDarkMode();
     setupScreenVisionControls();
 
-    // Initialize screen vision if supported (with error handling)
+    // Initialize modern interactions
+    initializeModernInteractions();
+
+    // Initialize screen vision if supported
     if (window.platformInfo && window.platformInfo.supportsScreenVision) {
         try {
             window.screenVision.initialize().then(success => {
@@ -1264,6 +1690,20 @@ function initializeWebsite() {
                 } else {
                     console.log('📱 Screen vision initialization failed, using fallback methods');
                 }
+            }).catch(error => {
+                console.error('❌ Screen vision initialization error:', error);
+                console.log('📱 Continuing with traditional visual context tracking');
+            });
+        } catch (error) {
+            console.error('❌ Screen vision setup error:', error);
+            console.log('📱 Screen vision unavailable, using traditional methods');
+        }
+    } else {
+        console.log('📱 Screen vision not supported on this platform, using traditional visual context tracking');
+    }
+
+    console.log('✅ Website initialization complete');
+}
             }).catch(error => {
                 console.error('❌ Screen vision initialization error:', error);
                 console.log('📱 Continuing with traditional visual context tracking');
