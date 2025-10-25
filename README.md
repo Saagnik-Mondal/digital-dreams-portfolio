@@ -25,6 +25,8 @@ A stunning, next-generation interactive portfolio website designed specifically 
 - **Accessibility**: Screen reader support and keyboard navigation
 - **SEO Ready**: Semantic HTML structure
 - **Cross-Browser**: Compatible with modern browsers
+- **AI-Powered Context Tracking**: Intelligent visual context awareness
+- **Screen Vision** (Beta): Google Gemini Live-style screen analysis for Windows, Mac, and Android
 
 ## 🏗️ Structure
 
@@ -41,6 +43,56 @@ portfolio-website/
 │   └── drawings/          # Your drawing files
 └── README.md              # This file
 ```
+
+## 🎥 Screen Vision Feature (Beta)
+
+Experience cutting-edge AI-powered visual context tracking similar to Google Gemini Live!
+
+### How It Works
+- **Real-time Screen Analysis**: Uses your screen capture to understand what you're viewing
+- **AI-Powered Recognition**: Google Gemini API analyzes screenshots to identify artworks and sections
+- **Intelligent Chatbot**: Ronica provides contextual responses based on what she "sees" on your screen
+- **Multi-Platform Support**: Works on Windows, Mac, and Android (iOS not supported due to browser limitations)
+
+### Supported Platforms
+- ✅ **Windows** (Chrome, Edge, Firefox)
+- ✅ **macOS** (Chrome, Safari, Firefox)
+- ✅ **Android** (Chrome, Samsung Internet)
+- ❌ **iOS** (Not supported due to WebKit restrictions)
+
+### How to Use Screen Vision
+
+1. **Get Gemini API Key**:
+   - Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Create a new API key
+   - Keep it secure and don't share it
+
+2. **Enable Screen Vision**:
+   - Click the 👁️ eye icon in the chatbot header
+   - Enter your Gemini API key when prompted
+   - Grant screen sharing permission when requested
+   - The icon will change to 🎥 when active
+
+3. **Keyboard Shortcuts**:
+   - `Ctrl+Shift+V`: Toggle screen vision on/off
+   - `Ctrl+Shift+D`: Debug current visual context
+
+4. **Experience Enhanced AI**:
+   - Ronica will now "see" what you're looking at
+   - Get more accurate, contextual responses
+   - Real-time analysis every 2 seconds
+
+### Privacy & Security
+- Screen capture requires your explicit permission
+- Only analyzes the portfolio website content
+- API key is stored locally in your browser session
+- No data is sent to external servers except Gemini API calls
+
+### Troubleshooting
+- **"Screen vision not supported"**: Check if you're on a supported platform
+- **Permission denied**: Allow screen sharing when prompted
+- **API errors**: Verify your Gemini API key is valid and has quota remaining
+- **Performance issues**: Screen vision may impact performance on lower-end devices
 
 ## 🚀 Quick Start
 
