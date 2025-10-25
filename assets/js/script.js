@@ -280,7 +280,7 @@ function setupAIChatbot() {
 
                 // Generate response
                 const responses = {
-                    'hello': 'Namaste! I am Ronica, at your service. I\'ve analyzed this portfolio extensively and am prepared to provide detailed insights into each creative endeavor. How may I be of assistance?',
+                    'greetings': 'Namaste! I am Ronica, at your service. I\'ve analyzed this portfolio extensively and am prepared to provide detailed insights into each creative endeavor. How may I be of assistance?',
                     'about': 'Ah, the artist\'s background. This creator is a true maestro of digital craftsmanship with over five years of experience in visual storytelling. Their work beautifully blends traditional Indian aesthetics with modern digital techniques. The emotional depth and cultural sensitivity in their art is quite remarkable.',
                     'animations': 'The animations section features three remarkable pieces: "Divine Dance" - a Kathakali-inspired 3D character animation, "Mystic Forest" - an interactive forest with mythical creatures from Indian folklore, and "Cosmic Mandala" - an abstract exploration of the universe through traditional mandala patterns. Each demonstrates the beautiful fusion of cultural heritage and cutting-edge technology.',
                     'illustrations': 'The illustrations showcase three beautiful pieces: "Sacred Waters" - a photorealistic digital painting of the Ganges at dawn, "Goddess Awakening" - a contemporary interpretation of Durga blending traditional iconography with modern aesthetics, and "Urban Mandala" - a geometric design incorporating Mumbai\'s architecture. Each piece tells a unique story of cultural fusion.',
@@ -292,13 +292,33 @@ function setupAIChatbot() {
 
                 const lowerMessage = message.toLowerCase();
                 let response = responses.default;
+                console.log('User message:', message);
+                console.log('Lower case message:', lowerMessage);
 
-                for (const [key, value] of Object.entries(responses)) {
-                    if (lowerMessage.includes(key)) {
-                        response = value;
-                        break;
+                // Improved keyword matching with multiple variations
+                const keywords = {
+                    'greetings': ['hello', 'hi', 'hey', 'namaste', 'greetings', 'good morning', 'good afternoon', 'good evening', 'howdy', 'hola'],
+                    'about': ['about', 'artist', 'creator', 'background', 'experience', 'who', 'profile', 'bio', 'biography'],
+                    'animations': ['animation', 'animations', 'animated', 'motion', 'moving', 'divine dance', 'mystic forest', 'cosmic mandala'],
+                    'illustrations': ['illustration', 'illustrations', 'digital art', 'sacred waters', 'goddess awakening', 'urban mandala'],
+                    'drawings': ['drawing', 'drawings', 'sketch', 'sketches', 'charcoal', 'ink', 'urban sketch', 'mandala'],
+                    'workflow': ['workflow', 'process', 'how', 'creative', 'steps', 'method', 'approach'],
+                    'contact': ['contact', 'email', 'phone', 'reach', 'hire', 'work', 'collaborate', 'project']
+                };
+
+                // Check for keyword matches
+                for (const [category, words] of Object.entries(keywords)) {
+                    for (const word of words) {
+                        if (lowerMessage.includes(word)) {
+                            response = responses[category];
+                            console.log(`✅ Matched keyword: "${word}" in category: "${category}"`);
+                            break;
+                        }
                     }
+                    if (response !== responses.default) break;
                 }
+
+                console.log('Selected response:', response.substring(0, 50) + '...');
 
                 sendMessage(response, false);
             }, 1500 + Math.random() * 1000);
