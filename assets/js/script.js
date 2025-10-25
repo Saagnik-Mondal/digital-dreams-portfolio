@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
     startLoadingSequence();
 });
 
-// Elegant loading sequence
+// Unique Artistic Loading Sequence
 function startLoadingSequence() {
     const loadingScreen = document.getElementById('loading-screen');
 
@@ -64,24 +64,57 @@ function startLoadingSequence() {
         return;
     }
 
-    console.log('🎭 Starting elegant loading sequence...');
+    console.log('🎨 Starting unique artistic loading sequence...');
 
     // Show loading screen
     loadingScreen.style.display = 'flex';
 
-    // Simulate loading time (3 seconds for elegance)
+    // Creative loading sequence (5 seconds for artistic experience)
+    // Phase 1: Canvas preparation (0-1s)
     setTimeout(() => {
-        // Fade out loading screen
-        loadingScreen.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+        console.log('🎨 Phase 1: Canvas awakening...');
+        // Canvas elements start animating
+    }, 500);
+
+    // Phase 2: Color mixing (1-2s)
+    setTimeout(() => {
+        console.log('🎨 Phase 2: Colors coming alive...');
+        // Color dots start mixing
+    }, 1500);
+
+    // Phase 3: Creative sparkles (2-3s)
+    setTimeout(() => {
+        console.log('🎨 Phase 3: Creative inspiration flowing...');
+        // Sparkles and art elements animate
+    }, 2500);
+
+    // Phase 4: Title reveal (3-4s)
+    setTimeout(() => {
+        console.log('🎨 Phase 4: Title taking shape...');
+        // Characters reveal one by one
+    }, 3500);
+
+    // Phase 5: Final creation (4-5s)
+    setTimeout(() => {
+        console.log('🎨 Phase 5: Artwork complete...');
+        // Progress bar completes
+    }, 4500);
+
+    // Complete loading sequence
+    setTimeout(() => {
+        console.log('🎨 Loading sequence complete!');
+
+        // Artistic fade-out with creative transition
+        loadingScreen.style.transition = 'all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
         loadingScreen.style.opacity = '0';
-        loadingScreen.style.transform = 'scale(1.1)';
+        loadingScreen.style.transform = 'scale(1.05) rotate(-1deg)';
 
         // Remove loading screen and initialize portfolio
         setTimeout(() => {
             loadingScreen.style.display = 'none';
             initializePortfolio();
-        }, 800);
-    }, 3000);
+        }, 1200);
+    }, 5500);
 }
 
 // Initialize the main portfolio
