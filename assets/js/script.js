@@ -50,6 +50,44 @@ document.querySelectorAll('a, button, .portfolio-card, .btn').forEach(el => {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 Initializing unique Digital Dreams portfolio...');
 
+    // Start loading sequence
+    startLoadingSequence();
+});
+
+// Elegant loading sequence
+function startLoadingSequence() {
+    const loadingScreen = document.getElementById('loading-screen');
+
+    if (!loadingScreen) {
+        console.log('No loading screen found, initializing directly...');
+        initializePortfolio();
+        return;
+    }
+
+    console.log('🎭 Starting elegant loading sequence...');
+
+    // Show loading screen
+    loadingScreen.style.display = 'flex';
+
+    // Simulate loading time (3 seconds for elegance)
+    setTimeout(() => {
+        // Fade out loading screen
+        loadingScreen.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+        loadingScreen.style.opacity = '0';
+        loadingScreen.style.transform = 'scale(1.1)';
+
+        // Remove loading screen and initialize portfolio
+        setTimeout(() => {
+            loadingScreen.style.display = 'none';
+            initializePortfolio();
+        }, 800);
+    }, 3000);
+}
+
+// Initialize the main portfolio
+function initializePortfolio() {
+    console.log('🎨 Initializing main portfolio experience...');
+
     // Show main content
     showMainContent();
 
@@ -62,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
     createParticles();
 
     console.log('✅ Unique portfolio ready with creative effects! ✨');
-});
+}
 
 // Show main content
 function showMainContent() {
