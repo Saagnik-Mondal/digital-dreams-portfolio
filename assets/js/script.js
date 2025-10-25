@@ -1459,9 +1459,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Uncomment the line below to use external images
     // loadParallaxImages();
     
-    // Option 3: Load from local assets folder
-    // Uncomment the line below and create assets/parallax/ folder with images
-    // loadLocalParallaxImages();
+    // Option 3: Load from local assets folder (CURRENTLY ACTIVE)
+    // Your Gemini-generated images are loaded from assets/parallax/
+    loadLocalParallaxImages();
     
     // Option 4: Generate random gradients (default - already working)
     // generateGradientParallaxImages();
