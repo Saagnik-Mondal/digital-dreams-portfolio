@@ -2017,6 +2017,50 @@ document.addEventListener('DOMContentLoaded', () => {
     // generateGradientParallaxImages();
 });
 
+// Debug function to check current visual context
+function debugVisualContext() {
+    console.log('🔍 Current Visual Context:', window.visualContext);
+
+    const context = window.visualContext;
+    console.log('📊 Context Summary:', {
+        hasAttentionFocus: !!context.attentionFocus,
+        confidenceLevel: `${Math.round(context.contextConfidence * 100)}%`,
+        lastAction: context.lastIntentionalAction,
+        viewportCenter: context.viewportCenter,
+        viewingHistory: context.viewingHistory.slice(0, 3) // Show last 3 items
+    });
+
+    // Provide contextual response based on current state
+    let response = '';
+
+    if (context.attentionFocus) {
+        const artworkDetails = getArtworkDetails(context.attentionFocus);
+        if (artworkDetails.description) {
+            response = `You're asking about "${context.attentionFocus}". ${artworkDetails.description}`;
+        } else {
+            response = `I see you're focused on "${context.attentionFocus}" in the ${context.currentSection} section.`;
+        }
+    } else if (context.currentArtwork) {
+        const artworkDetails = getArtworkDetails(context.currentArtwork);
+        response = `Based on what I can see, you're referring to "${context.currentArtwork}". ${artworkDetails.description}`;
+    } else if (context.currentSection) {
+        response = `You're currently viewing the ${context.currentSection} section of the portfolio.`;
+    } else {
+        response = 'I\'m not sure what you\'re looking at right now. Could you tell me which section or artwork interests you?';
+    }
+
+    return response;
+}
+
+// Add keyboard shortcut for debugging (Ctrl+Shift+D)
+document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+        e.preventDefault();
+        debugVisualContext();
+        console.log('🎯 Debug: Visual context logged to console');
+    }
+});
+
 // ============================================================
 // PARALLAX CONFIGURATION & DOCUMENTATION
 // ============================================================
