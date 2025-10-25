@@ -1,0 +1,13 @@
+{
+  "name": "digital-dreams-portfolio",
+  "version": "1.0.0",
+  "description": "Unique artistic portfolio showcasing Indian digital art",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "deploy": "echo \"Ready for deployment to Vercel, Netlify, or GitHub Pages\""
+  },
+  "keywords": ["portfolio", "digital-art", "indian-art", "creative", "unique"],
+  "author": "Digital Dreams Artist",
+  "license": "MIT"
+}
