@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Initialize Website
 function initializeWebsite() {
+    // Load parallax images first
+    loadLocalParallaxImages();
+    
     setupLoadingScreen();
     setupNavigation();
     setupParticleSystem();
@@ -22,6 +25,7 @@ function initializeWebsite() {
     setupSmoothScrolling();
     setupScrollProgress();
     setupAdvancedScrollEffects();
+    setupParallaxShowcase(); // Initialize parallax showcase
 }
 
 // Custom Cursor
