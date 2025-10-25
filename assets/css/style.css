@@ -858,13 +858,13 @@ html {
 
 /* Hero Section */
 .hero {
-    height: 100vh;
+    min-height: 100vh;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: var(--gradient-primary);
+    background: var(--bg-primary);
 }
 
 .hero-background {
@@ -885,7 +885,7 @@ html {
     position: relative;
     z-index: 2;
     text-align: center;
-    color: white;
+    color: var(--text-primary);
     max-width: 800px;
     padding: 0 2rem;
 }
