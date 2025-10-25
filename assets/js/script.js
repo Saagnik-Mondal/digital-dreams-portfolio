@@ -612,9 +612,15 @@ function setupAIChatbot() {
                     response += personalityPhrases[Math.floor(Math.random() * personalityPhrases.length)];
                 }
 
-                console.log(`🎯 Best match: ${bestMatch.intent} (confidence: ${(bestMatch.confidence * 100).toFixed(1)}%)`);
-                console.log('Conversation context:', window.conversationContext);
-                console.log('Selected response:', response.substring(0, 80) + '...');
+                            console.log(`🎯 Best match: ${bestMatch.intent} (confidence: ${(bestMatch.confidence * 100).toFixed(1)}%)`);
+                console.log('💬 Visual context at response time:', window.visualContext);
+                console.log('🗣️ Conversation context:', window.conversationContext);
+                console.log('📝 Selected response:', response.substring(0, 80) + '...');
+
+                // Debug visual context usage
+                if (bestMatch.intent === 'current_view' || lowerMessage.includes('this') || lowerMessage.includes('that')) {
+                    console.log('🎨 Using visual context for response');
+                }
 
                 sendMessage(response, false);
             }, 1500 + Math.random() * 1000);
@@ -637,6 +643,17 @@ function setupAIChatbot() {
         console.log('Sending welcome message...');
         sendMessage('Namaste! I am Ronica, your intelligent creative assistant. I\'ve been designed to help you navigate through this digital portfolio and provide insights into the creative process. How may I assist you today?');
     }, 1000); // Reduced delay
+
+    // Debug context button
+    const debugBtn = document.getElementById('debug-context');
+    if (debugBtn) {
+        debugBtn.addEventListener('click', () => {
+            console.log('🔍 Debug button clicked');
+            window.debugContext();
+            const context = window.visualContext;
+            alert(`Ronica's Current View:\n📍 Section: ${context.currentSection || 'None'}\n🎨 Artwork: ${context.currentArtwork || 'None'}\n👀 Last Viewed: ${context.lastViewedItem || 'None'}\n📚 History: ${context.viewingHistory.slice(0, 3).join(', ')}`);
+        });
+    }
 }
 
 // Dark Mode Toggle
@@ -739,6 +756,12 @@ function startMainExperience() {
     setupModalSystem();
     setupSmoothScrolling();
     setupScrollProgress();
+
+    // Initialize context indicator
+    setTimeout(() => {
+        updateContextIndicator();
+        console.log('🎯 Initial context indicator set');
+    }, 1000);
 
     // Ensure chatbot is visible
     const chatbot = document.getElementById('ai-chatbot');
@@ -1306,6 +1329,8 @@ function animateCounter(element) {
 
 // Visual Context Tracking Functions
 function updateVisualContext(section, artwork = null) {
+    console.log('🔄 UPDATING VISUAL CONTEXT:', { section, artwork });
+
     window.visualContext.currentSection = section;
     window.visualContext.currentArtwork = artwork;
     window.visualContext.lastViewedItem = artwork || section;
@@ -1318,7 +1343,10 @@ function updateVisualContext(section, artwork = null) {
     }
     window.visualContext.viewingHistory = window.visualContext.viewingHistory.slice(0, 5);
 
-    console.log('Visual context updated:', window.visualContext);
+    console.log('✅ Visual context updated:', window.visualContext);
+
+    // Update UI indicator if available
+    updateContextIndicator();
 }
 
 function setViewingModal(isViewing) {
@@ -1328,24 +1356,52 @@ function setViewingModal(isViewing) {
 
 // Enhanced portfolio interactions with context tracking
 function setupEnhancedPortfolioInteractions() {
+    console.log('🎨 Setting up enhanced portfolio interactions...');
     const portfolioCards = document.querySelectorAll('.portfolio-card');
+    console.log('Found portfolio cards:', portfolioCards.length);
 
-    portfolioCards.forEach((card) => {
+    portfolioCards.forEach((card, index) => {
         const item = card.closest('.portfolio-item');
-        const category = item.dataset.category;
-        const title = card.querySelector('h3').textContent.trim();
+        const category = item ? item.dataset.category : 'unknown';
+        const titleElement = card.querySelector('h3');
+        const title = titleElement ? titleElement.textContent.trim() : 'unknown';
+
+        console.log(`Card ${index}: category="${category}", title="${title}"`);
 
         // Track when user hovers/views an artwork
         card.addEventListener('mouseenter', () => {
+            console.log('🖱️ Mouse entered card:', title);
             updateVisualContext(category, title);
         });
 
         // Enhanced click handler with context
-        card.addEventListener('click', () => {
+        card.addEventListener('click', (e) => {
+            // Don't trigger if clicking on the Ask Ronica button (it has its own handler)
+            if (e.target.closest('.ask-ronica-indicator')) {
+                console.log('🎯 Ask Ronica button clicked, skipping modal');
+                return;
+            }
+
+            console.log('👆 Card clicked:', title);
             updateVisualContext(category, title);
             setViewingModal(true);
             openPortfolioModal(card);
         });
+
+        // Add click handler for Ask Ronica buttons
+        const askButton = card.querySelector('.ask-ronica-indicator');
+        if (askButton) {
+            askButton.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent card click
+                console.log('🤖 Ask Ronica clicked for:', title);
+                updateVisualContext(category, title);
+                // Trigger chatbot toggle
+                const toggle = document.querySelector('.chatbot-toggle');
+                if (toggle) {
+                    toggle.click();
+                }
+            });
+        }
     });
 
     // Track section visibility
@@ -1438,11 +1494,57 @@ function getArtworkDetails(artworkName) {
     };
 }
 
+// Visual Context Indicator
+function updateContextIndicator() {
+    let indicator = document.getElementById('context-indicator');
+    if (!indicator) {
+        indicator = document.createElement('div');
+        indicator.id = 'context-indicator';
+        indicator.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 10000;
+            pointer-events: none;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        `;
+        document.body.appendChild(indicator);
+    }
+
+    const context = window.visualContext;
+    let text = '👁️ Ronica sees: ';
+
+    if (context.currentArtwork) {
+        text += `"${context.currentArtwork}" (${context.currentSection})`;
+    } else if (context.currentSection) {
+        text += `${context.currentSection} section`;
+    } else {
+        text += 'homepage';
+    }
+
+    indicator.textContent = text;
+}
+
+// Debug function to manually check context
+window.debugContext = function() {
+    console.log('🔍 Current Visual Context:', window.visualContext);
+    console.log('🎯 Current Conversation Context:', window.conversationContext);
+    updateContextIndicator();
+};
+
 // Export functions for global use
 window.scrollToSection = scrollToSection;
 window.updateVisualContext = updateVisualContext;
 window.setViewingModal = setViewingModal;
 window.getArtworkDetails = getArtworkDetails;
+window.debugContext = window.debugContext;
 
 // Utility function for content visibility (kept for potential future use)
 window.forceShowContent = function() {
