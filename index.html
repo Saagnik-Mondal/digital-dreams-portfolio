@@ -61,12 +61,24 @@
                 <div class="particle"></div>
                 <div class="particle"></div>
                 <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
             </div>
             
             <div class="loading-orbs">
-                <div class="orb"></div>
-                <div class="orb"></div>
-                <div class="orb"></div>
+                <div class="orb orb-1"></div>
+                <div class="orb orb-2"></div>
+                <div class="orb orb-3"></div>
+                <div class="orb orb-4"></div>
+                <div class="orb orb-5"></div>
+            </div>
+            
+            <div class="loading-morphing-shapes">
+                <div class="morph-shape-loading morph-1"></div>
+                <div class="morph-shape-loading morph-2"></div>
+                <div class="morph-shape-loading morph-3"></div>
             </div>
         </div>
         
@@ -100,13 +112,14 @@
         <div class="floating-element"></div>
     </div>
 
-    <!-- Parallax Background Elements -->
+    <!-- Enhanced Parallax Background Elements -->
     <div class="parallax-bg-elements">
-        <div class="parallax-shape"></div>
-        <div class="parallax-shape"></div>
-        <div class="parallax-shape"></div>
-        <div class="parallax-shape"></div>
-        <div class="parallax-shape"></div>
+        <div class="parallax-shape parallax-shape-1" data-speed="0.2"></div>
+        <div class="parallax-shape parallax-shape-2" data-speed="0.4"></div>
+        <div class="parallax-shape parallax-shape-3" data-speed="0.3"></div>
+        <div class="parallax-shape parallax-shape-4" data-speed="0.6"></div>
+        <div class="parallax-shape parallax-shape-5" data-speed="0.1"></div>
+        <div class="parallax-shape parallax-shape-6" data-speed="0.5"></div>
     </div>
 
     <!-- Navigation -->
@@ -173,7 +186,7 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="about section-parallax">
+    <section id="about" class="about section-parallax" data-parallax="true">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">About Me</h2>
@@ -210,7 +223,7 @@
     </section>
 
     <!-- Animations Section -->
-    <section id="animations" class="portfolio-section parallax-container">
+    <section id="animations" class="portfolio-section parallax-container" data-parallax="true">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Animations</h2>
@@ -265,7 +278,7 @@
     </section>
 
     <!-- Illustrations Section -->
-    <section id="illustrations" class="portfolio-section parallax-container">
+    <section id="illustrations" class="portfolio-section parallax-container" data-parallax="true">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Illustrations</h2>
@@ -319,7 +332,7 @@
     </section>
 
     <!-- Drawings Section -->
-    <section id="drawings" class="portfolio-section parallax-container">
+    <section id="drawings" class="portfolio-section parallax-container" data-parallax="true">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Drawings</h2>
@@ -372,73 +385,7 @@
         </div>
     </section>
 
-    <!-- Parallax Scroll Animation Section -->
-    <section id="parallax-showcase" class="parallax-showcase">
-        <div class="parallax-header">
-            <h2>Parallax Journey</h2>
-            <p>Scroll to experience immersive parallax effects</p>
-        </div>
 
-        <!-- Parallax Layer 1: Background -->
-        <div class="parallax-layer layer-1" data-speed="0.3">
-            <div class="parallax-bg-img"></div>
-            <div class="parallax-content-layer">
-                <div class="parallax-text">
-                    <h3>Layer One</h3>
-                    <p>Experience depth through parallax scrolling</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Parallax Layer 2: Middle Ground -->
-        <div class="parallax-layer layer-2" data-speed="0.5">
-            <div class="parallax-bg-img"></div>
-            <div class="parallax-content-layer">
-                <div class="parallax-text parallax-text-right">
-                    <h3>Layer Two</h3>
-                    <p>Beautiful gradient and depth effects</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Parallax Layer 3: Foreground -->
-        <div class="parallax-layer layer-3" data-speed="0.7">
-            <div class="parallax-bg-img"></div>
-            <div class="parallax-content-layer">
-                <div class="parallax-text">
-                    <h3>Layer Three</h3>
-                    <p>Interactive parallax at its finest</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Parallax Layer 4: Deep Background -->
-        <div class="parallax-layer layer-4" data-speed="0.2">
-            <div class="parallax-bg-img"></div>
-            <div class="parallax-content-layer">
-                <div class="parallax-text parallax-text-right">
-                    <h3>Layer Four</h3>
-                    <p>Smooth, seamless transitions</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Parallax Layer 5: Final Frame -->
-        <div class="parallax-layer layer-5" data-speed="0.4">
-            <div class="parallax-bg-img"></div>
-            <div class="parallax-content-layer">
-                <div class="parallax-text">
-                    <h3>The Journey Continues</h3>
-                    <p>Discover more amazing effects below</p>
-                    <div class="parallax-cta">
-                        <button class="btn btn-primary" onclick="scrollToSection('contact')">
-                            Get Started
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Contact Section -->
     <section id="contact" class="contact">
@@ -522,37 +469,32 @@
     <script src="assets/js/webgl-effects.js"></script>
     <script src="assets/js/script.js"></script>
     
-    <!-- Parallax Diagnostic Script -->
+    <!-- Enhanced Loading & Parallax Integration Script -->
     <script>
         // Runs after all scripts are loaded
         window.addEventListener('load', function() {
-            console.log('=== PARALLAX DIAGNOSTIC ===');
+            console.log('=== ENHANCED LOADING & PARALLAX SYSTEM ===');
             
-            // Check parallax section
-            const parallaxSection = document.querySelector('#parallax-showcase');
-            console.log('✓ Parallax section found:', !!parallaxSection);
+            // Check enhanced loading elements
+            const loadingScreen = document.querySelector('#loading-screen');
+            const morphingShapes = document.querySelectorAll('.morph-shape-loading');
+            const enhancedOrbs = document.querySelectorAll('.orb');
+            console.log('✓ Enhanced loading screen found:', !!loadingScreen);
+            console.log('✓ Morphing shapes found:', morphingShapes.length);
+            console.log('✓ Enhanced orbs found:', enhancedOrbs.length);
             
-            // Check layers
-            const layers = document.querySelectorAll('.parallax-layer');
-            console.log('✓ Parallax layers found:', layers.length);
+            // Check integrated parallax elements
+            const parallaxShapes = document.querySelectorAll('.parallax-shape');
+            const parallaxSections = document.querySelectorAll('[data-parallax="true"]');
+            console.log('✓ Parallax background shapes found:', parallaxShapes.length);
+            console.log('✓ Parallax-enabled sections found:', parallaxSections.length);
             
-            // Check images
-            const bgImages = document.querySelectorAll('.parallax-bg-img');
-            console.log('✓ Background images found:', bgImages.length);
+            // Check if integrated functions exist
+            console.log('✓ setupIntegratedParallax function exists:', typeof setupIntegratedParallax === 'function');
+            console.log('✓ setupEnhancedLoadingScreen function exists:', typeof setupEnhancedLoadingScreen === 'function');
             
-            // Check if images are loaded
-            bgImages.forEach((img, i) => {
-                const bgImg = window.getComputedStyle(img).backgroundImage;
-                console.log(`  Layer ${i+1} bg-image:`, bgImg?.substring(0, 60) + '...');
-            });
-            
-            // Check if setup function exists
-            console.log('✓ setupParallaxShowcase function exists:', typeof setupParallaxShowcase === 'function');
-            console.log('✓ loadLocalParallaxImages function exists:', typeof loadLocalParallaxImages === 'function');
-            
-            console.log('=== END DIAGNOSTIC ===');
-            console.log('If you see all ✓, parallax should be working!');
-            console.log('If not, check PARALLAX_DEBUG.md for troubleshooting');
+            console.log('=== INTEGRATION COMPLETE ===');
+            console.log('Enhanced loading and integrated parallax system active!');
         });
     </script>
 </body>

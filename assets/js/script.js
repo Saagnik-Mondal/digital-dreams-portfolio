@@ -12,10 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Initialize Website
 function initializeWebsite() {
-    // Load parallax images first
-    loadLocalParallaxImages();
-    
-    setupLoadingScreen();
+    setupEnhancedLoadingScreen();
     setupNavigation();
     setupParticleSystem();
     setupScrollAnimations();
@@ -25,7 +22,7 @@ function initializeWebsite() {
     setupSmoothScrolling();
     setupScrollProgress();
     setupAdvancedScrollEffects();
-    setupParallaxShowcase(); // Initialize parallax showcase
+    setupIntegratedParallax(); // Initialize integrated parallax throughout site
 }
 
 // Custom Cursor
@@ -129,7 +126,7 @@ function setupScrollProgress() {
 }
 
 // Enhanced Loading Screen with Beautiful Animations
-function setupLoadingScreen() {
+function setupEnhancedLoadingScreen() {
     const loadingScreen = document.getElementById('loading-screen');
     const progressFill = document.querySelector('.progress-fill');
     const progressPercentage = document.querySelector('.progress-percentage');
@@ -879,7 +876,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!prefersReducedMotion && !isMobile) {
         setupParallaxScrolling();
         setupMouseParallax();
-        setupParallaxShowcase();
+        setupIntegratedParallax();
     }
 });
 
@@ -1323,45 +1320,71 @@ window.createPageTransition = createPageTransition;
  * Setup Parallax Showcase with scroll-based parallax effects
  * Each layer moves at different speeds creating depth illusion
  */
-function setupParallaxShowcase() {
-    const parallaxLayers = document.querySelectorAll('.parallax-layer');
+// Integrated Parallax System - Works throughout the entire site
+function setupIntegratedParallax() {
+    const parallaxElements = document.querySelectorAll('.parallax-shape');
+    const portfolioCards = document.querySelectorAll('.portfolio-card');
+    const sections = document.querySelectorAll('[data-parallax="true"]');
     
-    if (parallaxLayers.length === 0) return;
-    
-    const handleParallaxShowcaseScroll = throttle(() => {
-        parallaxLayers.forEach((layer) => {
-            const speed = parseFloat(layer.dataset.speed) || 0.5;
-            const rect = layer.getBoundingClientRect();
-            const layerTop = rect.top;
-            const windowHeight = window.innerHeight;
+    // Enhanced scroll performance with integrated parallax
+    const optimizedScrollHandler = throttle(() => {
+        const scrolled = window.scrollY;
+        const windowHeight = window.innerHeight;
+        
+        // Hero background parallax
+        const heroBackground = document.querySelector('.hero-background');
+        if (heroBackground && scrolled < windowHeight) {
+            const rate = scrolled * -0.3;
+            heroBackground.style.transform = `translateY(${rate}px)`;
+        }
+        
+        // Parallax background shapes
+        parallaxElements.forEach((element, index) => {
+            const speed = parseFloat(element.dataset.speed) || 0.2;
+            const yPos = scrolled * speed;
+            const rotation = scrolled * 0.02 * (index + 1);
+            element.style.transform = `translate3d(0, ${yPos}px, 0) rotate(${rotation}deg)`;
+        });
+        
+        // Portfolio cards parallax effect
+        portfolioCards.forEach((card, index) => {
+            const rect = card.getBoundingClientRect();
+            const cardCenter = rect.top + rect.height / 2;
+            const windowCenter = windowHeight / 2;
+            const distance = cardCenter - windowCenter;
+            const parallaxValue = distance * -0.05;
             
-            // Calculate parallax offset based on position and speed
-            const yOffset = (windowHeight - layerTop) * speed * -0.1;
-            
-            const bgImg = layer.querySelector('.parallax-bg-img');
-            if (bgImg) {
-                bgImg.style.transform = `translateY(${yOffset}px) scale(1.1)`;
-            }
-            
-            // Add visibility class when layer enters viewport
-            if (layerTop < windowHeight && rect.bottom > 0) {
-                layer.classList.add('active');
+            if (rect.top < windowHeight && rect.bottom > 0) {
+                card.style.transform = `translateY(${parallaxValue}px)`;
             }
         });
         
-        // Optional: Enhance text animations
-        const parallaxTexts = document.querySelectorAll('.parallax-text');
-        parallaxTexts.forEach((text) => {
-            const rect = text.getBoundingClientRect();
-            const opacity = Math.max(0, 1 - Math.abs(rect.top - window.innerHeight / 2) / (window.innerHeight / 2));
-            text.style.opacity = (0.5 + opacity * 0.5).toString();
+        // Section background parallax
+        sections.forEach((section, index) => {
+            const rect = section.getBoundingClientRect();
+            if (rect.top < windowHeight && rect.bottom > 0) {
+                const parallaxValue = (windowHeight - rect.top) * 0.1;
+                if (section.style) {
+                    section.style.transform = `translateY(${parallaxValue * 0.5}px)`;
+                }
+            }
         });
+        
+        // Floating elements parallax
+        const floatingElements = document.querySelectorAll('.floating-element');
+        floatingElements.forEach((element, index) => {
+            const speed = 0.15 + (index * 0.05);
+            const yPos = scrolled * speed;
+            const rotation = scrolled * 0.03 * (index + 1);
+            element.style.transform = `translate3d(0, ${yPos}px, 0) rotate(${rotation}deg)`;
+        });
+        
     }, 16);
     
-    window.addEventListener('scroll', handleParallaxShowcaseScroll);
+    window.addEventListener('scroll', optimizedScrollHandler);
     
     // Initial call
-    handleParallaxShowcaseScroll();
+    optimizedScrollHandler();
 }
 
 /**
