@@ -521,5 +521,39 @@
 
     <script src="assets/js/webgl-effects.js"></script>
     <script src="assets/js/script.js"></script>
+    
+    <!-- Parallax Diagnostic Script -->
+    <script>
+        // Runs after all scripts are loaded
+        window.addEventListener('load', function() {
+            console.log('=== PARALLAX DIAGNOSTIC ===');
+            
+            // Check parallax section
+            const parallaxSection = document.querySelector('#parallax-showcase');
+            console.log('✓ Parallax section found:', !!parallaxSection);
+            
+            // Check layers
+            const layers = document.querySelectorAll('.parallax-layer');
+            console.log('✓ Parallax layers found:', layers.length);
+            
+            // Check images
+            const bgImages = document.querySelectorAll('.parallax-bg-img');
+            console.log('✓ Background images found:', bgImages.length);
+            
+            // Check if images are loaded
+            bgImages.forEach((img, i) => {
+                const bgImg = window.getComputedStyle(img).backgroundImage;
+                console.log(`  Layer ${i+1} bg-image:`, bgImg?.substring(0, 60) + '...');
+            });
+            
+            // Check if setup function exists
+            console.log('✓ setupParallaxShowcase function exists:', typeof setupParallaxShowcase === 'function');
+            console.log('✓ loadLocalParallaxImages function exists:', typeof loadLocalParallaxImages === 'function');
+            
+            console.log('=== END DIAGNOSTIC ===');
+            console.log('If you see all ✓, parallax should be working!');
+            console.log('If not, check PARALLAX_DEBUG.md for troubleshooting');
+        });
+    </script>
 </body>
 </html>
