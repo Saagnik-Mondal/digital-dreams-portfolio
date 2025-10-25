@@ -15,26 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.0.27/bundled/lenis.min.js"></script>
 </head>
 <body>
-    <!-- Advanced AI Loading Screen -->
-    <div id="ai-loading-screen" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%); z-index: 10000; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-        <div class="ai-loading-container">
-            <!-- AI Brain Visualization -->
-            <div class="ai-brain">
-                <div class="brain-outline">
-                    <svg viewBox="0 0 200 200" class="brain-svg">
-                        <path d="M100 20 C130 20 160 40 160 70 C160 90 140 110 120 110 C100 110 80 90 80 70 C80 50 90 30 100 20 Z" fill="none" stroke="url(#brainGradient)" stroke-width="3" class="brain-path"/>
-                        <path d="M40 80 C40 60 60 40 80 40 C100 40 120 60 120 80 C120 100 100 120 80 120 C60 120 40 100 40 80 Z" fill="none" stroke="url(#brainGradient)" stroke-width="3" class="brain-path"/>
-                        <path d="M160 80 C160 60 140 40 120 40 C100 40 80 60 80 80 C80 100 100 120 120 120 C140 120 160 100 160 80 Z" fill="none" stroke="url(#brainGradient)" stroke-width="3" class="brain-path"/>
-                        <circle cx="100" cy="80" r="15" fill="url(#brainGradient)" class="brain-core"/>
-                        <defs>
-                            <linearGradient id="brainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#667eea"/>
-                                <stop offset="50%" stop-color="#764ba2"/>
-                                <stop offset="100%" stop-color="#f093fb"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                </div>
+
                 <div class="neural-network">
                     <div class="neuron"></div>
                     <div class="neuron"></div>
@@ -261,43 +242,49 @@
                 <h2 class="section-title reveal-text">Animations</h2>
                 <div class="section-subtitle">Motion brings stories to life</div>
             </div>
-             <div class="portfolio-grid" id="animations-grid">
-                 <!-- Animation items will be populated by JavaScript -->
-                 <div class="portfolio-item stagger-item" data-category="animation">
-                     <div class="portfolio-card magnetic">
-                         <div class="ask-ronica-indicator" onclick="updateVisualContext('illustrations', 'Goddess Awakening'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
-                         <div class="card-image">
-                             <img src="assets/illustrations/goddess-awakening.jpg" alt="Goddess Awakening">
-                         </div>
-                         <div class="card-content">
-                             <h3>Goddess Awakening</h3>
-                             <p>Contemporary interpretation of Durga with flowing digital elements, blending traditional iconography with modern aesthetics</p>
-                             <div class="project-tags">
-                                 <span class="tag">Procreate</span>
-                                 <span class="tag">Digital Art</span>
-                                 <span class="tag">Mythology</span>
-                             </div>
-                         </div>
-                     </div>
-                         </div>
-                         <div class="card-content">
-                             <h3>Divine Dance</h3>
-                             <p>Kathakali-inspired character animation blending traditional Indian dance forms with modern 3D techniques</p>
-                             <div class="project-tags">
-                                 <span>After Effects</span>
-                                 <span>Blender</span>
-                                 <span>Cultural Fusion</span>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-                 <div class="portfolio-item stagger-item" data-category="animation">
-                     <div class="portfolio-card magnetic">
-                         <div class="ask-ronica-indicator" onclick="updateVisualContext('drawings', 'Charcoal Portrait'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
-                         <div class="card-image">
-                             <img src="assets/drawings/charcoal-portrait.jpg" alt="Charcoal Portrait">
-                         </div>
-                         <div class="card-content">
+              <div class="portfolio-grid" id="animations-grid">
+                  <!-- Animation items will be populated by JavaScript -->
+                  <div class="portfolio-item stagger-item" data-category="animation">
+                      <div class="portfolio-card magnetic">
+                          <div class="ask-ronica-indicator" onclick="updateVisualContext('animations', 'Divine Dance'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
+                          <div class="card-image">
+                              <img src="assets/animations/divine-dance.jpg" alt="Divine Dance">
+                          </div>
+                          <div class="card-content">
+                              <h3>Divine Dance</h3>
+                              <p>Kathakali-inspired character animation blending traditional Indian dance forms with modern 3D techniques</p>
+                              <div class="project-tags">
+                                  <span class="tag">After Effects</span>
+                                  <span class="tag">Blender</span>
+                                  <span class="tag">Cultural Fusion</span>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="portfolio-item stagger-item" data-category="animation">
+                      <div class="portfolio-card magnetic">
+                          <div class="ask-ronica-indicator" onclick="updateVisualContext('animations', 'Mystic Forest'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
+                          <div class="card-image">
+                              <img src="assets/animations/mystic-forest.jpg" alt="Mystic Forest">
+                          </div>
+                          <div class="card-content">
+                              <h3>Mystic Forest</h3>
+                              <p>Interactive forest scene featuring mythical creatures from Indian folklore, brought to life with advanced particle systems</p>
+                              <div class="project-tags">
+                                  <span class="tag">Cinema 4D</span>
+                                  <span class="tag">Redshift</span>
+                                  <span class="tag">Folklore</span>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="portfolio-item stagger-item" data-category="animation">
+                      <div class="portfolio-card magnetic">
+                          <div class="ask-ronica-indicator" onclick="updateVisualContext('animations', 'Cosmic Mandala'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
+                          <div class="card-image">
+                              <img src="assets/animations/cosmic-mandala.jpg" alt="Cosmic Mandala">
+                          </div>
+                          <div class="card-content">
                              <h3>Charcoal Portrait</h3>
                              <p>Intimate portrait study using traditional charcoal techniques, capturing the depth and emotion of human expression</p>
                              <div class="project-tags">
@@ -361,47 +348,55 @@
              <div class="portfolio-grid" id="illustrations-grid">
                  <div class="portfolio-item" data-category="illustration">
                      <div class="portfolio-card magnetic">
-                         <div class="ask-ronica-indicator" onclick="updateVisualContext('drawings', 'Urban Sketch'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
+                         <div class="ask-ronica-indicator" onclick="updateVisualContext('illustrations', 'Sacred Waters'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
                          <div class="card-image">
-                             <img src="assets/drawings/urban-sketch.jpg" alt="Urban Sketch">
-                         </div>
-                         <div class="card-content">
-                             <h3>Urban Sketch</h3>
-                             <p>Quick sketch of Mumbai street life using mixed media, capturing the energy and chaos of urban India</p>
-                             <div class="project-tags">
-                                 <span class="tag">Mixed Media</span>
-                                 <span class="tag">Urban</span>
-                                 <span class="tag">Street Art</span>
-                             </div>
-                         </div>
-                     </div>
+                             <img src="assets/illustrations/sacred-waters.jpg" alt="Sacred Waters">
                          </div>
                          <div class="card-content">
                              <h3>Sacred Waters</h3>
                              <p>Digital painting of the Ganges at dawn, capturing the spiritual essence of India's holy river with photorealistic detail</p>
                              <div class="project-tags">
-                                 <span>Photoshop</span>
-                                 <span>Digital Painting</span>
-                                 <span>Spiritual</span>
+                                 <span class="tag">Photoshop</span>
+                                 <span class="tag">Digital Painting</span>
+                                 <span class="tag">Spiritual</span>
                              </div>
                          </div>
                      </div>
                  </div>
                  <div class="portfolio-item" data-category="illustration">
                      <div class="portfolio-card magnetic">
-                         <div class="ask-ronica-indicator" onclick="updateVisualContext('animations', 'Mystic Forest'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
+                         <div class="ask-ronica-indicator" onclick="updateVisualContext('illustrations', 'Goddess Awakening'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
                          <div class="card-image">
-                             <img src="assets/animations/mystic-forest.jpg" alt="Mystic Forest">
+                             <img src="assets/illustrations/goddess-awakening.jpg" alt="Goddess Awakening">
                          </div>
                          <div class="card-content">
-                             <h3>Mystic Forest</h3>
-                             <p>Interactive forest animation featuring mythical creatures from Indian folklore with particle effects</p>
+                             <h3>Goddess Awakening</h3>
+                             <p>Contemporary interpretation of Durga with flowing digital elements, blending traditional iconography with modern aesthetics</p>
                              <div class="project-tags">
-                                 <span class="tag">Cinema 4D</span>
-                                 <span class="tag">Redshift</span>
-                                 <span class="tag">Folklore</span>
+                                 <span class="tag">Procreate</span>
+                                 <span class="tag">Digital Art</span>
+                                 <span class="tag">Mythology</span>
                              </div>
                          </div>
+                     </div>
+                 </div>
+                 <div class="portfolio-item" data-category="illustration">
+                     <div class="portfolio-card magnetic">
+                         <div class="ask-ronica-indicator" onclick="updateVisualContext('illustrations', 'Urban Mandala'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
+                         <div class="card-image">
+                             <img src="assets/illustrations/urban-mandala.jpg" alt="Urban Mandala">
+                         </div>
+                         <div class="card-content">
+                             <h3>Urban Mandala</h3>
+                             <p>Geometric mandala design incorporating Mumbai's architectural elements, merging ancient patterns with modern cityscape</p>
+                             <div class="project-tags">
+                                 <span class="tag">Illustrator</span>
+                                 <span class="tag">Geometric</span>
+                                 <span class="tag">Urban Art</span>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
                      </div>
                          </div>
                          <div class="card-content">
@@ -421,28 +416,17 @@
                          <div class="card-image">
                              <img src="assets/animations/cosmic-mandala.jpg" alt="Cosmic Mandala">
                          </div>
-                         <div class="card-content">
-                             <h3>Cosmic Mandala</h3>
-                             <p>Abstract animation exploring the universe through traditional mandala patterns and modern geometry</p>
-                             <div class="project-tags">
-                                 <span class="tag">Houdini</span>
-                                 <span class="tag">TouchDesigner</span>
-                                 <span class="tag">Abstract</span>
-                             </div>
-                         </div>
-                     </div>
-                         </div>
-                         <div class="card-content">
-                             <h3>Urban Mandala</h3>
-                             <p>Geometric mandala design incorporating Mumbai's architectural elements, merging ancient patterns with modern cityscape</p>
-                             <div class="project-tags">
-                                 <span>Illustrator</span>
-                                 <span>Geometric</span>
-                                 <span>Urban Art</span>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
+                          <div class="card-content">
+                              <h3>Cosmic Mandala</h3>
+                              <p>Abstract animation exploring the universe through traditional mandala patterns and modern geometry</p>
+                              <div class="project-tags">
+                                  <span class="tag">Houdini</span>
+                                  <span class="tag">TouchDesigner</span>
+                                  <span class="tag">Abstract</span>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
              </div>
         </div>
     </section>
@@ -457,56 +441,17 @@
              <div class="portfolio-grid" id="drawings-grid">
                  <div class="portfolio-item" data-category="drawing">
                      <div class="portfolio-card magnetic">
-                         <div class="ask-ronica-indicator" onclick="updateVisualContext('illustrations', 'Urban Mandala'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
+                         <div class="ask-ronica-indicator" onclick="updateVisualContext('drawings', 'Charcoal Portrait'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
                          <div class="card-image">
-                             <img src="assets/illustrations/urban-mandala.jpg" alt="Urban Mandala">
-                         </div>
-                         <div class="card-content">
-                             <h3>Urban Mandala</h3>
-                             <p>Geometric mandala design incorporating Mumbai's architectural elements, merging ancient patterns with modern cityscape</p>
-                             <div class="project-tags">
-                                 <span class="tag">Illustrator</span>
-                                 <span class="tag">Geometric</span>
-                                 <span class="tag">Urban Art</span>
-                             </div>
-                         </div>
-                     </div>
+                             <img src="assets/drawings/charcoal-portrait.jpg" alt="Charcoal Portrait">
                          </div>
                          <div class="card-content">
                              <h3>Charcoal Portrait</h3>
                              <p>Intimate portrait study using traditional charcoal techniques, capturing the depth and emotion of human expression</p>
                              <div class="project-tags">
-                                 <span>Charcoal</span>
-                                 <span>Portrait</span>
-                                 <span>Traditional</span>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-                 <div class="portfolio-item" data-category="drawing">
-                     <div class="portfolio-card magnetic">
-                         <div class="ask-ronica-indicator" onclick="updateVisualContext('illustrations', 'Sacred Waters'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
-                         <div class="card-image">
-                             <img src="assets/illustrations/sacred-waters.jpg" alt="Sacred Waters">
-                         </div>
-                         <div class="card-content">
-                             <h3>Sacred Waters</h3>
-                             <p>Digital painting of the Ganges at dawn, capturing the spiritual essence of India's holy river with photorealistic detail</p>
-                             <div class="project-tags">
-                                 <span class="tag">Photoshop</span>
-                                 <span class="tag">Digital Painting</span>
-                                 <span class="tag">Spiritual</span>
-                             </div>
-                         </div>
-                     </div>
-                         </div>
-                         <div class="card-content">
-                             <h3>Ink Mandala</h3>
-                             <p>Intricate mandala design created with dip pen and ink, exploring symmetry and spiritual geometry in traditional style</p>
-                             <div class="project-tags">
-                                 <span>Dip Pen</span>
-                                 <span>Mandala</span>
-                                 <span>Spiritual</span>
+                                 <span class="tag">Charcoal</span>
+                                 <span class="tag">Portrait</span>
+                                 <span class="tag">Traditional</span>
                              </div>
                          </div>
                      </div>
@@ -527,14 +472,20 @@
                              </div>
                          </div>
                      </div>
+                 </div>
+                 <div class="portfolio-item" data-category="drawing">
+                     <div class="portfolio-card magnetic">
+                         <div class="ask-ronica-indicator" onclick="updateVisualContext('drawings', 'Urban Sketch'); document.querySelector('.chatbot-toggle').click();">Ask Ronica</div>
+                         <div class="card-image">
+                             <img src="assets/drawings/urban-sketch.jpg" alt="Urban Sketch">
                          </div>
                          <div class="card-content">
                              <h3>Urban Sketch</h3>
                              <p>Quick sketch of Mumbai street life using mixed media, capturing the energy and chaos of urban India</p>
                              <div class="project-tags">
-                                 <span>Mixed Media</span>
-                                 <span>Urban</span>
-                                 <span>Street Art</span>
+                                 <span class="tag">Mixed Media</span>
+                                 <span class="tag">Urban</span>
+                                 <span class="tag">Street Art</span>
                              </div>
                          </div>
                      </div>
