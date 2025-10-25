@@ -245,14 +245,14 @@ function setupAIChatbot() {
             // AI responses
             setTimeout(() => {
                 const responses = {
-                    'hello': 'Hello! Welcome to my creative portfolio. I\'m here to guide you through my work and answer any questions you have about my creative process.',
-                    'about': 'I\'m a digital artist specializing in animations, illustrations, and creative storytelling. Each piece tells a unique story and showcases different techniques.',
-                    'animations': 'My animations section features fluid motion graphics and character animations. Click on any piece to see the workflow behind it!',
-                    'illustrations': 'The illustrations showcase my digital art style, from concept art to finished pieces. Each one represents hours of creative exploration.',
-                    'drawings': 'My traditional drawings combine classic techniques with modern themes. They show the foundation of my artistic journey.',
-                    'workflow': 'My workflow typically involves concept development, sketching, digital creation, and final refinement. Each step is crucial to the final result.',
-                    'contact': 'Feel free to reach out! I\'m always excited to discuss new projects and creative collaborations.',
-                    'default': 'I\'d love to tell you more about my creative process! Ask me about animations, illustrations, drawings, or my workflow.'
+                    'hello': 'Greetings. I am Ronica, at your service. I\'ve analyzed this portfolio extensively and am prepared to provide detailed insights into each creative endeavor. How may I be of assistance?',
+                    'about': 'Ah, the artist\'s background. This creator is a master of digital craftsmanship with over five years of experience in visual storytelling. Their work demonstrates exceptional technical proficiency and an innate ability to evoke emotion through art. Quite remarkable, if I may say so.',
+                    'animations': 'The animations section showcases masterful motion graphics and character work. Each piece demonstrates sophisticated timing, fluid movement, and narrative depth. I recommend examining the technical execution - it\'s quite impressive.',
+                    'illustrations': 'These digital illustrations represent the pinnacle of artistic precision. Each piece undergoes extensive conceptualization, with meticulous attention to composition, color theory, and emotional resonance. The level of detail is extraordinary.',
+                    'drawings': 'The traditional drawings section reveals the foundation of this artist\'s skill. These pieces demonstrate classical technique elevated by contemporary vision. One can see the evolution from traditional mastery to digital innovation.',
+                    'workflow': 'The creative process is meticulously structured: conceptualization sparks the vision, research provides depth, digital creation brings it to life, and refinement ensures perfection. Each phase is executed with precision and artistic integrity.',
+                    'contact': 'Certainly. The artist welcomes professional inquiries and creative collaborations. I suggest reaching out to discuss potential projects - their expertise would be valuable to any endeavor.',
+                    'default': 'I\'m afraid I didn\'t quite catch that. Perhaps you\'d like to know about the animations, illustrations, drawings, or the creative workflow? I\'m here to provide comprehensive insights into any aspect of this portfolio.'
                 };
 
                 const lowerMessage = message.toLowerCase();
@@ -275,7 +275,7 @@ function setupAIChatbot() {
         if (message) {
             sendMessage(message, true);
             input.value = '';
-            sendMessage('...'); // AI thinking
+            sendMessage('Processing your inquiry...'); // Ronica thinking
         }
     }
 
@@ -288,7 +288,7 @@ function setupAIChatbot() {
 
     // Welcome message after a delay
     setTimeout(() => {
-        sendMessage('Welcome to my AI-powered portfolio! I can help you explore my creative work and understand the process behind each piece. What interests you most?');
+        sendMessage('Greetings. I am Ronica, your intelligent creative assistant. I\'ve been designed to help you navigate through this digital portfolio and provide insights into the creative process. How may I assist you today?');
     }, 2000);
 }
 
