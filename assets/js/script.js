@@ -562,7 +562,6 @@ function setupAIChatbot() {
                         response = `I notice you're exploring the ${window.visualContext.currentSection} section. This collection showcases the artist's mastery in ${window.visualContext.currentSection === 'animations' ? 'motion graphics and 3D animation' : window.visualContext.currentSection === 'illustrations' ? 'digital painting and illustration' : window.visualContext.currentSection === 'drawings' ? 'traditional drawing techniques' : 'creative processes'}. What specific aspect interests you?`;
                     }
                 }
-                }
 
                 // Add contextual suggestions
                 if (bestMatch.intent === 'animations') {
@@ -1093,7 +1092,7 @@ class ScreenVision {
             // Check for modal-like layout which often indicates artwork viewing
             const centerX = width / 2;
             const centerY = height / 2;
-            const centerBrightness = this.getAverageBrightness(data, width, centerX - 50, centerY - 50, 100, 100);
+            const centerBrightness = this.getAverageBrightness(data, width, height, centerX - 50, centerY - 50, 100, 100);
 
             if (centerBrightness > 150) { // Bright center suggests artwork
                 bestArtwork = 'Unknown Artwork';
@@ -1107,11 +1106,11 @@ class ScreenVision {
         };
     }
 
-    getAverageBrightness(data, width, startX, startY, w, h) {
+    getAverageBrightness(data, width, height, startX, startY, w, h) {
         let totalBrightness = 0;
         let pixelCount = 0;
 
-        for (let y = startY; y < startY + h && y < height; y++) {
+        for (let y = startY; y < startY + h && y < startY + h; y++) {
             for (let x = startX; x < startX + w && x < width; x++) {
                 const pixelIndex = (y * width + x) * 4;
                 const r = data[pixelIndex];
