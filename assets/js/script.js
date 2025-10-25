@@ -1,7 +1,16 @@
 // Global Variables
 let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-console.log('Script loaded successfully!');
+// Visual Context Awareness System
+window.visualContext = {
+    currentSection: null,
+    currentArtwork: null,
+    lastViewedItem: null,
+    viewingHistory: [],
+    isViewingModal: false
+};
+
+console.log('Script loaded successfully! Mobile device:', isMobile);
 
 // Global error handler
 window.addEventListener('error', function(e) {
@@ -405,12 +414,27 @@ function setupAIChatbot() {
                     specific_artwork: {
                         patterns: [
                             /\b(divine dance|mystic forest|cosmic mandala|sacred waters|goddess awakening|urban mandala|charcoal portrait|ink mandala|urban sketch)\b/i,
-                            /\b(tell me about|show me|what about|more about)\b.*\b(dance|forest|mandala|water|goddess|portrait|sketch)\b/i
+                            /\b(tell me about|show me|what about|more about)\b.*\b(dance|forest|mandala|water|goddess|portrait|sketch)\b/i,
+                            /\b(this|that|current|viewing|looking at|seeing)\b.*\b(picture|image|artwork|piece|work)\b/i,
+                            /\b(what.*this|what.*that|details about|tell me about this|what is this)\b/i
                         ],
                         responses: [
                             'I\'d be delighted to share more about that specific piece! Each artwork has its own unique story and cultural significance. Which particular artwork caught your attention?',
                             'Wonderful choice! That piece represents a beautiful fusion of traditional Indian elements with modern digital techniques. Would you like me to elaborate on its creation process or cultural inspiration?',
                             'Excellent selection! That artwork showcases the artist\'s mastery in blending ancient wisdom with contemporary aesthetics. I can tell you about the techniques used, the inspiration behind it, or how it fits into the overall portfolio vision.'
+                        ]
+                    },
+
+                    current_view: {
+                        patterns: [
+                            /\b(this|that|current|now|here|viewing|looking)\b/i,
+                            /\b(what.*see|what.*this|what.*showing|what.*display)\b/i,
+                            /\b(explain|describe|about this|this is|this artwork)\b/i
+                        ],
+                        responses: [
+                            'Based on what I can see you\'re currently viewing, this appears to be a beautiful piece from the portfolio. Could you be more specific about which aspect you\'d like me to explain?',
+                            'I\'m detecting that you\'re looking at something specific. To give you the most accurate information, could you tell me which artwork or section has caught your attention?',
+                            'I can see you\'re engaged with the portfolio content. To provide the most helpful response, could you let me know which particular piece or section you\'re referring to?'
                         ]
                     },
 
@@ -469,10 +493,23 @@ function setupAIChatbot() {
                     }
                 }
 
-                // Intelligent fallback responses based on context
+                // Visual context-aware responses
                 let response;
                 if (bestMatch.response) {
                     response = bestMatch.response;
+                } else if (bestMatch.intent === 'current_view' && window.visualContext.currentArtwork) {
+                    // Provide specific details about the artwork being viewed
+                    const artworkDetails = getArtworkDetails(window.visualContext.currentArtwork);
+                    response = `Ah, you're looking at "${window.visualContext.currentArtwork}"! ${artworkDetails.description} This piece was created using ${artworkDetails.technique} and represents ${artworkDetails.theme}. Would you like to know more about the creative process, cultural inspiration, or technical aspects?`;
+                } else if (bestMatch.intent === 'current_view' && window.visualContext.currentSection) {
+                    // Provide section overview
+                    response = `You're currently in the ${window.visualContext.currentSection} section. This collection features ${window.visualContext.currentSection === 'animations' ? 'three dynamic motion graphics pieces' : window.visualContext.currentSection === 'illustrations' ? 'three stunning digital illustrations' : window.visualContext.currentSection === 'drawings' ? 'three classical drawing studies' : 'the artist\'s creative workflow'}. Each piece showcases the beautiful fusion of Indian cultural heritage with modern digital techniques. Which specific work interests you?`;
+                } else if (window.visualContext.currentArtwork) {
+                    // User is viewing a specific artwork
+                    response = `I see you're looking at "${window.visualContext.currentArtwork}". This is a remarkable piece from the ${window.visualContext.currentSection} section. Would you like me to tell you more about its creation, cultural significance, or technical aspects?`;
+                } else if (window.visualContext.currentSection) {
+                    // User is in a specific section
+                    response = `I notice you're exploring the ${window.visualContext.currentSection} section. This collection showcases the artist's mastery in ${window.visualContext.currentSection === 'animations' ? 'motion graphics and 3D animation' : window.visualContext.currentSection === 'illustrations' ? 'digital painting and illustration' : window.visualContext.currentSection === 'drawings' ? 'traditional drawing techniques' : 'creative processes'}. What specific aspect interests you?`;
                 } else {
                     // Smart fallback based on conversation history and message content
                     const fallbackResponses = [
@@ -501,9 +538,19 @@ function setupAIChatbot() {
                     response += ' I can share more details about the drawing techniques used.';
                 }
 
-                // Add conversation memory (simple context tracking)
+                // Initialize conversation and visual context
                 if (!window.conversationContext) {
                     window.conversationContext = { lastIntent: null, messageCount: 0, topicsDiscussed: [] };
+                }
+
+                if (!window.visualContext) {
+                    window.visualContext = {
+                        currentSection: null,
+                        currentArtwork: null,
+                        lastViewedItem: null,
+                        viewingHistory: [],
+                        isViewingModal: false
+                    };
                 }
 
                 window.conversationContext.messageCount++;
@@ -686,7 +733,7 @@ function startMainExperience() {
 
     setupNavigation();
     setupScrollAnimations();
-    setupPortfolioInteractions();
+    setupEnhancedPortfolioInteractions(); // Enhanced with context tracking
     setupWorkflowAnimations();
     setupContactForm();
     setupModalSystem();
@@ -1151,10 +1198,11 @@ function closeModal() {
     const modal = document.getElementById('portfolio-modal');
     modal.style.opacity = '0';
     modal.querySelector('.modal-content').style.transform = 'translate(-50%, -50%) scale(0.8)';
-    
+
     setTimeout(() => {
         modal.style.display = 'none';
         document.body.style.overflow = 'auto';
+        setViewingModal(false); // Reset modal viewing state
     }, 300);
 }
 
@@ -1256,8 +1304,145 @@ function animateCounter(element) {
     }
 }
 
+// Visual Context Tracking Functions
+function updateVisualContext(section, artwork = null) {
+    window.visualContext.currentSection = section;
+    window.visualContext.currentArtwork = artwork;
+    window.visualContext.lastViewedItem = artwork || section;
+
+    // Add to viewing history (keep last 5 items)
+    if (artwork) {
+        window.visualContext.viewingHistory.unshift(`${section}: ${artwork}`);
+    } else {
+        window.visualContext.viewingHistory.unshift(section);
+    }
+    window.visualContext.viewingHistory = window.visualContext.viewingHistory.slice(0, 5);
+
+    console.log('Visual context updated:', window.visualContext);
+}
+
+function setViewingModal(isViewing) {
+    window.visualContext.isViewingModal = isViewing;
+    console.log('Modal viewing state:', isViewing);
+}
+
+// Enhanced portfolio interactions with context tracking
+function setupEnhancedPortfolioInteractions() {
+    const portfolioCards = document.querySelectorAll('.portfolio-card');
+
+    portfolioCards.forEach((card) => {
+        const item = card.closest('.portfolio-item');
+        const category = item.dataset.category;
+        const title = card.querySelector('h3').textContent.trim();
+
+        // Track when user hovers/views an artwork
+        card.addEventListener('mouseenter', () => {
+            updateVisualContext(category, title);
+        });
+
+        // Enhanced click handler with context
+        card.addEventListener('click', () => {
+            updateVisualContext(category, title);
+            setViewingModal(true);
+            openPortfolioModal(card);
+        });
+    });
+
+    // Track section visibility
+    const observerOptions = {
+        threshold: 0.3,
+        rootMargin: '-50px 0px'
+    };
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const sectionId = entry.target.id;
+                if (sectionId && ['animations', 'illustrations', 'drawings', 'about', 'workflow', 'contact'].includes(sectionId)) {
+                    updateVisualContext(sectionId);
+                }
+            }
+        });
+    }, observerOptions);
+
+    // Observe all main sections
+    document.querySelectorAll('section[id]').forEach(section => {
+        sectionObserver.observe(section);
+    });
+}
+
+// Artwork details database
+function getArtworkDetails(artworkName) {
+    const artworkDatabase = {
+        'Divine Dance': {
+            description: 'This is a mesmerizing 3D animation that brings the traditional Kathakali dance form to life through modern digital techniques.',
+            technique: 'Blender 3D modeling, After Effects compositing, and motion capture technology',
+            theme: 'the spiritual energy and cultural heritage of classical Indian dance',
+            cultural: 'Kathakali is one of India\'s oldest classical dance forms, originating from Kerala'
+        },
+        'Mystic Forest': {
+            description: 'An interactive forest animation featuring mythical creatures drawn from Indian folklore and mythology.',
+            technique: 'Cinema 4D particle systems, Redshift rendering, and procedural animation',
+            theme: 'the magical realm of Indian mythology and nature spirits',
+            cultural: 'Inspired by ancient Indian texts like the Vedas and Puranas'
+        },
+        'Cosmic Mandala': {
+            description: 'An abstract animation exploring the universe through traditional mandala patterns and sacred geometry.',
+            technique: 'Houdini procedural generation, TouchDesigner real-time rendering, and mathematical algorithms',
+            theme: 'the interconnectedness of all things through sacred geometric patterns',
+            cultural: 'Mandala symbolism is central to Hindu and Buddhist spiritual traditions'
+        },
+        'Sacred Waters': {
+            description: 'A photorealistic digital painting capturing the serene beauty of the Ganges River at dawn.',
+            technique: 'Photoshop digital painting, custom brushes, and advanced layering techniques',
+            theme: 'the spiritual purity and life-giving essence of India\'s sacred river',
+            cultural: 'The Ganges is considered the holiest river in Hinduism, symbolizing purification and enlightenment'
+        },
+        'Goddess Awakening': {
+            description: 'A contemporary interpretation of Goddess Durga, blending traditional iconography with modern digital aesthetics.',
+            technique: 'Procreate digital illustration, custom textures, and symbolic color palettes',
+            theme: 'feminine power, protection, and the awakening of divine consciousness',
+            cultural: 'Durga is a principal Hindu goddess representing strength and protection against evil forces'
+        },
+        'Urban Mandala': {
+            description: 'A geometric mandala design incorporating architectural elements from modern Mumbai.',
+            technique: 'Illustrator vector graphics, mathematical precision, and urban photography references',
+            theme: 'the harmony between ancient spiritual geometry and contemporary urban life',
+            cultural: 'Combines sacred mandala traditions with the vibrant energy of Mumbai\'s cityscape'
+        },
+        'Charcoal Portrait': {
+            description: 'An intimate portrait study using traditional charcoal techniques to capture human emotion and depth.',
+            technique: 'Classical charcoal drawing, blending techniques, and expressive mark-making',
+            theme: 'the inner beauty and emotional complexity of the human spirit',
+            cultural: 'Draws from the rich tradition of Indian portraiture and classical art studies'
+        },
+        'Ink Mandala': {
+            description: 'An intricate mandala design created with traditional dip pen and ink, exploring spiritual geometry.',
+            technique: 'Dip pen illustration, India ink, and precise geometric construction',
+            theme: 'meditative focus and the mathematical perfection of sacred geometry',
+            cultural: 'Mandala creation is a spiritual practice in Hindu and Buddhist traditions'
+        },
+        'Urban Sketch': {
+            description: 'A mixed media sketch capturing the vibrant chaos and energy of Mumbai street life.',
+            technique: 'Mixed media drawing, urban sketching techniques, and expressive line work',
+            theme: 'the dynamic energy and cultural diversity of contemporary Indian urban life',
+            cultural: 'Inspired by the bustling streets of Mumbai and India\'s vibrant street culture'
+        }
+    };
+
+    return artworkDatabase[artworkName] || {
+        description: 'This is a beautiful piece from the portfolio.',
+        technique: 'advanced digital techniques',
+        theme: 'cultural fusion and artistic expression',
+        cultural: 'Indian artistic traditions'
+    };
+}
+
 // Export functions for global use
 window.scrollToSection = scrollToSection;
+window.updateVisualContext = updateVisualContext;
+window.setViewingModal = setViewingModal;
+window.getArtworkDetails = getArtworkDetails;
 
 // Utility function for content visibility (kept for potential future use)
 window.forceShowContent = function() {
