@@ -1,12 +1,40 @@
 // Global Variables
 let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
+console.log('Script loaded successfully!');
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing AI portfolio...');
+    initializeWebsite();
+});
+
 // AI Loading Screen
 function setupAILoadingScreen() {
+    console.log('Setting up AI loading screen...');
     const loadingScreen = document.getElementById('ai-loading-screen');
     const progressFill = document.querySelector('.progress-circle-fill');
     const progressPercentage = document.querySelector('.progress-percentage');
     const stages = document.querySelectorAll('.stage');
+
+    if (!loadingScreen) {
+        console.error('AI loading screen not found!');
+        startMainExperience();
+        return;
+    }
+
+    console.log('AI loading screen found, starting animation...');
+
+    // Fallback timeout in case loading gets stuck
+    setTimeout(() => {
+        if (loadingScreen.style.display !== 'none') {
+            console.log('Loading timeout reached, starting main experience...');
+            loadingScreen.style.display = 'none';
+            startMainExperience();
+            setupCustomCursor();
+            setupAIChatbot();
+        }
+    }, 10000); // 10 second fallback
 
     let currentProgress = 0;
     let currentStage = 0;
@@ -63,12 +91,13 @@ function setupAILoadingScreen() {
                 setTimeout(() => {
                     loadingScreen.style.opacity = '0';
                     loadingScreen.style.transform = 'scale(1.1)';
-                    setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                        startMainExperience();
-                        setupCustomCursor();
-                        setupAIChatbot();
-                    }, 800);
+                setTimeout(() => {
+                    console.log('Loading complete, starting main experience...');
+                    loadingScreen.style.display = 'none';
+                    startMainExperience();
+                    setupCustomCursor();
+                    setupAIChatbot();
+                }, 800);
                 }, 1000);
             }
         }
@@ -176,6 +205,7 @@ function initializeWebsite() {
 
 // After loading screen completes
 function startMainExperience() {
+    console.log('Starting main experience...');
     setupNavigation();
     setupScrollAnimations();
     setupPortfolioInteractions();
@@ -184,6 +214,7 @@ function startMainExperience() {
     setupModalSystem();
     setupSmoothScrolling();
     setupScrollProgress();
+    console.log('Main experience initialized!');
 }
 
 
