@@ -133,7 +133,7 @@ function setupAILoadingScreen() {
 
 // AI Chatbot
 function setupAIChatbot() {
-    console.log('Setting up AI chatbot...');
+    console.log('=== SETTING UP AI CHATBOT ===');
     const chatbot = document.getElementById('ai-chatbot');
     const toggle = document.querySelector('.chatbot-toggle');
     const windowEl = document.querySelector('.chatbot-window');
@@ -142,7 +142,15 @@ function setupAIChatbot() {
     const sendBtn = document.querySelector('.send-btn');
     const messages = document.querySelector('.chatbot-messages');
 
-    console.log('Chatbot elements found:', { chatbot, toggle, windowEl, closeBtn, input, sendBtn, messages });
+    console.log('Chatbot elements found:', {
+        chatbot: !!chatbot,
+        toggle: !!toggle,
+        windowEl: !!windowEl,
+        closeBtn: !!closeBtn,
+        input: !!input,
+        sendBtn: !!sendBtn,
+        messages: !!messages
+    });
 
     if (!chatbot) {
         console.error('Chatbot container not found!');
@@ -165,6 +173,7 @@ function setupAIChatbot() {
         isOpen = !isOpen;
         windowEl.style.display = isOpen ? 'flex' : 'none';
         toggle.style.transform = isOpen ? 'scale(0.9)' : 'scale(1)';
+        console.log('Chatbot window display:', windowEl.style.display);
     });
 
     closeBtn.addEventListener('click', () => {
@@ -218,6 +227,7 @@ function setupAIChatbot() {
 
     function handleSend() {
         const message = input.value.trim();
+        console.log('handleSend called with message:', message);
         if (message) {
             sendMessage(message, true);
             input.value = '';
@@ -275,9 +285,13 @@ function setupAIChatbot() {
         }
     }
 
-    sendBtn.addEventListener('click', handleSend);
+    sendBtn.addEventListener('click', () => {
+        console.log('Send button clicked');
+        handleSend();
+    });
     input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
+            console.log('Enter key pressed');
             handleSend();
         }
     });
