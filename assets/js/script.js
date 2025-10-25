@@ -874,9 +874,9 @@ const setupMouseParallax = () => {
 // Initialize parallax effects
 document.addEventListener('DOMContentLoaded', () => {
     if (!prefersReducedMotion && !isMobile) {
-        setupParallaxScrolling();
+        // setupParallaxScrolling(); // Disabled to avoid conflicts with setupIntegratedParallax
         setupMouseParallax();
-        setupIntegratedParallax();
+        // setupIntegratedParallax(); // Already called in initializeWebsite
     }
 });
 

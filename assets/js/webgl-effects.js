@@ -503,9 +503,10 @@ function initAdvancedEffects() {
     liquidCursor = new LiquidCursor();
     
     // Initialize smooth scroll
-    if (typeof Lenis !== 'undefined') {
-        smoothScroll = new SmoothScroll();
-    }
+    // Temporarily disabled to fix parallax scroll issues
+    // if (typeof Lenis !== 'undefined') {
+    //     smoothScroll = new SmoothScroll();
+    // }
     
     // Initialize enhanced parallax effects
     parallaxScrollManager = new ParallaxScrollManager();
